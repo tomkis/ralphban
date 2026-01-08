@@ -29,3 +29,14 @@
   - Service and repository now share consistent Task naming
   - Used alias import (getAllTasks as getAllTasksFromRepo) to avoid name collision between service and repository exports
 ---
+
+## 2026-01-08 - CHORE-004
+- Installed concurrently package in root workspace
+- Updated root package.json: dev, typecheck, lint, fix scripts now use concurrently
+- Updated server, web, integration-tests: lint/fix scripts now run eslint and prettier concurrently
+- Files changed: package.json, packages/server/package.json, packages/web/package.json, packages/integration-tests/package.json
+- **Learnings:**
+  - concurrently provides better output handling than shell `&` operator
+  - Sub-package lint/fix can also run eslint+prettier in parallel since they operate independently
+  - Sequential `&&` kept for scripts where order matters (e.g., docker-compose before tsx, tsc before vite build)
+---

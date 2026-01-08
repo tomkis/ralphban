@@ -42,6 +42,6 @@
       "Update scripts in @packages/web/package.json to use concurrency package",
       "Update scripts in @packages/integration-tests/package.json to use concurrency package"
     ],
-    "passes": false
+    "passes": true
   }
 ]

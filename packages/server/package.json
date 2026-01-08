@@ -11,8 +11,8 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "db:init": "tsx scripts/init-db.ts",
-    "lint": "eslint . && prettier --check .",
-    "fix": "eslint --fix . && prettier --write ."
+    "lint": "concurrently \"eslint .\" \"prettier --check .\"",
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",

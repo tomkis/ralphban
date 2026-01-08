@@ -3,16 +3,17 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @ralphban/server dev & pnpm --filter @ralphban/web dev",
-    "typecheck": "pnpm --filter @ralphban/server typecheck & pnpm --filter @ralphban/web typecheck & pnpm --filter @ralphban/integration-tests typecheck",
-    "lint": "pnpm --filter @ralphban/server lint & pnpm --filter @ralphban/web lint & pnpm --filter @ralphban/integration-tests lint",
-    "fix": "pnpm --filter @ralphban/server fix & pnpm --filter @ralphban/web fix & pnpm --filter @ralphban/integration-tests fix"
+    "dev": "concurrently \"pnpm --filter @ralphban/server dev\" \"pnpm --filter @ralphban/web dev\"",
+    "typecheck": "concurrently \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
+    "lint": "concurrently \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
+    "fix": "concurrently \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter @ralphban/integration-tests fix\""
   },
   "keywords": [],
   "license": "ISC",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.52.0",
     "@typescript-eslint/parser": "^8.52.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
