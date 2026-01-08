@@ -30,5 +30,18 @@
       "Make sure you remove it from lock using pnpm install"
     ],
     "passes": false
+  },
+  {
+    "id": "CHORE-004",
+    "category": "chore",
+    "title": "Install concurrency package in the root and handle all concurent runs of scripts using concurrency package",
+    "steps": [
+      "Install concurrency package in the root",
+      "Update scripts in @package.json that runs stuff in parallel to use concurrency package",
+      "Update scripts in @packages/server/package.json to use concurrency package",
+      "Update scripts in @packages/web/package.json to use concurrency package",
+      "Update scripts in @packages/integration-tests/package.json to use concurrency package"
+    ],
+    "passes": false
   }
 ]
