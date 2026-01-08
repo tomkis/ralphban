@@ -1,7 +1,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { Pool } from 'pg';
-import { getTasksReadyForImplementation, markTaskAsCompleted } from '../services/task-service';
+import { getAllTasks, getTasksReadyForImplementation, markTaskAsCompleted } from '../services/task-service';
 
 export function createMCPServer(pool: Pool): Server {
   const server = new Server(
@@ -19,6 +19,14 @@ export function createMCPServer(pool: Pool): Server {
   server.setRequestHandler('tools/list' as any, async () => {
     return {
       tools: [
+        {
+          name: 'get_all_tasks',
+          description: 'Get all tasks from database with complete information including id, category, title, description, steps, state, and timestamps',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+          },
+        },
         {
           name: 'get_tasks_ready_for_implementation',
           description: 'Get all tasks that are ready for implementation',
@@ -46,6 +54,18 @@ export function createMCPServer(pool: Pool): Server {
   });
 
   server.setRequestHandler('tools/call' as any, async (request) => {
+    if (request.params.name === 'get_all_tasks') {
+      const tasks = await getAllTasks(pool);
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(tasks, null, 2),
+          },
+        ],
+      };
+    }
+
     if (request.params.name === 'get_tasks_ready_for_implementation') {
       const tasks = await getTasksReadyForImplementation(pool);
       return {

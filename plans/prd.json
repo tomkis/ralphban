@@ -45,7 +45,7 @@
       "Provide implementation for get_tasks_ready_for_implementation tool",
       "Provide implementation for mark_task_done tool"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "FEAT-006",

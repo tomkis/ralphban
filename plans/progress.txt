@@ -31,3 +31,14 @@
   - StdioServerTransport import added but not yet used (will be needed for HTTP transport in FEAT-006)
 ---
 
+## 2026-01-08 - FEAT-003
+- Added getAllTasks service function wrapping getAllPRDs repository function
+- Added get_all_tasks tool to MCP server for retrieving all tasks regardless of state
+- Files changed: packages/server/src/services/task-service.ts, packages/server/src/mcp/server.ts
+- **Learnings:**
+  - PRD steps were misleading - description asked for get_all_tasks but steps mentioned existing tools
+  - get_all_tasks returns complete task list unlike get_tasks_ready_for_implementation which filters by state
+  - getAllPRDs repository function already existed, just needed service layer wrapper
+  - MCP server now exposes three tools: get_all_tasks, get_tasks_ready_for_implementation, mark_task_done
+---
+
