@@ -70,7 +70,7 @@
       "Make sure the tests can be run using pnpm test",
       "Add empty test"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "TEST-002",

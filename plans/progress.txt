@@ -55,3 +55,16 @@
   - Pre-parsed body from express.json() can be passed to handleRequest
 ---
 
+## 2026-01-08 - TEST-001
+- Created @ralphban/integration-tests package for testing MCP server
+- Configured Vitest with TypeScript and Node environment
+- Added empty passing test to verify test infrastructure
+- Files changed: packages/integration-tests/package.json (new), packages/integration-tests/tsconfig.json (new), packages/integration-tests/vite.config.ts (new), packages/integration-tests/tests/empty.test.ts (new), package.json (updated typecheck script)
+- **Learnings:**
+  - Vitest requires vite.config.ts with test configuration for globals and environment
+  - Integration tests use node environment not jsdom since testing server APIs
+  - Root typecheck script needs updating to include new packages
+  - Empty test validates infrastructure before implementing real tests
+  - Package marked private since it's internal testing tool
+---
+
