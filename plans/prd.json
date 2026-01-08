@@ -76,6 +76,6 @@
       "Run the integration tests",
       "Report everything in the console"
     ],
-    "passes": false
+    "passes": true
   }
 ]

@@ -61,3 +61,14 @@
   - dotenv/config already imported, just need to read process.env.PORT
   - parseInt with radix 10 ensures proper number conversion
 ---
+
+## 2026-01-08 - CHORE-007
+- Created scripts/tests.sh bash script for running integration tests
+- Script finds available port using python3 socket, starts server, waits for readiness, runs tests
+- Updated integration tests to use SERVER_PORT env var instead of hardcoded 3001
+- Files changed: scripts/tests.sh (created), packages/integration-tests/tests/mcp-server.test.ts
+- **Learnings:**
+  - python3 -c with socket.bind(("", 0)) reliably finds available port
+  - curl to /mcp endpoint works for health check (returns response even with empty body)
+  - trap cleanup EXIT ensures server stops even on script failure
+---

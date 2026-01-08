@@ -2,11 +2,16 @@ import { describe, it, expect } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 
+const SERVER_PORT = process.env.SERVER_PORT || '3001';
+
 describe('MCP Server', () => {
   it('should call get_tasks_ready_for_implementation tool and return data', async () => {
-    const transport = new StreamableHTTPClientTransport(new URL('http://localhost:3001/mcp'), {
-      fetch,
-    });
+    const transport = new StreamableHTTPClientTransport(
+      new URL(`http://localhost:${SERVER_PORT}/mcp`),
+      {
+        fetch,
+      }
+    );
 
     const client = new Client(
       {
