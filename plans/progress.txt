@@ -1,0 +1,7 @@
+## 2026-01-08 - CHORE-001
+- Installed pg and @types/pg dependencies
+- Files changed: packages/server/package.json, pnpm-lock.yaml
+- **Learnings:**
+  - No type errors after dependency installation
+  - pnpm workspace structure working correctly
+---

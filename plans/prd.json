@@ -5,7 +5,7 @@
     "title": "Install PostgreSQL dependencies",
     "description": "Install pg (PostgreSQL client) and @types/pg for TypeScript support. These are required for database connection and query execution.",
     "steps": ["Install pg and @types/pg in server package using pnpm add"],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-002",
