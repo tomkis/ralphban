@@ -1,0 +1,10 @@
+{
+  "name": "ralphban",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "pnpm --filter @ralphban/server dev & pnpm --filter @ralphban/web dev",
+    "typecheck": "pnpm --filter @ralphban/server typecheck & pnpm --filter @ralphban/web typecheck"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
