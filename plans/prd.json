@@ -81,6 +81,6 @@
       "Read and execute seed.sql",
       "Add 'db:init' script to package.json that runs tsx scripts/init-db.ts"
     ],
-    "passes": false
+    "passes": true
   }
 ]

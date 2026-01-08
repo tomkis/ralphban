@@ -56,3 +56,14 @@
   - Added docker:up and docker:down utility scripts
 ---
 
+## 2026-01-08 - CHORE-007
+- Created database initialization script with transaction safety
+- Files changed: packages/server/scripts/init-db.ts, packages/server/package.json
+- **Learnings:**
+  - Wrapped schema and seed execution in transaction for atomicity
+  - Script properly releases client and closes pool after execution
+  - Idempotent design allows safe re-runs for dev environment resets
+  - Added db:init npm script for convenient database initialization
+  - Used fileURLToPath and dirname for ESM module path resolution
+---
+
