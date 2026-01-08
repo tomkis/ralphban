@@ -53,5 +53,29 @@
       "Web should have blue color and title Web"
     ],
     "passes": true
+  },
+  {
+    "id": "CHORE-006",
+    "category": "chore",
+    "title": "Allow to run server on a given port via environment variable",
+    "steps": [
+      "Add a new environment variable called PORT",
+      "Use the PORT environment variable to set the port the server runs on"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-007",
+    "category": "chore",
+    "title": "Make a testing bash script in the root that would start server on a random available port, wait for it to become available and then run integration tests",
+    "steps": [
+      "Create a new bash script in the root called scripts/tests.sh",
+      "Find available system port",
+      "Start the server  on that available port",
+      "Wait for the server to become available",
+      "Run the integration tests",
+      "Report everything in the console"
+    ],
+    "passes": false
   }
 ]
