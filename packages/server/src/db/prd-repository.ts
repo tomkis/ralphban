@@ -19,8 +19,5 @@ export async function getNextPendingPRD(pool: Pool): Promise<PRDItem | null> {
 }
 
 export async function updatePRDStatus(pool: Pool, id: string, state: string): Promise<void> {
-  await pool.query(
-    'UPDATE tasks SET state = $1, updated_at = NOW() WHERE id = $2',
-    [state, id]
-  );
+  await pool.query('UPDATE tasks SET state = $1, updated_at = NOW() WHERE id = $2', [state, id]);
 }

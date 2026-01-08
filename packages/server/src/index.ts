@@ -1,9 +1,9 @@
-import "dotenv/config";
-import express from "express";
-import { createMCPServer } from "./mcp/server";
-import { createDbClient } from "./db/client";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { randomUUID } from "crypto";
+import 'dotenv/config';
+import express from 'express';
+import { createMCPServer } from './mcp/server';
+import { createDbClient } from './db/client';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { randomUUID } from 'crypto';
 
 const app = express();
 const PORT = 3001;
@@ -19,7 +19,7 @@ const transport = new StreamableHTTPServerTransport({
 
 await mcpServer.connect(transport);
 
-app.post("/mcp", async (req, res) => {
+app.post('/mcp', async (req, res) => {
   await transport.handleRequest(req, res, req.body);
 });
 

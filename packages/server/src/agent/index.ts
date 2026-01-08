@@ -1,18 +1,18 @@
-import { createAnthropic } from "@ai-sdk/anthropic";
-import { streamText } from "ai";
+import { createAnthropic } from '@ai-sdk/anthropic';
+import { streamText } from 'ai';
 
 const anthropic = createAnthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 interface Message {
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: string;
 }
 
 export async function* createAgent(messages: Message[]) {
   const { textStream } = streamText({
-    model: anthropic("claude-sonnet-4-5-20250929"),
+    model: anthropic('claude-sonnet-4-5-20250929'),
     messages,
   });
 
