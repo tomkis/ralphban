@@ -5,7 +5,7 @@
 1. Read `@plans/prd.json`
 2. Read `@plans/progress.txt`
    (check Codebase Patterns first)
-4. Pick highest priority task from PRD
+4. Pick highest priority task from PRD, PRDs are NOT sorted by priorities, it is your goal to think which one is the right one to pick next based on past progress and list of PRDs.
    where `passes: false`
 5. Implement that ONE task
 6. Run `pnpm typecheck` to verify no type errors
