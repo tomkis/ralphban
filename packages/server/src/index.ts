@@ -1,44 +1,26 @@
 import 'dotenv/config';
 import express from 'express';
-import { createAgent } from './agent';
+import { createMCPServer } from './mcp/server';
+import { createDbClient } from './db/client';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { randomUUID } from 'crypto';
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello' });
+const pool = createDbClient();
+
+const mcpServer = createMCPServer(pool);
+const transport = new StreamableHTTPServerTransport({
+  sessionIdGenerator: () => randomUUID(),
 });
 
-app.post('/api/chat', async (req, res) => {
-  try {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
+await mcpServer.connect(transport);
 
-    const { messages } = req.body;
-
-    if (!messages || !Array.isArray(messages)) {
-      res.write(`data: ${JSON.stringify({ error: 'Invalid messages' })}\n\n`);
-      res.write('data: [DONE]\n\n');
-      res.end();
-      return;
-    }
-
-    for await (const token of createAgent(messages)) {
-      res.write(`data: ${JSON.stringify({ token })}\n\n`);
-    }
-
-    res.write('data: [DONE]\n\n');
-    res.end();
-  } catch (error) {
-    res.write(
-      `data: ${JSON.stringify({ error: 'Failed to process request' })}\n\n`
-    );
-    res.write('data: [DONE]\n\n');
-    res.end();
-  }
+app.post('/mcp', async (req, res) => {
+  await transport.handleRequest(req, res, req.body);
 });
 
 app.listen(PORT, () => {

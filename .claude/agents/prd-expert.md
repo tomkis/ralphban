@@ -21,7 +21,6 @@ Each item in prd.json:
   "id": "FEAT-XXX",
   "category": "feat|fix|refactor|test|docs",
   "title": "Brief title",
-  "description": "Clear description of what and why",
   "steps": [
     "Actionable step 1",
     "Actionable step 2"

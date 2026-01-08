@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;

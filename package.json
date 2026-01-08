@@ -1,10 +1,25 @@
 {
   "name": "ralphban",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @ralphban/server dev & pnpm --filter @ralphban/web dev",
-    "typecheck": "pnpm --filter @ralphban/server typecheck & pnpm --filter @ralphban/web typecheck"
+    "dev": "concurrently -n Server,Web -c green,blue \"pnpm --filter @ralphban/server dev\" \"pnpm --filter @ralphban/web dev\"",
+    "typecheck": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
+    "lint": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
+    "fix": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter @ralphban/integration-tests fix\"",
+    "test": "scripts/tests.sh"
   },
   "keywords": [],
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.52.0",
+    "@typescript-eslint/parser": "^8.52.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.0.0",
+    "prettier": "^3.7.4"
+  }
 }

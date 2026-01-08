@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Pool } from 'pg';
 
 export function createDbClient(): Pool {
   return new Pool({

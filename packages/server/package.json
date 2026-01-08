@@ -10,16 +10,18 @@
     "typecheck": "tsc --noEmit",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "db:init": "tsx scripts/init-db.ts"
+    "db:init": "tsx scripts/init-db.ts",
+    "lint": "concurrently \"eslint .\" \"prettier --check .\"",
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^3.0.8",
+    "@modelcontextprotocol/sdk": "^1.0.4",
     "@types/pg": "^8.16.0",
-    "ai": "^6.0.17",
     "dotenv": "^17.2.3",
     "eventsource-parser": "^3.0.6",
     "express": "^5.2.1",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
