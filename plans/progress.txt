@@ -1,0 +1,9 @@
+## 2026-01-08 - CHORE-003
+- Removed agent folder from packages/server/src/agent
+- Removed @ai-sdk/anthropic and ai dependencies from package.json
+- Kept @modelcontextprotocol/sdk as it's used by MCP server (not agent)
+- Files changed: packages/server/package.json, packages/server/src/agent/ (deleted)
+- **Learnings:**
+  - MCP server is separate from agent - don't remove MCP SDK
+  - eventsource-parser is used by MCP SDK, not agent directly
+---

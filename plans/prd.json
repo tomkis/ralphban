@@ -29,7 +29,7 @@
       "Remove dependency on @ai-sdk/anthropic and @ai",
       "Make sure you remove it from lock using pnpm install"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-004",
