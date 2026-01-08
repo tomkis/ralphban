@@ -43,5 +43,15 @@
       "Update scripts in @packages/integration-tests/package.json to use concurrency package"
     ],
     "passes": true
+  },
+  {
+    "id": "CHORE-005",
+    "category": "chore",
+    "title": "Make all @package.json concurrently scripts colored and titled properly to imrpove readability and understanding",
+    "steps": [
+      "Server sohuld have green color and title Server",
+      "Web should have blue color and title Web"
+    ],
+    "passes": false
   }
 ]
