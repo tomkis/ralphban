@@ -20,7 +20,7 @@
       "Add function for getting all tasks ready for implementation",
       "Add function for marking task as completed"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "FEAT-002",

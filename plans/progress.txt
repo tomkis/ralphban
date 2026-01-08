@@ -7,3 +7,13 @@
   - No type errors introduced
 ---
 
+## 2026-01-08 - CHORE-001
+- Created task service layer with getTasksReadyForImplementation and markTaskAsCompleted functions
+- Files changed: packages/server/src/services/task-service.ts (new)
+- **Learnings:**
+  - Service layer wraps existing repository functions to provide higher-level abstractions
+  - getTasksReadyForImplementation returns single pending task as array for consistency
+  - markTaskAsCompleted delegates to updatePRDStatus with 'Done' state
+  - Service layer pattern established for future MCP tool implementations
+---
+
