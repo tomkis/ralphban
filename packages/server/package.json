@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "db:init": "tsx scripts/init-db.ts"
+    "db:init": "tsx scripts/init-db.ts",
+    "lint": "eslint . && prettier --check .",
+    "fix": "eslint --fix . && prettier --write ."
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.8",

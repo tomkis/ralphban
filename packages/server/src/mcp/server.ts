@@ -28,6 +28,7 @@ export function createMCPServer(pool: Pool): McpServer {
     },
     async () => {
       const tasks = await getAllTasks(pool);
+
       return {
         content: [
           {
