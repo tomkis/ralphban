@@ -68,7 +68,7 @@
       "Add PostgreSQL service with basic configuration",
       "Make sure this is automatically started when the server is started"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-007",

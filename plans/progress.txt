@@ -45,3 +45,14 @@
   - updatePRDStatus() automatically updates updated_at timestamp
   - Repository pattern abstracts database operations from business logic
 ---
+## 2026-01-08 - CHORE-006
+- Created docker-compose.yml with PostgreSQL 16 alpine service
+- Modified package.json dev script to auto-start docker-compose
+- Files changed: packages/server/docker-compose.yml, packages/server/package.json
+- **Learnings:**
+  - docker-compose mounts ./db to /docker-entrypoint-initdb.d for auto schema/seed execution
+  - healthcheck ensures db ready before app starts
+  - dev script now runs docker-compose up -d before tsx watch
+  - Added docker:up and docker:down utility scripts
+---
+
