@@ -1,14 +1,32 @@
 import 'dotenv/config';
 import express from 'express';
 import { createAgent } from './agent';
+import { createMCPServer } from './mcp/server';
+import { createDbClient } from './db/client';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { randomUUID } from 'crypto';
 
 const app = express();
 const PORT = 3001;
 
 app.use(express.json());
 
+const pool = createDbClient();
+const mcpServer = createMCPServer(pool);
+const transport = new StreamableHTTPServerTransport({
+  sessionIdGenerator: () => randomUUID(),
+});
+
+transport.start().then(() => {
+  mcpServer.connect(transport);
+});
+
 app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello' });
+});
+
+app.post('/api/mcp', async (req, res) => {
+  await transport.handleRequest(req, res, req.body);
 });
 
 app.post('/api/chat', async (req, res) => {

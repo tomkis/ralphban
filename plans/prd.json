@@ -56,7 +56,7 @@
       "Add new route /api/mcp to Express server",
       "Connect the previously created MCP server to the new route"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "TEST-001",

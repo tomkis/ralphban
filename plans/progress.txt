@@ -42,3 +42,16 @@
   - MCP server now exposes three tools: get_all_tasks, get_tasks_ready_for_implementation, mark_task_done
 ---
 
+## 2026-01-08 - FEAT-006
+- Exposed MCP server via HTTP POST endpoint at /api/mcp
+- Used StreamableHTTPServerTransport for handling JSON-RPC requests with streaming
+- Connected MCP server to transport using connect method
+- Files changed: packages/server/src/index.ts
+- **Learnings:**
+  - StreamableHTTPServerTransport is the modern transport, SSEServerTransport is deprecated
+  - Transport handles request/response automatically via handleRequest method
+  - Server connects to transport via Protocol.connect() method, no manual message wiring needed
+  - SessionIdGenerator enables stateful mode for tracking client sessions
+  - Pre-parsed body from express.json() can be passed to handleRequest
+---
+
