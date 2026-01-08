@@ -52,3 +52,12 @@
   - Order of names/colors must match order of commands
   - Colors improve terminal readability when multiple processes output simultaneously
 ---
+
+## 2026-01-08 - CHORE-006
+- Made server port configurable via PORT environment variable
+- Default port remains 3001 when PORT is not set
+- Files changed: packages/server/src/index.ts
+- **Learnings:**
+  - dotenv/config already imported, just need to read process.env.PORT
+  - parseInt with radix 10 ensures proper number conversion
+---

@@ -62,7 +62,7 @@
       "Add a new environment variable called PORT",
       "Use the PORT environment variable to set the port the server runs on"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-007",
