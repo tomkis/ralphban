@@ -68,3 +68,15 @@
   - Package marked private since it's internal testing tool
 ---
 
+## 2026-01-08 - TEST-002
+- Installed @modelcontextprotocol/sdk as dev dependency in integration-tests package
+- Created MCP client test that calls get_tasks_ready_for_implementation tool and logs results
+- Files changed: packages/integration-tests/package.json, packages/integration-tests/tests/mcp-server.test.ts (new)
+- **Learnings:**
+  - StreamableHTTPClientTransport constructor takes URL object as first param, not options object
+  - Client connects via transport using Client.connect(transport) pattern
+  - Tool calls return result with content array structure
+  - Test validates server is accessible and tool execution works end-to-end
+  - Console.log added to inspect returned data structure for debugging
+---
+

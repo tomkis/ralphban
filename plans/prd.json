@@ -83,6 +83,6 @@
       "Create one test that calls get_tasks_ready_for_implementation tool and verifies that some data are returned",
       "console.log the data that are returned"
     ],
-    "passes": false
+    "passes": true
   }
 ]

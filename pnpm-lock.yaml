@@ -10,6 +10,9 @@ importers:
 
   packages/integration-tests:
     devDependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.4
+        version: 1.25.2(hono@4.11.3)(zod@4.3.5)
       '@types/node':
         specifier: ^22.10.5
         version: 22.19.3
