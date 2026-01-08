@@ -52,6 +52,9 @@ importers:
       pg:
         specifier: ^8.16.3
         version: 8.16.3
+      zod:
+        specifier: ^4.3.5
+        version: 4.3.5
     devDependencies:
       '@types/cors':
         specifier: ^2.8.19
