@@ -18,7 +18,7 @@
       "create @packages/server/src/kanban and move the service and repository there as well as the types",
       "keep just db client in the db folder"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-003",

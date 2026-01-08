@@ -7,3 +7,14 @@
   - MCP server is separate from agent - don't remove MCP SDK
   - eventsource-parser is used by MCP SDK, not agent directly
 ---
+
+## 2026-01-08 - CHORE-002
+- Created packages/server/src/kanban folder
+- Moved types.ts, repository.ts (was prd-repository.ts), service.ts (was task-service.ts) to kanban/
+- Removed old db/types.ts, db/prd-repository.ts, services/ folder
+- Updated mcp/server.ts import to use kanban/service
+- Files changed: packages/server/src/kanban/* (created), packages/server/src/db/* (cleaned), packages/server/src/mcp/server.ts
+- **Learnings:**
+  - db/ folder now only contains client.ts for database connection
+  - kanban/ owns business logic: types, repository, service
+---

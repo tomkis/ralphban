@@ -5,7 +5,7 @@ import {
   getAllTasks,
   getTasksReadyForImplementation,
   markTaskAsCompleted,
-} from '../services/task-service';
+} from '../kanban/service';
 
 export function createMCPServer(pool: Pool): McpServer {
   const server = new McpServer(

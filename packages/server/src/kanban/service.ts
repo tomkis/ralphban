@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
-import { PRDItem } from '../db/types';
-import { getAllPRDs, getNextPendingPRD, updatePRDStatus } from '../db/prd-repository';
+import { PRDItem } from './types';
+import { getAllPRDs, getNextPendingPRD, updatePRDStatus } from './repository';
 
 export async function getAllTasks(pool: Pool): Promise<PRDItem[]> {
   return await getAllPRDs(pool);
