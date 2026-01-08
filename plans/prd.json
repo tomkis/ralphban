@@ -8,7 +8,7 @@
       "Remove unused functions in the repository",
       "Rename the functions accroding to new naminging convention, make it matching with the service"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-002",

@@ -18,3 +18,14 @@
   - db/ folder now only contains client.ts for database connection
   - kanban/ owns business logic: types, repository, service
 ---
+
+## 2026-01-08 - CHORE-001
+- Renamed PRDItem interface to Task in types.ts
+- Renamed repository functions: getAllPRDs→getAllTasks, getNextPendingPRD→getNextPendingTask, updatePRDStatus→updateTaskStatus
+- Removed unused getPRDById function
+- Updated service.ts imports to use new repository function names
+- Files changed: packages/server/src/kanban/types.ts, repository.ts, service.ts
+- **Learnings:**
+  - Service and repository now share consistent Task naming
+  - Used alias import (getAllTasks as getAllTasksFromRepo) to avoid name collision between service and repository exports
+---

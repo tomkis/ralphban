@@ -1,4 +1,4 @@
-export interface PRDItem {
+export interface Task {
   id: string;
   category: string;
   title: string;
