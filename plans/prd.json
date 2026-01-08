@@ -8,7 +8,7 @@
       "Add @modelcontextprotocol/sdk to dependencies in /Users/tomkis/dev/ralphban/packages/server/package.json",
       "Run pnpm install to install the package"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-001",

@@ -1,0 +1,9 @@
+## 2026-01-08 - FEAT-001
+- Added @modelcontextprotocol/sdk v1.0.4 dependency
+- Files changed: packages/server/package.json
+- **Learnings:**
+  - MCP SDK is foundational dependency for all MCP server implementation tasks
+  - Dependency installed successfully without conflicts
+  - No type errors introduced
+---
+
