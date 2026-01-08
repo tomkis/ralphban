@@ -5,3 +5,13 @@
   - No type errors after dependency installation
   - pnpm workspace structure working correctly
 ---
+
+## 2026-01-08 - CHORE-002
+- Created PostgreSQL schema with tasks table
+- Files changed: packages/server/db/schema.sql
+- **Learnings:**
+  - Added indexes on state and created_at for query performance
+  - Using JSONB for steps array allows flexible storage
+  - CHECK constraint ensures state values are valid
+  - TEXT id type supports flexible format like CHORE-001
+---

@@ -16,7 +16,7 @@
       "Create packages/server/db/schema.sql file",
       "Define tasks table with columns: id TEXT PRIMARY KEY, category VARCHAR(20), title TEXT, description TEXT, steps JSONB, state TEXT DEFAULT 'ReadyForDev' CHECK (state IN ('ReadyForDev', 'Done')), created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW()"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-003",
