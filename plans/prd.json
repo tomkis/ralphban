@@ -41,7 +41,7 @@
       "Export pool instance and types",
       "Add DATABASE_URL to .env.example"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-005",

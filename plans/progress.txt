@@ -25,3 +25,12 @@
   - JSONB arrays in SQL use JSON array syntax with proper escaping
   - DELETE before INSERT ensures clean seed data on re-runs
 ---
+
+## 2026-01-08 - CHORE-004
+- Created database client with PostgreSQL connection pooling
+- Files changed: packages/server/src/db/client.ts, packages/server/.env.example
+- **Learnings:**
+  - Pool configured to support both DATABASE_URL and individual connection params
+  - Supports flexible connection configuration via environment variables
+  - Default values provided for local development (localhost, port 5432, ralphban database)
+---
