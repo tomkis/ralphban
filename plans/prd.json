@@ -28,7 +28,7 @@
       "Insert 3-5 sample tasks items with varying categories and task states",
       "Include at least one item with state='ReadyForDev' (ready to implement) and one with state='Done' (completed)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-004",

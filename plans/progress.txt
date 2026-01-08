@@ -15,3 +15,13 @@
   - CHECK constraint ensures state values are valid
   - TEXT id type supports flexible format like CHORE-001
 ---
+
+## 2026-01-08 - CHORE-003
+- Created seed.sql with sample PRD data
+- Files changed: packages/server/db/seed.sql
+- **Learnings:**
+  - Included 5 sample tasks across different categories (CHORE, fix, refactor, test, docs)
+  - 3 tasks in ReadyForDev state, 2 in Done state for realistic workflow
+  - JSONB arrays in SQL use JSON array syntax with proper escaping
+  - DELETE before INSERT ensures clean seed data on re-runs
+---
