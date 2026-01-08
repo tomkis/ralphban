@@ -1,1 +1,88 @@
-[]
+[
+  {
+    "id": "FEAT-001",
+    "category": "feat",
+    "title": "Install MCP SDK dependency",
+    "description": "Add @modelcontextprotocol/sdk package to enable MCP server implementation. Required for exposing database operations as MCP tools.",
+    "steps": [
+      "Add @modelcontextprotocol/sdk to dependencies in /Users/tomkis/dev/ralphban/packages/server/package.json",
+      "Run pnpm install to install the package"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-001",
+    "category": "chore",
+    "title": "Create service layer for tasks",
+    "description": "Create service layer that would be responsible for providing tasks ready for implementation as well as marking task as completed.",
+    "steps": [
+      "Create new service that would use repository",
+      "Add function for getting all tasks ready for implementation",
+      "Add function for marking task as completed"
+    ],
+    "passes": false
+  },
+  {
+    "id": "FEAT-002",
+    "category": "feat",
+    "title": "Create MCP server module",
+    "description": "Create core MCP server that exposes task service as tools. Server must list available tools and handle tool execution requests.",
+    "steps": [
+      "Create /Users/tomkis/dev/ralphban/packages/server/src/mcp/server.ts",
+      "Setup MCP server",
+      "Implement HTTP streamable transport",
+      "Initialize MCP server with name 'ralphban-task-server' and version '0.0.1'",
+      "Export createMCPServer function that returns configured server instance"
+    ],
+    "passes": false
+  },
+  {
+    "id": "FEAT-003",
+    "category": "feat",
+    "title": "Implement get_all_tasks tool",
+    "description": "Create MCP tool to retrieve all tasks from database. Returns complete task list with id, category, title, description, steps, state, timestamps.",
+    "steps": [
+      "Provide implementation for get_tasks_ready_for_implementation tool",
+      "Provide implementation for mark_task_done tool"
+    ],
+    "passes": false
+  },
+  {
+    "id": "FEAT-006",
+    "category": "feat",
+    "title": "Add MCP HTTP endpoint to Express server",
+    "description": "Expose MCP server via HTTP POST endpoint with streaming responses. Endpoint should accept MCP JSON-RPC requests and stream tool execution results.",
+    "steps": [
+      "Add new route /api/mcp to Express server",
+      "Connect the previously created MCP server to the new route"
+    ],
+    "passes": false
+  },
+  {
+    "id": "TEST-001",
+    "category": "test",
+    "title": "Create new integration test package",
+    "description": "Create new package within monorepo for integration testing, currently we only need to test MCP server.",
+    "steps": [
+      "Add new package @ralphban/integration-tests to monorepo",
+      "Initialize this as vite project",
+      "Make sure this project is using typescript",
+      "Make sure the tests can be run using pnpm test",
+      "Add empty test"
+    ],
+    "passes": false
+  },
+  {
+    "id": "TEST-002",
+    "category": "test",
+    "title": "Implement test that verifies MCP server is working",
+    "description": "List get_tasks_ready_for_implementation tool and see whether some data are returned",
+    "steps": [
+      "Install mcp as a dependency to the integration test package",
+      "Create MCP client that connects to the MCP server",
+      "Create one test that calls get_tasks_ready_for_implementation tool and verifies that some data are returned",
+      "console.log the data that are returned"
+    ],
+    "passes": false
+  }
+]
