@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"pnpm --filter @ralphban/server dev\" \"pnpm --filter @ralphban/web dev\"",
-    "typecheck": "concurrently \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
-    "lint": "concurrently \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
-    "fix": "concurrently \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter @ralphban/integration-tests fix\""
+    "dev": "concurrently -n Server,Web -c green,blue \"pnpm --filter @ralphban/server dev\" \"pnpm --filter @ralphban/web dev\"",
+    "typecheck": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
+    "lint": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
+    "fix": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter @ralphban/integration-tests fix\""
   },
   "keywords": [],
   "license": "ISC",

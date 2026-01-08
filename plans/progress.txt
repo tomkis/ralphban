@@ -40,3 +40,15 @@
   - Sub-package lint/fix can also run eslint+prettier in parallel since they operate independently
   - Sequential `&&` kept for scripts where order matters (e.g., docker-compose before tsx, tsc before vite build)
 ---
+
+## 2026-01-08 - CHORE-005
+- Added -n and -c flags to concurrently scripts in root package.json
+- Server: green color, "Server" title
+- Web: blue color, "Web" title
+- Tests: yellow color, "Tests" title (for integration-tests in typecheck/lint/fix)
+- Files changed: package.json
+- **Learnings:**
+  - concurrently uses -n for comma-separated names, -c for comma-separated colors
+  - Order of names/colors must match order of commands
+  - Colors improve terminal readability when multiple processes output simultaneously
+---

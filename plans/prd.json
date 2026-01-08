@@ -52,6 +52,6 @@
       "Server sohuld have green color and title Server",
       "Web should have blue color and title Web"
     ],
-    "passes": false
+    "passes": true
   }
 ]
