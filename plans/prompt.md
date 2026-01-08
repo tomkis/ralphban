@@ -11,10 +11,11 @@
 5. Run `pnpm typecheck` to verify no type errors
 6. Run `pnpm lint` to verify linting issues
 7. Fix any type or linting errors if present
-8. Update prd.json: `passes: true`
-9. Append learnings to progress.txt
-10. Commit: `[Category]: [ID] - [Title]`
-11. Terminate, you are only supposed to work on ONE task, not more
+9. Ensure the project still works by using `pnpm test`
+9. Update prd.json: `passes: true`
+10. Append learnings to progress.txt
+11. Commit: `[Category]: [ID] - [Title]`
+12. Terminate, you are only supposed to work on ONE task, not more
 
 If while implementing the feature, you notice PRD is complete, output <promise>COMPLETE</promise>.
 
