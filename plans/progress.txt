@@ -17,3 +17,17 @@
   - Service layer pattern established for future MCP tool implementations
 ---
 
+## 2026-01-08 - FEAT-002
+- Created MCP server module with createMCPServer function
+- Implemented tools/list handler exposing get_tasks_ready_for_implementation and mark_task_done tools
+- Implemented tools/call handler for both tools
+- Files changed: packages/server/src/mcp/server.ts (new)
+- **Learnings:**
+  - MCP Server requires 'as any' type assertions for setRequestHandler due to SDK type limitations
+  - MCP server initialization requires name, version, and capabilities configuration
+  - Tool handlers return content array with text type for responses
+  - get_tasks_ready_for_implementation tool delegates to service layer
+  - mark_task_done tool accepts taskId parameter and delegates to service layer
+  - StdioServerTransport import added but not yet used (will be needed for HTTP transport in FEAT-006)
+---
+

@@ -34,7 +34,7 @@
       "Initialize MCP server with name 'ralphban-task-server' and version '0.0.1'",
       "Export createMCPServer function that returns configured server instance"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "FEAT-003",
