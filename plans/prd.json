@@ -56,7 +56,7 @@
       "Implement getNextPendingPRD() returning first item where state='ReadyForDev'",
       "Implement updatePRDStatus(id: string, state: string) for status updates"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-006",

@@ -34,3 +34,14 @@
   - Supports flexible connection configuration via environment variables
   - Default values provided for local development (localhost, port 5432, ralphban database)
 ---
+
+## 2026-01-08 - CHORE-005
+- Created PRD repository layer for database operations
+- Files changed: packages/server/src/db/types.ts, packages/server/src/db/prd-repository.ts
+- **Learnings:**
+  - PRDItem interface matches schema exactly with proper TypeScript typing
+  - All repository functions use parameterized queries for SQL injection prevention
+  - getNextPendingPRD() uses ASC ordering by created_at to process oldest first
+  - updatePRDStatus() automatically updates updated_at timestamp
+  - Repository pattern abstracts database operations from business logic
+---
