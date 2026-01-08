@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "id": "CHORE-001",
+    "Category": "chore",
+    "title": "Install PostgreSQL dependencies",
+    "description": "Install pg (PostgreSQL client) and @types/pg for TypeScript support. These are required for database connection and query execution.",
+    "steps": ["Install pg and @types/pg in server package using pnpm add"],
+    "passes": false
+  },
+  {
+    "id": "CHORE-002",
+    "Category": "chore",
+    "title": "Create database schema SQL file",
+    "description": "Define PostgreSQL schema with tasks table matching task structure (id, category, title, description, steps as JSONB, state with CHECK constraint). Include created_at, updated_at for tracking. Use TEXT for id to support format like CHORE-001.",
+    "steps": [
+      "Create packages/server/db/schema.sql file",
+      "Define tasks table with columns: id TEXT PRIMARY KEY, category VARCHAR(20), title TEXT, description TEXT, steps JSONB, state TEXT DEFAULT 'ReadyForDev' CHECK (state IN ('ReadyForDev', 'Done')), created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW()"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-003",
+    "Category": "chore",
+    "title": "Create database seed script",
+    "description": "Create seed.sql with sample PRD data demonstrating different categories (CHORE, fix, refactor, test, docs) and task states. Should populate database with realistic examples that mirror RalphBan workflow.",
+    "steps": [
+      "Create packages/server/db/seed.sql file",
+      "Insert 3-5 sample tasks items with varying categories and task states",
+      "Include at least one item with state='ReadyForDev' (ready to implement) and one with state='Done' (completed)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-004",
+    "Category": "chore",
+    "title": "Add database connection configuration",
+    "description": "Create database client singleton for PostgreSQL connection pooling. Use environment variables for connection config (DATABASE_URL or individual params). Export typed client for use across application.",
+    "steps": [
+      "Create packages/server/src/db/client.ts",
+      "Configure pg.Pool with connection settings from env vars",
+      "Export pool instance and types",
+      "Add DATABASE_URL to .env.example"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-005",
+    "Category": "chore",
+    "title": "Create PRD repository layer",
+    "description": "Build data access layer for PRD operations. Implement functions: getAllPRDs(), getPRDById(id), getNextPendingPRD(), updatePRDStatus(id, state). Use proper TypeScript types matching PRD structure. This layer abstracts database queries from business logic.",
+    "steps": [
+      "Create packages/server/src/db/types.ts with PRDItem interface matching schema",
+      "Create packages/server/src/db/prd-repository.ts",
+      "Implement getAllPRDs() returning PRDItem[]",
+      "Implement getPRDById(id: string) returning PRDItem | null",
+      "Implement getNextPendingPRD() returning first item where state='ReadyForDev'",
+      "Implement updatePRDStatus(id: string, state: string) for status updates"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-006",
+    "Category": "chore",
+    "title": "Create development environemnt setup using docker-compose",
+    "description": "Provide basic docker-compose file to setup local development. The docker compose should contain basic configuration for the PostgreSQL so that devs can run the application locally without need of installing PSQL.",
+    "steps": [
+      "Create packages/server/docker-compose.yml file",
+      "Add PostgreSQL service with basic configuration",
+      "Make sure this is automatically started when the server is started"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-007",
+    "Category": "chore",
+    "title": "Add database initialization script",
+    "description": "Create npm script to initialize database with schema and seed data. Should be idempotent (safe to run multiple times). Useful for resetting dev environment.",
+    "steps": [
+      "Create packages/server/scripts/init-db.ts",
+      "Read and execute schema.sql using database client",
+      "Read and execute seed.sql",
+      "Add 'db:init' script to package.json that runs tsx scripts/init-db.ts"
+    ],
+    "passes": false
+  }
+]
