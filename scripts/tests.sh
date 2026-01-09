@@ -65,6 +65,10 @@ TAIL_PID=$!
 wait_for_server $PORT
 
 echo ""
+echo "Initializing database..."
+pnpm --filter @ralphban/server db:init
+
+echo ""
 echo "Running integration tests..."
 RALPH_API_URL=http://localhost:$PORT SERVER_PORT=$PORT pnpm --filter @ralphban/integration-tests test
 TEST_EXIT_CODE=$?

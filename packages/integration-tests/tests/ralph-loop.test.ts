@@ -1,5 +1,5 @@
-import { describe, it, beforeEach } from 'vitest';
-import { rm, mkdir } from 'fs/promises';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { rm, mkdir, access } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,6 +7,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEST_WORKING_DIR = join(__dirname, '../.ralph-test-workdir');
 
 const RALPH_API_URL = process.env.RALPH_API_URL || 'http://localhost:3001';
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 describe('Ralph Loop', () => {
   beforeEach(async () => {
@@ -25,5 +34,11 @@ describe('Ralph Loop', () => {
       const body = (await response.json()) as { error: string };
       throw new Error(`Ralph API error: ${body.error}`);
     }
+
+    const packageJsonExists = await fileExists(join(TEST_WORKING_DIR, 'package.json'));
+    const indexJsExists = await fileExists(join(TEST_WORKING_DIR, 'index.js'));
+
+    expect(packageJsonExists).toBe(true);
+    expect(indexJsExists).toBe(true);
   });
 });

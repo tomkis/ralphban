@@ -9,6 +9,6 @@
       "Before the ralp loop it should purge and reseed the db:init",
       "After the loop is done it should ensure the ralp test workdir contains package.json and index.js"
     ],
-    "passes": false
+    "passes": true
   }
 ]

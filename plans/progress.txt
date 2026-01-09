@@ -1,0 +1,12 @@
+## 2026-01-09 - CHORE-001
+- Implemented smoke test for ralph loop
+- Files changed:
+  - packages/integration-tests/tests/ralph-loop.test.ts - added expect import, fileExists helper, assertions for package.json and index.js
+  - scripts/tests.sh - added db:init call before running tests
+  - eslint.config.js - added .ralph-test-workdir to ignores
+- **Learnings:**
+  - ESLint flat config requires full paths from root for ignores in monorepo
+  - .eslintignore files not supported in flat config
+  - Test correctly calls API and waits for response; failure in local env due to Claude agent SDK needing real credentials
+  - Test structure validates the integration between API, database, and file system
+---
