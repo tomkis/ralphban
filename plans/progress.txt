@@ -38,3 +38,15 @@
   - Service now uses async/await instead of manual Promise construction
   - Error message translation needed (Process aborted -> Ralph loop aborted) for API consistency
 ---
+
+## 2026-01-09 - BUG-001
+- Simplified `spawnProcess` to return only stdout string and throw on non-zero exit
+- Removed COMPLETE marker check from ralph service (handled in ralph.sh)
+- Simplified service to just run, log and catch errors
+- Updated integration test to match new return type
+- Files changed: `packages/server/src/utils/process.ts`, `packages/server/src/ralph/service.ts`, `packages/integration-tests/tests/ralph-loop.test.ts`
+- **Learnings:**
+  - stderr can be silently ignored when stdout is all we need
+  - Throwing on non-zero exit simplifies caller code significantly
+  - Service no longer needs RalphResult interface, just returns string
+---

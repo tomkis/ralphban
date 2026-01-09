@@ -45,5 +45,17 @@
       "Call the utils from the service"
     ],
     "passes": true
+  },
+  {
+    "id": "BUG-001",
+    "category": "bug",
+    "title": "Ralph service does not need to check for COMPLETE marker. It is already handled by the ralph.sh script",
+    "steps": [
+      "Remove the COMPLETE marker check from the ralph service",
+      "spawn process should throw an error when the process is terminated with non-zero exit code",
+      "spawn process should return  string only which is stdout, ignore stderr",
+      "Simplify the service even more, the service should not worry about exit codec, just run the spawnProcess, log result and catch and log error if thrown"
+    ],
+    "passes": true
   }
 ]
