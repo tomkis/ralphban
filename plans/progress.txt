@@ -94,3 +94,20 @@
   - tRPC useQuery with `refetchInterval: 3000` for polling data changes
   - Import `type Task` from @ralphban/api for typed task handling
 ---
+
+## 2026-01-09 - FEAT-002
+- Added Start Ralph button with state-based enable/disable logic
+- Files changed:
+  - packages/api/src/routers/ralph.ts (new - ralph router with getStatus query and start mutation)
+  - packages/api/src/context.ts (updated - added IRalphService interface)
+  - packages/api/src/router.ts (updated - added ralph router)
+  - packages/api/src/index.ts (updated - exported ralph types)
+  - packages/server/src/ralph/trpc-service.ts (new - implements IRalphService with in-memory running state)
+  - packages/server/src/trpc/context.ts (updated - added ralph service to context)
+  - packages/web/src/App.tsx (updated - StartRalphButton component with polling)
+- **Learnings:**
+  - In-memory state sufficient for tracking single ralph process
+  - Ralph status polled at 1s interval for responsiveness
+  - Button disabled when: no ready tasks OR ralph already running
+  - runRalphLoop runs async, finally block resets isRunning state
+---

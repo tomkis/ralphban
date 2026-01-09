@@ -51,13 +51,52 @@ function Column({ title, tasks }: { title: string; tasks: Task[] }) {
   );
 }
 
+function StartRalphButton({
+  hasReadyTasks,
+  isRalphRunning,
+  onStart,
+}: {
+  hasReadyTasks: boolean;
+  isRalphRunning: boolean;
+  onStart: () => void;
+}) {
+  const isDisabled = !hasReadyTasks || isRalphRunning;
+  const buttonText = isRalphRunning ? 'Ralph Running...' : 'Start Ralph';
+
+  return (
+    <button
+      onClick={onStart}
+      disabled={isDisabled}
+      style={{
+        padding: '10px 20px',
+        fontSize: '14px',
+        fontWeight: 600,
+        color: isDisabled ? '#a5adba' : '#fff',
+        backgroundColor: isDisabled ? '#dfe1e6' : '#5aac44',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        marginLeft: 'auto',
+      }}
+    >
+      {buttonText}
+    </button>
+  );
+}
+
 export default function App() {
   const { data: tasks = [] } = trpc.kanban.getTasks.useQuery(undefined, {
     refetchInterval: 3000,
   });
+  const { data: ralphStatus } = trpc.ralph.getStatus.useQuery(undefined, {
+    refetchInterval: 1000,
+  });
+  const startRalph = trpc.ralph.start.useMutation();
 
   const todoTasks = tasks.filter((t) => t.status === 'todo' || t.status === 'in_progress');
   const doneTasks = tasks.filter((t) => t.status === 'done');
+  const hasReadyTasks = todoTasks.length > 0;
+  const isRalphRunning = ralphStatus?.isRunning ?? false;
 
   return (
     <div
@@ -68,16 +107,23 @@ export default function App() {
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      <h1
-        style={{
-          color: '#fff',
-          margin: '0 0 24px 0',
-          fontSize: '20px',
-          fontWeight: 700,
-        }}
-      >
-        Kanban Board
-      </h1>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '24px' }}>
+        <h1
+          style={{
+            color: '#fff',
+            margin: 0,
+            fontSize: '20px',
+            fontWeight: 700,
+          }}
+        >
+          Kanban Board
+        </h1>
+        <StartRalphButton
+          hasReadyTasks={hasReadyTasks}
+          isRalphRunning={isRalphRunning}
+          onStart={() => startRalph.mutate()}
+        />
+      </div>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
         <Column title="Todo" tasks={todoTasks} />
         <Column title="Done" tasks={doneTasks} />

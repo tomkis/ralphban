@@ -67,6 +67,17 @@
       "make sure button is disabled when no tasks are ready",
       "make sure button is enabled when tasks are ready",
       "make sure button is disabled when ralph is running"
-    ]
+    ],
+    "passes": true
+  },
+  {
+    "id": "FEAT-003",
+    "category": "feat",
+    "title": "Make ralph working directory configurable in UI",
+    "steps": [
+      "When user clicks start ralph button, show a modal to enter working directory",
+      "The working directory is passed to the ralph loop via API"
+    ],
+    "passes": false
   }
 ]
