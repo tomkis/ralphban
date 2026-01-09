@@ -10,7 +10,7 @@
       "Call Claude from the script simiarly how @plans/ralph.sh does it, however prompt should be passed as an argument to the script",
       "Make sure claude is working in the working directory of the script"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-002",

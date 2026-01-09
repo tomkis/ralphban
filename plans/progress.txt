@@ -1,0 +1,9 @@
+## 2026-01-09 - CHORE-001
+- Created `packages/server/src/ralph/` module
+- Added `ralph.sh` script that takes working directory and prompt as args
+- Script cd's to working dir before invoking claude
+- Files changed: `packages/server/src/ralph/ralph.sh`
+- **Learnings:**
+  - Existing `plans/ralph.sh` reads prompt from file, new script takes it as argument
+  - Script outputs claude result and checks for `<promise>COMPLETE</promise>` marker
+---
