@@ -16,7 +16,9 @@
     "mcp:stdio": "tsx src/mcp/stdio-server.ts"
   },
   "dependencies": {
+    "@ralphban/api": "workspace:*",
     "@anthropic-ai/claude-agent-sdk": "^0.2.2",
+    "@trpc/server": "^11.3.0",
     "@modelcontextprotocol/sdk": "^1.0.4",
     "@types/pg": "^8.16.0",
     "dotenv": "^17.2.3",

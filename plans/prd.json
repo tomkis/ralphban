@@ -22,7 +22,7 @@
       "provide implementation for the router in server package",
       "getTasks will only return empty array for now"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-003",

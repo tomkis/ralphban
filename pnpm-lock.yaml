@@ -75,6 +75,12 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.4
         version: 1.25.2(hono@4.11.3)(zod@4.3.5)
+      '@ralphban/api':
+        specifier: workspace:*
+        version: link:../api
+      '@trpc/server':
+        specifier: ^11.3.0
+        version: 11.8.1(typescript@5.9.3)
       '@types/pg':
         specifier: ^8.16.0
         version: 8.16.0

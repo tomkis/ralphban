@@ -15,3 +15,19 @@
   - Task schema defined with id, title, status fields
   - Router exports AppRouter type for client type inference
 ---
+
+## 2026-01-09 - CHORE-002
+- Integrated @ralphban/api with server package using tRPC
+- Files changed:
+  - packages/server/package.json (added @ralphban/api and @trpc/server deps)
+  - packages/server/src/trpc/context.ts (new - tRPC context)
+  - packages/server/src/trpc/router.ts (new - server-side router impl)
+  - packages/server/src/trpc/adapter.ts (new - Express adapter)
+  - packages/server/src/trpc/index.ts (new - exports)
+  - packages/server/src/index.ts (added /trpc endpoint)
+- **Learnings:**
+  - tRPC v11 uses fetchRequestHandler from @trpc/server/adapters/fetch
+  - Express 5 requires `{*path}` syntax for wildcards, not `*`
+  - Server-side router mirrors api types but provides actual implementation
+  - getTasks returns empty array as specified
+---
