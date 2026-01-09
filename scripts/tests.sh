@@ -4,13 +4,23 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SERVER_LOG="$PROJECT_ROOT/.server-test.log"
 
 cleanup() {
+  [ -n "$TAIL_PID" ] && kill $TAIL_PID 2>/dev/null
+
   if [ -n "$SERVER_PID" ]; then
-    echo "Stopping server (PID: $SERVER_PID)..."
-    kill $SERVER_PID 2>/dev/null || true
+    kill -TERM $SERVER_PID 2>/dev/null
+    for i in {1..5}; do
+      kill -0 $SERVER_PID 2>/dev/null || break
+      sleep 1
+    done
+    kill -KILL $SERVER_PID 2>/dev/null || true
     wait $SERVER_PID 2>/dev/null || true
   fi
+
+  echo ""
+  echo "Server log: $SERVER_LOG"
 }
 
 trap cleanup EXIT
@@ -45,14 +55,20 @@ echo "Using port: $PORT"
 
 echo "Starting server..."
 cd "$PROJECT_ROOT"
-PORT=$PORT pnpm --filter @ralphban/server dev >&1 2>&1 &
+PORT=$PORT pnpm --filter @ralphban/server dev > "$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
+
+sleep 1
+tail -f "$SERVER_LOG" | sed 's/^/[SERVER] /' &
+TAIL_PID=$!
 
 wait_for_server $PORT
 
+echo ""
 echo "Running integration tests..."
 RALPH_API_URL=http://localhost:$PORT SERVER_PORT=$PORT pnpm --filter @ralphban/integration-tests test
 TEST_EXIT_CODE=$?
 
+echo ""
 echo "Tests completed with exit code: $TEST_EXIT_CODE"
 exit $TEST_EXIT_CODE
