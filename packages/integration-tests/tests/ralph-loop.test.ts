@@ -8,7 +8,7 @@ const TEST_WORKING_DIR = join(__dirname, '../.ralph-test-workdir');
 
 const RALPH_API_URL = process.env.RALPH_API_URL || 'http://localhost:3001';
 
-describe.skip('Ralph Loop', () => {
+describe('Ralph Loop', () => {
   beforeEach(async () => {
     await rm(TEST_WORKING_DIR, { recursive: true, force: true });
     await mkdir(TEST_WORKING_DIR, { recursive: true });

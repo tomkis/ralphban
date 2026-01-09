@@ -45,13 +45,13 @@ echo "Using port: $PORT"
 
 echo "Starting server..."
 cd "$PROJECT_ROOT"
-PORT=$PORT pnpm --filter @ralphban/server dev &
+PORT=$PORT pnpm --filter @ralphban/server dev >&1 2>&1 &
 SERVER_PID=$!
 
 wait_for_server $PORT
 
 echo "Running integration tests..."
-SERVER_PORT=$PORT pnpm --filter @ralphban/integration-tests test
+RALPH_API_URL=http://localhost:$PORT SERVER_PORT=$PORT pnpm --filter @ralphban/integration-tests test
 TEST_EXIT_CODE=$?
 
 echo "Tests completed with exit code: $TEST_EXIT_CODE"

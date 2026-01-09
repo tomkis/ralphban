@@ -25,6 +25,8 @@ app.post('/mcp', async (req, res) => {
 });
 
 app.post('/ralph', async (req, res) => {
+  console.log('Running Ralph loop...');
+
   const { workingDirectory } = req.body;
   if (!workingDirectory || typeof workingDirectory !== 'string') {
     res.status(400).json({ error: 'workingDirectory is required' });
