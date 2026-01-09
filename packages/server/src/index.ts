@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express, { ErrorRequestHandler } from 'express';
 import { runRalphLoop } from './ralph/service.js';
+import { trpcHandler } from './trpc/index.js';
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   console.error('Unhandled error:', err);
@@ -11,6 +12,8 @@ const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 app.use(express.json());
+
+app.all('/trpc/{*path}', trpcHandler);
 
 app.post('/ralph', async (req, res) => {
   console.log('Running Ralph loop...');

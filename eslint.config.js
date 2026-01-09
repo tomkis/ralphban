@@ -51,7 +51,7 @@ export default [
     },
   },
   {
-    files: ['packages/server/**/*.ts', 'packages/integration-tests/**/*.ts'],
+    files: ['packages/server/**/*.ts', 'packages/integration-tests/**/*.ts', 'packages/api/**/*.ts'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -61,8 +61,8 @@ export default [
   prettierConfig,
   {
     ignores: [
-      'dist',
-      'node_modules',
+      '**/dist',
+      '**/node_modules',
       '.next',
       'build',
       'packages/integration-tests/.ralph-test-workdir',
