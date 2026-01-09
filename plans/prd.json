@@ -34,5 +34,39 @@
       "call getTasks query from web package"
     ],
     "passes": true
+  },
+  {
+    "id": "CHORE-004",
+    "category": "chore",
+    "title": "Remove every UI component from web package",
+    "steps": [
+      "remove all UI components from the web package",
+      "keep the app empty and nothing should be rendered",
+      "Make sure trpc connection remains",
+      "remove all unusued code"
+    ],
+    "passes": false
+  },
+  {
+    "id": "FEAT-001",
+    "category": "feat",
+    "title": "Create ticket board UI with two columns: todo and done",
+    "steps": [
+      "list all tasks from the api",
+      "based on a status keep it in the correct column",
+      "make sure UI is polling data for changes"
+    ],
+    "passes": false
+  },
+  {
+    "id": "FEAT-002",
+    "category": "feat",
+    "title": "Add button to start ralph",
+    "steps": [
+      "add button to start ralph",
+      "make sure button is disabled when no tasks are ready",
+      "make sure button is enabled when tasks are ready",
+      "make sure button is disabled when ralph is running"
+    ]
   }
 ]
