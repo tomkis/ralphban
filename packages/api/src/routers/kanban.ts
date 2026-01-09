@@ -10,7 +10,7 @@ export const TaskSchema = z.object({
 export type Task = z.infer<typeof TaskSchema>;
 
 export const kanbanRouter = router({
-  getTasks: publicProcedure.query(async (): Promise<Task[]> => {
-    throw new Error('Not implemented');
+  getTasks: publicProcedure.query(async ({ ctx }): Promise<Task[]> => {
+    return ctx.kanban.getTasks();
   }),
 });

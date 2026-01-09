@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from './router.js';
+import { appRouter } from '@ralphban/api';
 import { createContext } from './context.js';
 
 export const trpcHandler = async (req: Request, res: Response) => {
