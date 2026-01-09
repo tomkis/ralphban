@@ -57,5 +57,20 @@
       "Simplify the service even more, the service should not worry about exit codec, just run the spawnProcess, log result and catch and log error if thrown"
     ],
     "passes": true
+  },
+  {
+    "id": "FEAT-001",
+    "category": "feat",
+    "title": "Assemble Ralph loop prompt in the service",
+    "steps": [
+      "The prompt should be constructed in the service",
+      "Service should not accept the raw prompt anymore",
+      "Create prompt template in the service file",
+      "Use very similar prompt that is in @plans/prompt.md",
+      "Obviously skip the part about reading PRDs and progress, we'll provide this via the MCP later",
+      "The prompt should be altered to use the tool calls to get the tasks and mark them as done instead of direct file manipulation",
+      "Skip current test, we'll fix this in next stages"
+    ],
+    "passes": false
   }
 ]
