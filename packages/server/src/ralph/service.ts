@@ -1,8 +1,4 @@
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { spawnProcess } from '../utils/process.js';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { query } from '@anthropic-ai/claude-agent-sdk';
 
 const RALPH_PROMPT_TEMPLATE = `
 # Ralph Agent Instructions
@@ -31,22 +27,6 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 - Commit your changes with the specified format
 `;
 
-function getMcpConfig(): object {
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
-  return {
-    mcpServers: {
-      ralphban: {
-        type: 'http',
-        url: `http://localhost:${port}/mcp`,
-      },
-    },
-  };
-}
-
-function buildPrompt(): string {
-  return RALPH_PROMPT_TEMPLATE.trim();
-}
-
 export async function runRalphLoop(
   workingDirectory: string,
   options?: {
@@ -54,25 +34,45 @@ export async function runRalphLoop(
     signal?: AbortSignal;
   }
 ): Promise<string> {
-  const scriptPath = join(__dirname, 'ralph.sh');
-  const prompt = buildPrompt();
-  const mcpConfig = JSON.stringify(getMcpConfig());
+  const abortController = new AbortController();
 
-  try {
-    const output = await spawnProcess(
-      'bash',
-      [scriptPath, workingDirectory, prompt, mcpConfig],
-      {
-        cwd: workingDirectory,
-        onStdout: options?.onOutput,
-        signal: options?.signal,
-      }
-    );
-
-    console.log('Ralph loop completed:', output.slice(0, 200));
-    return output;
-  } catch (error) {
-    console.error('Ralph loop error:', error);
-    throw error;
+  if (options?.signal) {
+    options.signal.addEventListener('abort', () => abortController.abort());
   }
+
+  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+  let fullOutput = '';
+
+  for await (const message of query({
+    prompt: RALPH_PROMPT_TEMPLATE.trim(),
+    options: {
+      cwd: workingDirectory,
+      allowedTools: ['Read', 'Write', 'Edit', 'Bash', 'Glob', 'Grep'],
+      permissionMode: 'bypassPermissions',
+      allowDangerouslySkipPermissions: true,
+      abortController,
+      mcpServers: {
+        ralphban: {
+          type: 'http',
+          url: `http://localhost:3001/mcp`,
+        },
+      },
+    },
+  })) {
+    console.log('message:', message);
+
+    if (message.type === 'result' && message.subtype === 'success') {
+      fullOutput = message.result;
+    }
+    if (message.type === 'assistant') {
+      for (const block of message.message.content) {
+        if (block.type === 'text') {
+          options?.onOutput?.(block.text);
+        }
+      }
+    }
+  }
+
+  console.log('Ralph loop completed:', fullOutput.slice(0, 200));
+  return fullOutput;
 }
