@@ -34,5 +34,16 @@
       "Test that the file is created and contains hello world"
     ],
     "passes": true
+  },
+  {
+    "id": "CHORE-004",
+    "category": "chore",
+    "title": "Decouple IO operations from the ralph service. Create utils that would cover the process management and then call it from the service",
+    "steps": [
+      "Create new module @server/src/utils/process.ts",
+      "Create a function that would spawn a process and return a promise that would resolve when the process is terminated",
+      "Call the utils from the service"
+    ],
+    "passes": false
   }
 ]
