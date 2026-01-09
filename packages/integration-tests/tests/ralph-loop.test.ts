@@ -32,6 +32,7 @@ describe('Ralph Loop', () => {
 
     if (!response.ok) {
       const body = (await response.json()) as { error: string };
+      console.error('Ralph API error:', body);
       throw new Error(`Ralph API error: ${body.error}`);
     }
 

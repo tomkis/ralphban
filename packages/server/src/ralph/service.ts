@@ -1,4 +1,4 @@
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { spawnProcess } from '../utils/process';
 
 const RALPH_PROMPT_TEMPLATE = `
 # Ralph Agent Instructions
@@ -20,49 +20,28 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 - Only implement ONE task per run
 `;
 
-export async function runRalphLoop(
-  workingDirectory: string,
-  options?: {
-    onOutput?: (data: string) => void;
-    signal?: AbortSignal;
-  }
-): Promise<string> {
-  const abortController = new AbortController();
-
-  if (options?.signal) {
-    options.signal.addEventListener('abort', () => abortController.abort());
-  }
-
-  let fullOutput = '';
-
-  for await (const message of query({
-    prompt: RALPH_PROMPT_TEMPLATE.trim(),
-    options: {
-      cwd: workingDirectory,
-      allowedTools: ['Read', 'Write', 'Edit', 'Bash', 'Glob', 'Grep'],
-      permissionMode: 'bypassPermissions',
-      allowDangerouslySkipPermissions: true,
-      abortController,
-      mcpServers: {
-        ralphban: {
-          type: 'stdio',
-          command: 'pnpm',
-          args: ['--filter', 'server', 'mcp:stdio'],
-        },
-      },
+const MCP_CONFIG = JSON.stringify({
+  mcpServers: {
+    ralphban: {
+      type: 'stdio',
+      command: 'pnpm',
+      args: ['--filter', 'server', 'mcp:stdio'],
     },
-  })) {
-    if (message.type === 'result' && message.subtype === 'success') {
-      fullOutput = message.result;
-    }
-    if (message.type === 'assistant') {
-      for (const block of message.message.content) {
-        if (block.type === 'text') {
-          options?.onOutput?.(block.text);
-        }
-      }
-    }
-  }
+  },
+});
 
-  return fullOutput;
+export async function runRalphLoop(workingDirectory: string): Promise<string> {
+  return spawnProcess(
+    'claude',
+    [
+      '--dangerously-skip-permissions',
+      '--mcp-config',
+      MCP_CONFIG,
+      '-p',
+      RALPH_PROMPT_TEMPLATE.trim(),
+    ],
+    {
+      cwd: workingDirectory,
+    }
+  );
 }
