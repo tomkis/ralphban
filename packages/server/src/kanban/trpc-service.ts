@@ -24,9 +24,7 @@ function mapServerTaskToApiTask(task: ServerTask): ApiTask {
 export function createKanbanService(pool: Pool): IKanbanService {
   return {
     async getTasks(): Promise<ApiTask[]> {
-      const result = await pool.query<ServerTask>(
-        'SELECT * FROM tasks ORDER BY created_at ASC'
-      );
+      const result = await pool.query<ServerTask>('SELECT * FROM tasks ORDER BY created_at ASC');
       return result.rows.map(mapServerTaskToApiTask);
     },
   };

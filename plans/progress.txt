@@ -68,3 +68,19 @@
   - Procedures call context methods, not throw errors or return stubs
   - Server mapping layer converts DB types to API types
 ---
+
+## 2026-01-09 - CHORE-004 (UI Cleanup)
+- Removed all UI components from web package
+- Files changed:
+  - packages/web/src/components/ (deleted - ChatBubble, ChatInput, ChatContainer)
+  - packages/web/src/hooks/ (deleted - useChatMessages)
+  - packages/web/src/App.tsx (simplified - renders null, keeps tRPC query)
+  - eslint.config.js (fixed - **/dist and **/node_modules ignores)
+  - .prettierignore (new - ignores dist, node_modules, .ralph-test-workdir)
+  - packages/*/package.json (updated lint scripts to use --ignore-path)
+  - packages/server/src/kanban/trpc-service.ts (prettier fix)
+- **Learnings:**
+  - ESLint ignores need **/dist pattern for nested packages
+  - Prettier needs --ignore-path in package scripts to find root .prettierignore
+  - Each package runs lint from its own directory, not monorepo root
+---

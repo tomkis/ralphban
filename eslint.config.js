@@ -61,8 +61,8 @@ export default [
   prettierConfig,
   {
     ignores: [
-      'dist',
-      'node_modules',
+      '**/dist',
+      '**/node_modules',
       '.next',
       'build',
       'packages/integration-tests/.ralph-test-workdir',

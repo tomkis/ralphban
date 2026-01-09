@@ -15,8 +15,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "typecheck": "tsc --noEmit",
-    "lint": "concurrently \"eslint .\" \"prettier --check .\"",
-    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
+    "lint": "concurrently \"eslint .\" \"prettier --check . --ignore-path ../../.prettierignore\"",
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write . --ignore-path ../../.prettierignore\""
   },
   "dependencies": {
     "@trpc/server": "^11.3.0",

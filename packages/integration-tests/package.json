@@ -7,8 +7,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "lint": "concurrently \"eslint .\" \"prettier --check .\"",
-    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
+    "lint": "concurrently \"eslint .\" \"prettier --check . --ignore-path ../../.prettierignore\"",
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write . --ignore-path ../../.prettierignore\""
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",

@@ -45,7 +45,7 @@
       "Make sure trpc connection remains",
       "remove all unusued code"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "FEAT-001",
