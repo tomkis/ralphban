@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": "CHORE-001",
+    "category": "chore",
+    "title": "Create API package",
+    "steps": [
+      "create a typescript package inside a monorepo called @ralphban/api",
+      "install trpc",
+      "create basic setup for api definition",
+      "add just one router called kanban",
+      "router will have one query called getTasks"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-002",
+    "category": "chore",
+    "title": "Use API package in server",
+    "steps": [
+      "setup dependency on @ralphban/api in server package",
+      "install trpc server package in server package",
+      "provide implementation for the router in server package",
+      "getTasks will only return empty array for now"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-003",
+    "category": "chore",
+    "title": "Use API package in web",
+    "steps": [
+      "setup dependency on @ralphban/api in web package",
+      "install trpc (react) client package in web package",
+      "call getTasks query from web package"
+    ],
+    "passes": false
+  }
+]
