@@ -10,6 +10,9 @@
     "lint": "concurrently \"eslint .\" \"prettier --check .\"",
     "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
   },
+  "dependencies": {
+    "@ralphban/server": "workspace:*"
+  },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
     "@types/node": "^22.10.5",

@@ -37,6 +37,10 @@ importers:
         version: 3.7.4
 
   packages/integration-tests:
+    dependencies:
+      '@ralphban/server':
+        specifier: workspace:*
+        version: link:../server
     devDependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.4

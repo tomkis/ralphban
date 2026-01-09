@@ -17,3 +17,13 @@
   - AbortSignal support for external cancellation via SIGTERM
   - Process errors and non-zero exits are rejected, except when COMPLETE marker found
 ---
+
+## 2026-01-09 - CHORE-003
+- Created integration test for ralph loop
+- Files changed: `packages/integration-tests/tests/ralph-loop.test.ts`, `packages/integration-tests/package.json`, `.gitignore`
+- **Learnings:**
+  - Test imports service from @ralphban/server workspace package
+  - Test working dir `.ralph-test-workdir` is purged with `rm -rf` in beforeEach
+  - 120s timeout required for claude CLI invocation
+  - Test verifies both `isComplete` flag and actual file content
+---

@@ -33,6 +33,6 @@
       "Provide testing prompt that would tell the service to create empty file with hello world",
       "Test that the file is created and contains hello world"
     ],
-    "passes": false
+    "passes": true
   }
 ]
