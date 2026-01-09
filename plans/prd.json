@@ -44,6 +44,6 @@
       "Create a function that would spawn a process and return a promise that would resolve when the process is terminated",
       "Call the utils from the service"
     ],
-    "passes": false
+    "passes": true
   }
 ]

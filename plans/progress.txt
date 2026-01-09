@@ -27,3 +27,14 @@
   - 120s timeout required for claude CLI invocation
   - Test verifies both `isComplete` flag and actual file content
 ---
+
+## 2026-01-09 - CHORE-004
+- Created `packages/server/src/utils/process.ts` with generic `spawnProcess` function
+- Refactored `packages/server/src/ralph/service.ts` to use the new util
+- Files changed: `packages/server/src/utils/process.ts`, `packages/server/src/ralph/service.ts`
+- **Learnings:**
+  - Generic spawnProcess returns `SpawnResult` with stdout, stderr, exitCode
+  - Supports callbacks for stdout/stderr streaming and AbortSignal for cancellation
+  - Service now uses async/await instead of manual Promise construction
+  - Error message translation needed (Process aborted -> Ralph loop aborted) for API consistency
+---
