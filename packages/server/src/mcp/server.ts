@@ -1,11 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { Pool } from 'pg';
-import {
-  getAllTasks,
-  getTasksReadyForImplementation,
-  markTaskAsCompleted,
-} from '../kanban/service';
+import { getTasksReadyForImplementation, markTaskAsCompleted } from '../kanban/service';
 
 export function createMCPServer(pool: Pool): McpServer {
   const server = new McpServer(
@@ -17,26 +13,6 @@ export function createMCPServer(pool: Pool): McpServer {
       capabilities: {
         tools: {},
       },
-    }
-  );
-
-  server.registerTool(
-    'get_all_tasks',
-    {
-      description:
-        'Get all tasks from database with complete information including id, category, title, description, steps, state, and timestamps',
-    },
-    async () => {
-      const tasks = await getAllTasks(pool);
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(tasks, null, 2),
-          },
-        ],
-      };
     }
   );
 
