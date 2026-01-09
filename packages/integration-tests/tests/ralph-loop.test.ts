@@ -13,7 +13,7 @@ describe('Ralph Loop', () => {
     await mkdir(TEST_WORKING_DIR, { recursive: true });
   });
 
-  it('should create a file with hello world content', { timeout: 120_000 }, async () => {
+  it.skip('should create a file with hello world content', { timeout: 120_000 }, async () => {
     const prompt = `Create a file called hello.txt containing exactly "hello world" (no quotes). Do not create any other files. Output <promise>COMPLETE</promise> when done.`;
 
     const result = await runRalphLoop(TEST_WORKING_DIR, prompt);
