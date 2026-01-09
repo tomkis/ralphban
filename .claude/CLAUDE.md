@@ -22,9 +22,6 @@ ralphban combines Ralph and Kanban into a unified development workflow.
 
 `plans/` folder is for developing ralphban itself using Ralph approach. This project is built with the same methodology it enables for other apps.
 
-### Rules
-- Always run `pnpm typecheck` to validate
-- Always run `pnpm lint` to run linter
 
 ## Tech Stack
 - Project is using `pnpm`

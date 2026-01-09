@@ -1,0 +1,45 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { rm, mkdir, access } from 'fs/promises';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const TEST_WORKING_DIR = join(__dirname, '../.ralph-test-workdir');
+
+const RALPH_API_URL = process.env.RALPH_API_URL || 'http://localhost:3001';
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+describe('Ralph Loop', () => {
+  beforeEach(async () => {
+    await rm(TEST_WORKING_DIR, { recursive: true, force: true });
+    await mkdir(TEST_WORKING_DIR, { recursive: true });
+  });
+
+  it('should run ralph loop via API', { timeout: 120_000 }, async () => {
+    const response = await fetch(`${RALPH_API_URL}/ralph`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ workingDirectory: TEST_WORKING_DIR }),
+    });
+
+    if (!response.ok) {
+      const body = (await response.json()) as { error: string };
+      console.error('Ralph API error:', body);
+      throw new Error(`Ralph API error: ${body.error}`);
+    }
+
+    const packageJsonExists = await fileExists(join(TEST_WORKING_DIR, 'package.json'));
+    const indexJsExists = await fileExists(join(TEST_WORKING_DIR, 'index.js'));
+
+    expect(packageJsonExists).toBe(true);
+    expect(indexJsExists).toBe(true);
+  });
+});

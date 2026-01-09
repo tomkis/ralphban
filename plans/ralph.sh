@@ -7,9 +7,7 @@ fi
 
 for ((i = 0; i < $1; i++)); do
     echo "Iteration $i"
-    result=$(claude --dangerously-skip-permissions "$(cat ./plans/prompt.md)")
-
-    echo $result
+    result=$(claude --dangerously-skip-permissions "$(cat ./plans/prompt.md)" | tee /dev/stderr)
 
     if [[ $result == *"<promise>COMPLETE</promise>"* ]]; then
         echo "PRD is complete"
