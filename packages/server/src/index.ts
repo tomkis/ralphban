@@ -12,10 +12,6 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 app.use(express.json());
 
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
-});
-
 app.post('/ralph', async (req, res) => {
   console.log('Running Ralph loop...');
 
