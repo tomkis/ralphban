@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, beforeEach } from 'vitest';
 import { runRalphLoop } from '@ralphban/server/src/ralph/service.js';
-import { rm, mkdir, readFile } from 'fs/promises';
+import { rm, mkdir } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -13,12 +13,7 @@ describe.skip('Ralph Loop', () => {
     await mkdir(TEST_WORKING_DIR, { recursive: true });
   });
 
-  it('should create a file with hello world content', { timeout: 120_000 }, async () => {
-    const prompt = `Create a file called hello.txt containing exactly "hello world" (no quotes). Do not create any other files. Output <promise>COMPLETE</promise> when done.`;
-
-    await runRalphLoop(TEST_WORKING_DIR, prompt);
-
-    const content = await readFile(join(TEST_WORKING_DIR, 'hello.txt'), 'utf-8');
-    expect(content.trim()).toBe('hello world');
+  it('should run ralph loop with internal prompt', { timeout: 120_000 }, async () => {
+    await runRalphLoop(TEST_WORKING_DIR);
   });
 });

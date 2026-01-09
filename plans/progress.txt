@@ -50,3 +50,15 @@
   - Throwing on non-zero exit simplifies caller code significantly
   - Service no longer needs RalphResult interface, just returns string
 ---
+
+## 2026-01-09 - FEAT-001
+- Created RALPH_PROMPT_TEMPLATE in service with instructions for tool-based workflow
+- Removed prompt parameter from runRalphLoop function
+- Added buildPrompt helper function
+- Updated integration test to use new signature (skipped, will be fixed in next stage)
+- Files changed: `packages/server/src/ralph/service.ts`, `packages/integration-tests/tests/ralph-loop.test.ts`
+- **Learnings:**
+  - Prompt template uses getTasks and markTaskComplete tool calls instead of direct file manipulation
+  - Skipping PRD/progress reading since MCP will provide that context later
+  - Test simplified since we can't test raw prompt anymore
+---
