@@ -36,11 +36,14 @@ export function spawnProcess(
 
     child.stdout?.on('data', (data: Buffer) => {
       const chunk = data.toString();
+      console.log('stdout chunk:', chunk);
       stdout += chunk;
       options?.onStdout?.(chunk);
     });
 
-    child.stderr?.on('data', () => {});
+    child.stderr?.on('data', (data: Buffer) => {
+      console.error('stderr chunk:', data.toString());
+    });
 
     child.on('error', (err) => {
       reject(new Error(`Failed to start process: ${err.message}`));
