@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": "CHORE-001",
+    "category": "chore",
+    "title": "Create a new bash script in the server, that spawns Claude agent with prompt that can be passed as an argument",
+    "steps": [
+      "Create new module @server/src/ralph",
+      "Create new bash script with execute permission",
+      "As a parameter, pass the raw prompt and working directory for the claude",
+      "Call Claude from the script simiarly how @plans/ralph.sh does it, however prompt should be passed as an argument to the script",
+      "Make sure claude is working in the working directory of the script"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-002",
+    "category": "chore",
+    "title": "Create new service in the ralph module that would allow running ralph loop for a given prompt",
+    "steps": [
+      "Create new service file in the ralph module",
+      "Call the ralph.sh script from the service, as a parameter pass both working directory and raw prompt (well provide ralph specific prompt later)",
+      "Make sure all edge cases with IPC are covered (think of process termination, error handling, etc.)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "CHORE-003",
+    "category": "chore",
+    "title": "Build integration test that would run the ralph loop.",
+    "steps": [
+      "Create empty folder for the test that you always purge before running the test",
+      "Gitingore the working directory for the test",
+      "Provide testing prompt that would tell the service to create empty file with hello world",
+      "Test that the file is created and contains hello world"
+    ],
+    "passes": false
+  }
+]
