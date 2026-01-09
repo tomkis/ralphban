@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n Server,Web -c green,blue \"pnpm --filter @ralphban/server dev\" \"pnpm --filter @ralphban/web dev\"",
-    "typecheck": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
-    "lint": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
-    "fix": "concurrently -n Server,Web,Tests -c green,blue,yellow \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter @ralphban/integration-tests fix\"",
+    "typecheck": "concurrently -n Api,Server,Web,Tests -c magenta,green,blue,yellow \"pnpm --filter @ralphban/api typecheck\" \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
+    "lint": "concurrently -n Api,Server,Web,Tests -c magenta,green,blue,yellow \"pnpm --filter @ralphban/api lint\" \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
+    "fix": "concurrently -n Api,Server,Web,Tests -c magenta,green,blue,yellow \"pnpm --filter @ralphban/api fix\" \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter @ralphban/integration-tests fix\"",
     "test": "scripts/tests.sh"
   },
   "keywords": [],

@@ -1,0 +1,17 @@
+## 2026-01-09 - CHORE-001
+- Created @ralphban/api package with tRPC setup
+- Files changed:
+  - packages/api/package.json (new)
+  - packages/api/tsconfig.json (new)
+  - packages/api/src/trpc.ts (new)
+  - packages/api/src/router.ts (new)
+  - packages/api/src/routers/kanban.ts (new)
+  - packages/api/src/index.ts (new)
+  - eslint.config.js (updated to include api package)
+  - package.json (updated scripts to include api package)
+- **Learnings:**
+  - tRPC v11 uses @trpc/server package
+  - zod v3 used for schema validation in kanban router
+  - Task schema defined with id, title, status fields
+  - Router exports AppRouter type for client type inference
+---

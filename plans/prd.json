@@ -10,7 +10,7 @@
       "add just one router called kanban",
       "router will have one query called getTasks"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-002",

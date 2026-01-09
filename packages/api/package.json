@@ -1,0 +1,28 @@
+{
+  "name": "@ralphban/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "concurrently \"eslint .\" \"prettier --check .\"",
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
+  },
+  "dependencies": {
+    "@trpc/server": "^11.3.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
