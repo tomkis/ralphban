@@ -84,3 +84,13 @@
   - Prettier needs --ignore-path in package scripts to find root .prettierignore
   - Each package runs lint from its own directory, not monorepo root
 ---
+
+## 2026-01-09 - FEAT-001
+- Created ticket board UI with two columns: Todo and Done
+- Files changed:
+  - packages/web/src/App.tsx (rewrote - Kanban board with TaskCard and Column components)
+- **Learnings:**
+  - Task status `in_progress` treated as part of Todo column (only two columns required)
+  - tRPC useQuery with `refetchInterval: 3000` for polling data changes
+  - Import `type Task` from @ralphban/api for typed task handling
+---

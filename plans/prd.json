@@ -56,7 +56,7 @@
       "based on a status keep it in the correct column",
       "make sure UI is polling data for changes"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "FEAT-002",
