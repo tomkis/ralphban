@@ -21,7 +21,7 @@
       "Call the ralph.sh script from the service, as a parameter pass both working directory and raw prompt (well provide ralph specific prompt later)",
       "Make sure all edge cases with IPC are covered (think of process termination, error handling, etc.)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "CHORE-003",

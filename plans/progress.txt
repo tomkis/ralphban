@@ -7,3 +7,13 @@
   - Existing `plans/ralph.sh` reads prompt from file, new script takes it as argument
   - Script outputs claude result and checks for `<promise>COMPLETE</promise>` marker
 ---
+
+## 2026-01-09 - CHORE-002
+- Created ralph service for spawning and managing ralph.sh process
+- Files changed: `packages/server/src/ralph/service.ts`
+- **Learnings:**
+  - Used ES module `import.meta.url` pattern with `fileURLToPath` to resolve `__dirname`
+  - Service returns `RalphResult` with output, isComplete flag, and exitCode
+  - AbortSignal support for external cancellation via SIGTERM
+  - Process errors and non-zero exits are rejected, except when COMPLETE marker found
+---
