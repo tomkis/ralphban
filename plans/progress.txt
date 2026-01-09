@@ -31,3 +31,20 @@
   - Server-side router mirrors api types but provides actual implementation
   - getTasks returns empty array as specified
 ---
+
+## 2026-01-09 - CHORE-003
+- Integrated @ralphban/api with web package using tRPC React Query
+- Files changed:
+  - packages/web/package.json (added @ralphban/api, @tanstack/react-query, @trpc/client, @trpc/react-query)
+  - packages/web/src/trpc/client.ts (new - tRPC React client)
+  - packages/web/src/trpc/TRPCProvider.tsx (new - provider component)
+  - packages/web/src/trpc/index.ts (new - exports)
+  - packages/web/src/main.tsx (wrapped App with TRPCProvider)
+  - packages/web/src/App.tsx (calls getTasks query)
+- **Learnings:**
+  - tRPC v11 React uses @trpc/react-query package
+  - Requires @tanstack/react-query as peer dependency
+  - createTRPCReact<AppRouter>() for typed client creation
+  - TRPCProvider must wrap QueryClientProvider
+  - httpBatchLink used for connecting to server endpoint
+---

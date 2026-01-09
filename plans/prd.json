@@ -33,6 +33,6 @@
       "install trpc (react) client package in web package",
       "call getTasks query from web package"
     ],
-    "passes": false
+    "passes": true
   }
 ]
