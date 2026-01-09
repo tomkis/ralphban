@@ -111,3 +111,18 @@
   - Button disabled when: no ready tasks OR ralph already running
   - runRalphLoop runs async, finally block resets isRunning state
 ---
+
+## 2026-01-09 - FEAT-003
+- Made ralph working directory configurable via UI modal
+- Files changed:
+  - packages/api/src/routers/ralph.ts (updated - added StartRalphInputSchema with workingDirectory)
+  - packages/api/src/context.ts (updated - IRalphService.start accepts workingDirectory param)
+  - packages/server/src/ralph/trpc-service.ts (updated - removed static workingDirectory, uses passed param)
+  - packages/server/src/trpc/context.ts (updated - removed env-based workingDirectory config)
+  - packages/web/src/App.tsx (updated - added WorkingDirectoryModal component)
+- **Learnings:**
+  - Moved workingDirectory from server-side config to per-request param
+  - Modal pattern: backdrop div with onClick for close, inner div with stopPropagation
+  - Input supports Enter to submit, Escape to close
+  - Must rebuild @ralphban/api after changes for dependent packages to see updated types
+---

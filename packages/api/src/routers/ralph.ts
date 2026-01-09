@@ -7,11 +7,19 @@ export const RalphStatusSchema = z.object({
 
 export type RalphStatus = z.infer<typeof RalphStatusSchema>;
 
+export const StartRalphInputSchema = z.object({
+  workingDirectory: z.string(),
+});
+
+export type StartRalphInput = z.infer<typeof StartRalphInputSchema>;
+
 export const ralphRouter = router({
   getStatus: publicProcedure.query(async ({ ctx }): Promise<RalphStatus> => {
     return ctx.ralph.getStatus();
   }),
-  start: publicProcedure.mutation(async ({ ctx }): Promise<void> => {
-    return ctx.ralph.start();
-  }),
+  start: publicProcedure
+    .input(StartRalphInputSchema)
+    .mutation(async ({ ctx, input }): Promise<void> => {
+      return ctx.ralph.start(input.workingDirectory);
+    }),
 });

@@ -3,12 +3,12 @@ import { runRalphLoop } from './service.js';
 
 let isRunning = false;
 
-export function createRalphService(workingDirectory: string): IRalphService {
+export function createRalphService(): IRalphService {
   return {
     async getStatus(): Promise<RalphStatus> {
       return { isRunning };
     },
-    async start(): Promise<void> {
+    async start(workingDirectory: string): Promise<void> {
       if (isRunning) {
         return;
       }

@@ -78,6 +78,6 @@
       "When user clicks start ralph button, show a modal to enter working directory",
       "The working directory is passed to the ralph loop via API"
     ],
-    "passes": false
+    "passes": true
   }
 ]

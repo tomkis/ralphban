@@ -1,5 +1,115 @@
+import { useState } from 'react';
 import type { Task } from '@ralphban/api';
 import { trpc } from './trpc';
+
+function WorkingDirectoryModal({
+  isOpen,
+  onClose,
+  onSubmit,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (workingDirectory: string) => void;
+}) {
+  const [workingDirectory, setWorkingDirectory] = useState('');
+
+  if (!isOpen) return null;
+
+  const handleSubmit = () => {
+    if (workingDirectory.trim()) {
+      onSubmit(workingDirectory.trim());
+      setWorkingDirectory('');
+      onClose();
+    }
+  };
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: '#fff',
+          borderRadius: '8px',
+          padding: '24px',
+          minWidth: '400px',
+          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: 600 }}>Start Ralph</h2>
+        <label
+          style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#5e6c84' }}
+        >
+          Working Directory
+        </label>
+        <input
+          type="text"
+          value={workingDirectory}
+          onChange={(e) => setWorkingDirectory(e.target.value)}
+          placeholder="/path/to/project"
+          style={{
+            width: '100%',
+            padding: '8px 12px',
+            fontSize: '14px',
+            border: '1px solid #dfe1e6',
+            borderRadius: '4px',
+            boxSizing: 'border-box',
+            marginBottom: '16px',
+          }}
+          autoFocus
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSubmit();
+            if (e.key === 'Escape') onClose();
+          }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+          <button
+            onClick={onClose}
+            style={{
+              padding: '8px 16px',
+              fontSize: '14px',
+              backgroundColor: '#f4f5f7',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={!workingDirectory.trim()}
+            style={{
+              padding: '8px 16px',
+              fontSize: '14px',
+              fontWeight: 600,
+              color: '#fff',
+              backgroundColor: workingDirectory.trim() ? '#5aac44' : '#dfe1e6',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: workingDirectory.trim() ? 'pointer' : 'not-allowed',
+            }}
+          >
+            Start
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function TaskCard({ task }: { task: Task }) {
   return (
@@ -85,6 +195,7 @@ function StartRalphButton({
 }
 
 export default function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: tasks = [] } = trpc.kanban.getTasks.useQuery(undefined, {
     refetchInterval: 3000,
   });
@@ -97,6 +208,10 @@ export default function App() {
   const doneTasks = tasks.filter((t) => t.status === 'done');
   const hasReadyTasks = todoTasks.length > 0;
   const isRalphRunning = ralphStatus?.isRunning ?? false;
+
+  const handleStartRalph = (workingDirectory: string) => {
+    startRalph.mutate({ workingDirectory });
+  };
 
   return (
     <div
@@ -121,13 +236,18 @@ export default function App() {
         <StartRalphButton
           hasReadyTasks={hasReadyTasks}
           isRalphRunning={isRalphRunning}
-          onStart={() => startRalph.mutate()}
+          onStart={() => setIsModalOpen(true)}
         />
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
         <Column title="Todo" tasks={todoTasks} />
         <Column title="Done" tasks={doneTasks} />
       </div>
+      <WorkingDirectoryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleStartRalph}
+      />
     </div>
   );
 }
