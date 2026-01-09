@@ -1,9 +1,5 @@
 import 'dotenv/config';
 import express, { ErrorRequestHandler } from 'express';
-import { createMCPServer } from './mcp/server';
-import { createDbClient } from './db/client';
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { randomUUID } from 'crypto';
 import { runRalphLoop } from './ralph/service.js';
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -16,21 +12,8 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
 app.use(express.json());
 
-const pool = createDbClient();
-
-const mcpServer = createMCPServer(pool);
-const transport = new StreamableHTTPServerTransport({
-  sessionIdGenerator: () => randomUUID(),
-});
-
-await mcpServer.connect(transport);
-
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
-});
-
-app.post('/mcp', async (req, res) => {
-  await transport.handleRequest(req, res, req.body);
 });
 
 app.post('/ralph', async (req, res) => {

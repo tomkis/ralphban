@@ -10,21 +10,14 @@ const RALPH_PROMPT_TEMPLATE = `
    - Tasks are NOT sorted by priority
    - Think about which one is right to pick based on dependencies
 3. Implement that ONE task
-4. Run \`pnpm typecheck\` to verify no type errors
-5. Run \`pnpm lint\` to verify linting issues
-6. Fix any type or linting errors if present
-7. Ensure the project still works by using \`pnpm test\`
-8. Call \`mark_task_done\` tool with the task ID
-9. Commit: \`[Category]: [ID] - [Title]\`
-10. Terminate, you are only supposed to work on ONE task
+4. Call \`mark_task_done\` tool with the task ID
+5. Terminate, you are only supposed to work on ONE task
 
 If no tasks are returned, output <promise>COMPLETE</promise>.
 
 ## Important Rules
 
 - Only implement ONE task per run
-- Always verify with typecheck, lint, and test before marking complete
-- Commit your changes with the specified format
 `;
 
 export async function runRalphLoop(
@@ -40,7 +33,6 @@ export async function runRalphLoop(
     options.signal.addEventListener('abort', () => abortController.abort());
   }
 
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
   let fullOutput = '';
 
   for await (const message of query({
@@ -53,14 +45,13 @@ export async function runRalphLoop(
       abortController,
       mcpServers: {
         ralphban: {
-          type: 'http',
-          url: `http://localhost:3001/mcp`,
+          type: 'stdio',
+          command: 'pnpm',
+          args: ['--filter', 'server', 'mcp:stdio'],
         },
       },
     },
   })) {
-    console.log('message:', message);
-
     if (message.type === 'result' && message.subtype === 'success') {
       fullOutput = message.result;
     }
@@ -73,6 +64,5 @@ export async function runRalphLoop(
     }
   }
 
-  console.log('Ralph loop completed:', fullOutput.slice(0, 200));
   return fullOutput;
 }

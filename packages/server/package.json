@@ -12,7 +12,8 @@
     "docker:down": "docker-compose down",
     "db:init": "tsx scripts/init-db.ts",
     "lint": "concurrently \"eslint .\" \"prettier --check .\"",
-    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\"",
+    "mcp:stdio": "tsx src/mcp/stdio-server.ts"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.2.2",
