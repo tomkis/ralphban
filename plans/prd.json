@@ -72,5 +72,16 @@
       "Skip current test, we'll fix this in next stages"
     ],
     "passes": true
+  },
+  {
+    "id": "CHORE-005",
+    "category": "chore",
+    "title": "Expose runRalph via the REST API so that we can start this manually for testing purposes",
+    "steps": [
+      "Create new endpoint POST /ralph in the server",
+      "Adjust the integration test to use the new endpoint instead of manual run of the service",
+      "Ensure no dependency on the server exists in the tests"
+    ],
+    "passes": true
   }
 ]

@@ -62,3 +62,14 @@
   - Skipping PRD/progress reading since MCP will provide that context later
   - Test simplified since we can't test raw prompt anymore
 ---
+
+## 2026-01-09 - CHORE-005
+- Created POST /ralph endpoint in server that accepts workingDirectory in body
+- Refactored integration test to call API instead of importing service directly
+- Removed @ralphban/server dependency from integration-tests package
+- Files changed: `packages/server/src/index.ts`, `packages/integration-tests/tests/ralph-loop.test.ts`, `packages/integration-tests/package.json`
+- **Learnings:**
+  - Using environment variable RALPH_API_URL for configurable endpoint (defaults to localhost:3001)
+  - Test script already handles server lifecycle so tests are truly decoupled
+  - Need to cast response.json() for TypeScript when accessing properties
+---
