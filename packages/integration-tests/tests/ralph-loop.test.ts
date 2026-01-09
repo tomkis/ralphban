@@ -13,18 +13,14 @@ describe('Ralph Loop', () => {
     await mkdir(TEST_WORKING_DIR, { recursive: true });
   });
 
-  it(
-    'should create a file with hello world content',
-    async () => {
-      const prompt = `Create a file called hello.txt containing exactly "hello world" (no quotes). Do not create any other files. Output <promise>COMPLETE</promise> when done.`;
+  it('should create a file with hello world content', { timeout: 120_000 }, async () => {
+    const prompt = `Create a file called hello.txt containing exactly "hello world" (no quotes). Do not create any other files. Output <promise>COMPLETE</promise> when done.`;
 
-      const result = await runRalphLoop(TEST_WORKING_DIR, prompt);
+    const result = await runRalphLoop(TEST_WORKING_DIR, prompt);
 
-      expect(result.isComplete).toBe(true);
+    expect(result.isComplete).toBe(true);
 
-      const content = await readFile(join(TEST_WORKING_DIR, 'hello.txt'), 'utf-8');
-      expect(content.trim()).toBe('hello world');
-    },
-    { timeout: 120_000 }
-  );
+    const content = await readFile(join(TEST_WORKING_DIR, 'hello.txt'), 'utf-8');
+    expect(content.trim()).toBe('hello world');
+  });
 });
