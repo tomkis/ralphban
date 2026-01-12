@@ -56,6 +56,7 @@ export default [
       'packages/integration-tests/**/*.ts',
       'packages/api/**/*.ts',
       'packages/cli/**/*.ts',
+      'packages/mcp-cli/**/*.ts',
     ],
     languageOptions: {
       globals: {

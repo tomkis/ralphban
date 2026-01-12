@@ -8,3 +8,15 @@
   - ESLint config at root needs explicit file patterns for new packages
   - Placeholder entry point needed for typecheck to pass on new package
 ---
+
+## 2026-01-12 - chore-002
+- Created packages/mcp-cli directory structure
+- Added package.json with name "ralphban-mcp", bin field, private: false
+- Added yargs dependency for CLI argument parsing
+- Added tsconfig.json matching cli package pattern
+- Created placeholder mcp-cli.ts entry point
+- Updated eslint.config.js to include mcp-cli package in node globals
+- **Learnings:**
+  - Followed same pattern as chore-001 for consistency
+  - yargs v18 used for modern ESM CLI parsing
+---

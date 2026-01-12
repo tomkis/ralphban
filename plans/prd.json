@@ -27,7 +27,7 @@
       "Add build/dev scripts using tsx",
       "Create tsconfig.json for MCP CLI package"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "feat-001",
