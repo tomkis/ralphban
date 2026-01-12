@@ -73,3 +73,14 @@
   - Express.static serves these correctly when mounted at root
   - Explicit config documents intent even when matching defaults
 ---
+
+## 2026-01-12 - chore-004
+- Updated packages/server/src/ralph/service.ts MCP_CONFIG generation
+- Changed from static const to buildMcpConfig function accepting workingDirectory
+- Changed command from 'pnpm' to 'npx'
+- Changed args from ['--filter', 'server', 'mcp:stdio'] to ['ralphban-mcp', '--cwd', workingDirectory]
+- **Learnings:**
+  - Integration test ralph-loop.test.ts times out because npx ralphban-mcp isn't published yet
+  - Test designed for old pnpm workspace setup needs future update when packages are published
+  - Linter auto-adds .js extension to imports for ESM compatibility
+---

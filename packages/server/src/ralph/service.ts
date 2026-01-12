@@ -1,4 +1,4 @@
-import { spawnProcess } from '../utils/process';
+import { spawnProcess } from '../utils/process.js';
 
 const RALPH_PROMPT_TEMPLATE = `
 # Ralph Agent Instructions
@@ -20,15 +20,17 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 - Only implement ONE task per run
 `;
 
-const MCP_CONFIG = JSON.stringify({
-  mcpServers: {
-    ralphban: {
-      type: 'stdio',
-      command: 'pnpm',
-      args: ['--filter', 'server', 'mcp:stdio'],
+function buildMcpConfig(workingDirectory: string): string {
+  return JSON.stringify({
+    mcpServers: {
+      ralphban: {
+        type: 'stdio',
+        command: 'npx',
+        args: ['ralphban-mcp', '--cwd', workingDirectory],
+      },
     },
-  },
-});
+  });
+}
 
 export async function runRalphLoop(workingDirectory: string): Promise<string> {
   return spawnProcess(
@@ -36,7 +38,7 @@ export async function runRalphLoop(workingDirectory: string): Promise<string> {
     [
       '--dangerously-skip-permissions',
       '--mcp-config',
-      MCP_CONFIG,
+      buildMcpConfig(workingDirectory),
       '-p',
       RALPH_PROMPT_TEMPLATE.trim(),
     ],

@@ -107,7 +107,7 @@
       "Remove hardcoded pnpm workspace reference",
       "Ensure workingDirectory is passed correctly to MCP via --cwd"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-005",
