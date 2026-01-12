@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
-import { createDbClient } from './client.js';
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS tasks (
@@ -28,9 +27,7 @@ async function checkTablesExist(pool: Pool): Promise<boolean> {
   return result.rows[0].exists;
 }
 
-export async function initializeSchema(): Promise<void> {
-  const pool = createDbClient();
-
+export async function initializeSchema(pool: Pool): Promise<void> {
   try {
     const tablesExist = await checkTablesExist(pool);
 
@@ -48,7 +45,5 @@ export async function initializeSchema(): Promise<void> {
       );
     }
     throw error;
-  } finally {
-    await pool.end();
   }
 }

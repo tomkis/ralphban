@@ -271,7 +271,7 @@
       "Update initializeSchema to accept Pool parameter",
       "Pass pool from CLI to initializeSchema"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-016",

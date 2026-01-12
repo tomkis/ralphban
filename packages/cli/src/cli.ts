@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { validateGitRepository } from '@ralphban/server/utils/git-validation';
 import { initializeSchema } from '@ralphban/server/db/init';
+import { createDbClient } from '@ralphban/server/db/client';
 import { createServer, type ServerInstance } from '@ralphban/server';
 import { closeDbPool } from '@ralphban/server/trpc';
 
@@ -54,13 +55,16 @@ async function main() {
     process.exit(1);
   }
 
+  const pool = createDbClient();
   try {
-    await initializeSchema();
+    await initializeSchema(pool);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error('Database initialization failed:', message);
+    await pool.end();
     process.exit(1);
   }
+  await pool.end();
 
   const webDistPath = path.resolve(__dirname, '..', 'web-dist');
   server = createServer({ staticDir: webDistPath });

@@ -202,3 +202,14 @@
   - web-dist was already tracked (committed in chore-009), needed git rm --cached to untrack without deleting
   - chore-013 PRD is outdated - closeDbPool IS used in CLI shutdown handler
 ---
+
+## 2026-01-12 - chore-015
+- Updated initializeSchema to accept Pool parameter instead of creating its own
+- Removed createDbClient import from db/init.ts, removed pool.end() from function
+- Updated CLI to create pool with createDbClient and pass to initializeSchema
+- CLI now properly closes pool after initialization (or on error)
+- **Learnings:**
+  - Server package must be rebuilt before CLI typecheck to update .d.ts files
+  - Caller is now responsible for pool lifecycle
+  - Pool created just for schema init is closed after use; main app pool is separate (in trpc/context.ts)
+---
