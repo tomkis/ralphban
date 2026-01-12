@@ -1,1 +1,238 @@
-[]
+[
+  {
+    "id": "chore-001",
+    "category": "chore",
+    "title": "Create ralphban CLI package structure",
+    "description": "Setup new workspace package for main CLI. This package will be published as 'ralphban' on npm. It will contain bin entry point, depend on server/web packages, and handle Express server initialization.",
+    "steps": [
+      "Create packages/cli directory",
+      "Add packages/cli/package.json with name 'ralphban', bin field pointing to 'dist/cli.js'",
+      "Set private: false for publishing",
+      "Add dependencies: @ralphban/server, @ralphban/api, express, dotenv",
+      "Add build/dev scripts using tsx",
+      "Create tsconfig.json for CLI package"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-002",
+    "category": "chore",
+    "title": "Create ralphban-mcp package structure",
+    "description": "Setup new workspace package for MCP server. This package will be published as 'ralphban-mcp' on npm. It needs to accept --cwd CLI argument and initialize MCP stdio server with that working directory.",
+    "steps": [
+      "Create packages/mcp-cli directory",
+      "Add packages/mcp-cli/package.json with name 'ralphban-mcp', bin field pointing to 'dist/mcp-cli.js'",
+      "Set private: false for publishing",
+      "Add dependencies: @ralphban/server, @ralphban/api, dotenv, yargs or similar for CLI parsing",
+      "Add build/dev scripts using tsx",
+      "Create tsconfig.json for MCP CLI package"
+    ],
+    "passes": false
+  },
+  {
+    "id": "feat-001",
+    "category": "feat",
+    "title": "Implement git validation utility",
+    "description": "Create utility to validate project directory. Must check: git repository exists, working tree is clean. Should provide clear error messages for each failure case.",
+    "steps": [
+      "Create packages/server/src/utils/git-validation.ts",
+      "Implement checkIsGitRepo using git rev-parse --git-dir",
+      "Implement checkIsCleanWorkingTree using git status --porcelain",
+      "Export validateGitRepository function that runs both checks",
+      "Return validation result with error messages",
+      "Add basic error handling for git command failures"
+    ],
+    "passes": false
+  },
+  {
+    "id": "feat-002",
+    "category": "feat",
+    "title": "Implement main CLI entry point",
+    "description": "Create entry point for 'npx ralphban'. Validates git, initializes database connection, starts Express server serving both static UI and API. Static UI should be served from pre-built dist folder bundled with package.",
+    "steps": [
+      "Create packages/cli/src/cli.ts with #!/usr/bin/env node shebang",
+      "Add git validation before any initialization",
+      "Exit with clear error if validation fails",
+      "Initialize database pool using DATABASE_URL from env",
+      "Start Express server with tRPC handler from server package",
+      "Add static middleware serving web package dist folder",
+      "Add fallback for SPA routing",
+      "Log server URL on successful start",
+      "Handle DATABASE_URL missing with helpful error message"
+    ],
+    "passes": false
+  },
+  {
+    "id": "feat-003",
+    "category": "feat",
+    "title": "Implement MCP CLI entry point with --cwd argument",
+    "description": "Create entry point for 'npx ralphban-mcp'. Parses --cwd argument, validates git in target directory, changes process.cwd() to target directory, initializes MCP stdio server.",
+    "steps": [
+      "Create packages/mcp-cli/src/mcp-cli.ts with #!/usr/bin/env node shebang",
+      "Parse --cwd argument using CLI parser library",
+      "Validate --cwd is provided and is absolute path",
+      "Run git validation on --cwd directory",
+      "Exit with clear error if validation fails",
+      "Change process.cwd() to target directory",
+      "Initialize database pool",
+      "Initialize MCP server using existing createMCPServer",
+      "Setup stdio transport and connect",
+      "Handle errors with clear messages"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-003",
+    "category": "chore",
+    "title": "Configure static UI build integration",
+    "description": "Ensure web package builds static assets that can be bundled with CLI package. Vite should output to dist folder with proper paths for Express static serving.",
+    "steps": [
+      "Review vite.config.ts for build output configuration",
+      "Ensure base path is set correctly for static serving",
+      "Verify build outputs index.html and assets to dist folder",
+      "Test that assets use relative paths compatible with Express static middleware",
+      "Document build command in web package.json"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-004",
+    "category": "chore",
+    "title": "Update ralph service to use dynamic MCP config",
+    "description": "Modify runRalphLoop to generate MCP config dynamically that spawns 'npx ralphban-mcp --cwd <workingDir>' instead of hardcoded pnpm command. This makes it work with published packages.",
+    "steps": [
+      "Update packages/server/src/ralph/service.ts MCP_CONFIG generation",
+      "Change command to 'npx'",
+      "Change args to ['ralphban-mcp', '--cwd', workingDirectory]",
+      "Remove hardcoded pnpm workspace reference",
+      "Ensure workingDirectory is passed correctly to MCP via --cwd"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-005",
+    "category": "chore",
+    "title": "Make server/api packages publishable",
+    "description": "Update @ralphban/server and @ralphban/api to be publishable packages. Change private: true to private: false, ensure proper exports, prepare for npm publishing.",
+    "steps": [
+      "Update packages/server/package.json: set private: false, add publishConfig if needed",
+      "Update packages/api/package.json: set private: false",
+      "Verify exports field in api package.json is correct",
+      "Ensure build outputs are properly configured",
+      "Add .npmignore files if needed to exclude dev files",
+      "Verify dependencies are listed correctly (not devDependencies for runtime needs)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-006",
+    "category": "chore",
+    "title": "Setup build pipeline for CLI packages",
+    "description": "Configure TypeScript compilation for CLI packages. Ensure shebang is preserved, file permissions are set for executables, and all dependencies are bundled/referenced correctly.",
+    "steps": [
+      "Configure tsconfig for packages/cli with proper module/target settings",
+      "Configure tsconfig for packages/mcp-cli with proper module/target settings",
+      "Ensure tsc preserves shebang in output",
+      "Add postbuild step to chmod +x the bin files",
+      "Test that built CLI can be executed directly",
+      "Verify imports resolve correctly in built output"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-007",
+    "category": "chore",
+    "title": "Setup environment variable handling for CLI",
+    "description": "Document required environment variables. Main CLI needs DATABASE_URL and ANTHROPIC_API_KEY. MCP CLI needs same variables. Provide clear error messages when missing.",
+    "steps": [
+      "Create packages/cli/.env.example with DATABASE_URL, ANTHROPIC_API_KEY",
+      "Create packages/mcp-cli/.env.example with same variables",
+      "Add dotenv.config() at top of both CLI entry points",
+      "Add validation for required env vars with helpful error messages",
+      "Document in package README that users need .env file in their project",
+      "Consider where .env should be loaded from (user's project vs CLI installation)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-008",
+    "category": "chore",
+    "title": "Update root package.json for workspace builds",
+    "description": "Add build scripts to root package.json that build all packages in correct order. CLI packages need server/api built first. Add scripts for building all packages for publishing.",
+    "steps": [
+      "Add build:api script running pnpm --filter @ralphban/api build",
+      "Add build:server script running pnpm --filter @ralphban/server build",
+      "Add build:web script running pnpm --filter @ralphban/web build",
+      "Add build:cli script running pnpm --filter ralphban build",
+      "Add build:mcp script running pnpm --filter ralphban-mcp build",
+      "Add build:all script that runs all builds in dependency order",
+      "Consider using pnpm workspace dependencies resolution"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-009",
+    "category": "chore",
+    "title": "Bundle static assets with CLI package",
+    "description": "Configure CLI package to include built web dist folder in published package. Files field in package.json should include dist (CLI code) and web-dist (static UI).",
+    "steps": [
+      "Add prebuild script to CLI package that builds web package",
+      "Copy web package dist to packages/cli/web-dist during build",
+      "Update packages/cli/src/cli.ts to serve from ./web-dist relative path",
+      "Add files field to packages/cli/package.json including ['dist', 'web-dist']",
+      "Test that npm pack includes both folders",
+      "Verify static serving works with bundled assets"
+    ],
+    "passes": false
+  },
+  {
+    "id": "feat-004",
+    "category": "feat",
+    "title": "Add database initialization to CLI",
+    "description": "Main CLI should handle database schema initialization. Check if tables exist, run init script if needed. Provide clear error if PostgreSQL is not running.",
+    "steps": [
+      "Extract schema initialization logic from scripts/init-db.ts",
+      "Create packages/server/src/db/init.ts with initializeSchema function",
+      "Check if tables exist before running init",
+      "Call initializeSchema in CLI entry point after db connection",
+      "Catch connection errors and provide helpful message about PostgreSQL requirement",
+      "Handle case where database exists but schema is outdated",
+      "Consider idempotent migrations approach"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-010",
+    "category": "chore",
+    "title": "Add CLI usage documentation",
+    "description": "Create README files for both CLI packages explaining installation, requirements, usage. Cover PostgreSQL setup, environment variables, git requirements.",
+    "steps": [
+      "Create packages/cli/README.md",
+      "Document 'npx ralphban' usage",
+      "List requirements: Node.js version, PostgreSQL, git repository",
+      "Document environment variables needed",
+      "Add troubleshooting section for common errors",
+      "Create packages/mcp-cli/README.md",
+      "Document 'npx ralphban-mcp --cwd' usage",
+      "Explain MCP server purpose and Claude integration"
+    ],
+    "passes": false
+  },
+  {
+    "id": "feat-005",
+    "category": "feat",
+    "title": "Add graceful shutdown handling",
+    "description": "Both CLI entry points should handle SIGINT/SIGTERM gracefully. Close database connections, cleanup resources. Main CLI should stop Express server cleanly.",
+    "steps": [
+      "Add process.on('SIGINT') handler to packages/cli/src/cli.ts",
+      "Add process.on('SIGTERM') handler",
+      "Close database pool on shutdown",
+      "Close Express server on shutdown",
+      "Add same handlers to packages/mcp-cli/src/mcp-cli.ts",
+      "Close MCP server transport on shutdown",
+      "Log shutdown messages",
+      "Exit with appropriate code"
+    ],
+    "passes": false
+  }
+]
