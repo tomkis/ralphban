@@ -230,7 +230,7 @@
       "Update scripts/tests.sh to build mcp-cli before tests",
       "Set RALPHBAN_MCP_PATH env var in tests.sh pointing to local dist"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-012",

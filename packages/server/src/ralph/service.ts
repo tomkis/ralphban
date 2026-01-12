@@ -1,9 +1,4 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import { spawnProcess } from '../utils/process.js';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const RALPH_PROMPT_TEMPLATE = `
 # Ralph Agent Instructions
@@ -26,16 +21,12 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 `;
 
 function buildMcpConfig(): string {
-  return JSON.stringify({
-    mcpServers: {
-      ralphban: {
-        type: 'stdio',
-        command: 'node',
-        // TODO: this should use npx version after publishing
-        args: [path.join(__dirname, '..', '..', '..', 'mcp-cli', 'dist', 'mcp-cli.js')],
-      },
-    },
-  });
+  const mcpPath = process.env.RALPHBAN_MCP_PATH;
+  const mcpServer = mcpPath
+    ? { type: 'stdio', command: 'node', args: [mcpPath] }
+    : { type: 'stdio', command: 'npx', args: ['ralphban-mcp'] };
+
+  return JSON.stringify({ mcpServers: { ralphban: mcpServer } });
 }
 
 export async function runRalphLoop(workingDirectory: string): Promise<string> {

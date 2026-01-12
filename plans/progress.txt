@@ -128,3 +128,15 @@
   - CLI packages use package name (ralphban, ralphban-mcp) not @ralphban/cli
   - Integration test still fails due to unpublished npx (pre-existing, chore-011 will fix)
 ---
+
+## 2026-01-12 - chore-011
+- Modified buildMcpConfig() to check RALPHBAN_MCP_PATH env var
+- If set: uses `node` with that path; if not: uses `npx ralphban-mcp`
+- Removed unused path/dirname imports from service.ts
+- Updated scripts/tests.sh to build mcp-cli before tests
+- Set RALPHBAN_MCP_PATH env var when starting server in tests
+- **Learnings:**
+  - Integration tests now pass using local mcp-cli dist
+  - Environment variable override pattern enables local dev without npm publish
+  - Cleanup of unused imports simplifies codebase
+---
