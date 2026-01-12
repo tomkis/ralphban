@@ -97,6 +97,9 @@ importers:
 
   packages/mcp-cli:
     dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.4
+        version: 1.25.2(hono@4.11.3)(zod@4.3.5)
       '@ralphban/api':
         specifier: workspace:*
         version: link:../api

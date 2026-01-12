@@ -16,6 +16,7 @@
   "dependencies": {
     "@ralphban/api": "workspace:*",
     "@ralphban/server": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.0.4",
     "dotenv": "^17.2.3",
     "yargs": "^18.0.0"
   },

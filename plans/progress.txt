@@ -46,3 +46,19 @@
   - Using .ts extensions in exports works with tsx for dev
   - web-dist path is relative to cli.ts location using __dirname
 ---
+
+## 2026-01-12 - feat-003
+- Implemented MCP CLI entry point in packages/mcp-cli/src/mcp-cli.ts
+- Added yargs parsing for --cwd argument with demandOption
+- Added absolute path validation for --cwd
+- Added git validation on target directory
+- Added DATABASE_URL env validation
+- Changes process.cwd() to target directory before MCP init
+- Initializes db pool and MCP server with stdio transport
+- Added @modelcontextprotocol/sdk dependency to mcp-cli package
+- Added ./mcp/server export to @ralphban/server package
+- **Learnings:**
+  - yargs hideBin helper strips node/tsx prefix from argv
+  - MCP server creation reuses existing createMCPServer from server pkg
+  - Server package exports need updating for each new subpath import
+---

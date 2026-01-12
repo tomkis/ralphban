@@ -79,7 +79,7 @@
       "Setup stdio transport and connect",
       "Handle errors with clear messages"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-003",
