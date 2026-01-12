@@ -3,3 +3,4 @@ node_modules
 .ralph-test-workdir
 .server-test.log
 dist/
+.DS_Store
