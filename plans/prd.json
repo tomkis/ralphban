@@ -168,7 +168,7 @@
       "Add build:all script that runs all builds in dependency order",
       "Consider using pnpm workspace dependencies resolution"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-009",

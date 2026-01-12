@@ -117,3 +117,14 @@
   - Both CLIs already had DATABASE_URL validation with helpful messages
   - Integration test failure is pre-existing (npx ralphban-mcp not published)
 ---
+
+## 2026-01-12 - chore-008
+- Added build scripts to root package.json for all packages
+- Added build:api, build:server, build:web, build:cli, build:mcp individual scripts
+- Added build:all script that chains builds in correct dependency order (api → server → web → cli → mcp)
+- Added CLI packages (ralphban, ralphban-mcp) to typecheck and lint commands
+- **Learnings:**
+  - Dependency order: api first (no deps), then server (needs api), then web/cli/mcp in parallel theoretically but sequential in build:all is safer
+  - CLI packages use package name (ralphban, ralphban-mcp) not @ralphban/cli
+  - Integration test still fails due to unpublished npx (pre-existing, chore-011 will fix)
+---
