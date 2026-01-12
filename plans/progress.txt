@@ -194,3 +194,11 @@
   - Module-level pool in context.ts needs exported cleanup function
   - McpServer from @modelcontextprotocol/sdk has close() method
 ---
+
+## 2026-01-12 - chore-014
+- Added packages/cli/web-dist/ to .gitignore
+- Removed web-dist from git tracking using git rm --cached
+- **Learnings:**
+  - web-dist was already tracked (committed in chore-009), needed git rm --cached to untrack without deleting
+  - chore-013 PRD is outdated - closeDbPool IS used in CLI shutdown handler
+---

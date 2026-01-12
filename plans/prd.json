@@ -260,7 +260,7 @@
     "title": "Add web-dist to gitignore",
     "description": "web-dist is a build artifact that shouldn't be committed.",
     "steps": ["Add packages/cli/web-dist/ to .gitignore"],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-015",
