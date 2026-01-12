@@ -37,13 +37,15 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 export async function runHttpServer() {
   const cwd = process.cwd();
 
-  const gitValidation = await validateGitRepository(cwd);
-  if (!gitValidation.valid) {
-    console.error('Git validation failed:');
-    for (const error of gitValidation.errors) {
-      console.error(`  - ${error}`);
+  if (process.env.SKIP_GIT_VALIDATION !== 'true') {
+    const gitValidation = await validateGitRepository(cwd);
+    if (!gitValidation.valid) {
+      console.error('Git validation failed:');
+      for (const error of gitValidation.errors) {
+        console.error(`  - ${error}`);
+      }
+      process.exit(1);
     }
-    process.exit(1);
   }
 
   if (!process.env.DATABASE_URL) {
@@ -52,7 +54,7 @@ export async function runHttpServer() {
     process.exit(1);
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.ANTHROPIC_API_KEY && process.env.SKIP_API_KEY_CHECK !== 'true') {
     console.error('ANTHROPIC_API_KEY environment variable is required');
     console.error('Get your API key from https://console.anthropic.com/');
     process.exit(1);

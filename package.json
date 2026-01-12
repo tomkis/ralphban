@@ -2,18 +2,19 @@
   "name": "ralphban",
   "version": "0.0.1",
   "type": "module",
+  "bin": {
+    "ralphban": "packages/server/dist/index.js"
+  },
   "scripts": {
     "dev": "concurrently -n Server,Web -c green,blue \"pnpm --filter @ralphban/server dev\" \"pnpm --filter @ralphban/web dev\"",
-    "typecheck": "concurrently -n Api,Server,Web,Cli,McpCli,Tests -c magenta,green,blue,cyan,red,yellow \"pnpm --filter @ralphban/api typecheck\" \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter ralphban typecheck\" \"pnpm --filter ralphban-mcp typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
-    "lint": "concurrently -n Api,Server,Web,Cli,McpCli,Tests -c magenta,green,blue,cyan,red,yellow \"pnpm --filter @ralphban/api lint\" \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter ralphban lint\" \"pnpm --filter ralphban-mcp lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
-    "fix": "concurrently -n Api,Server,Web,Cli,McpCli,Tests -c magenta,green,blue,cyan,red,yellow \"pnpm --filter @ralphban/api fix\" \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter ralphban fix\" \"pnpm --filter ralphban-mcp fix\" \"pnpm --filter @ralphban/integration-tests fix\"",
+    "typecheck": "concurrently -n Api,Server,Web,Tests -c magenta,green,blue,yellow \"pnpm --filter @ralphban/api typecheck\" \"pnpm --filter @ralphban/server typecheck\" \"pnpm --filter @ralphban/web typecheck\" \"pnpm --filter @ralphban/integration-tests typecheck\"",
+    "lint": "concurrently -n Api,Server,Web,Tests -c magenta,green,blue,yellow \"pnpm --filter @ralphban/api lint\" \"pnpm --filter @ralphban/server lint\" \"pnpm --filter @ralphban/web lint\" \"pnpm --filter @ralphban/integration-tests lint\"",
+    "fix": "concurrently -n Api,Server,Web,Tests -c magenta,green,blue,yellow \"pnpm --filter @ralphban/api fix\" \"pnpm --filter @ralphban/server fix\" \"pnpm --filter @ralphban/web fix\" \"pnpm --filter @ralphban/integration-tests fix\"",
     "test": "scripts/tests.sh",
     "build:api": "pnpm --filter @ralphban/api build",
     "build:server": "pnpm --filter @ralphban/server build",
     "build:web": "pnpm --filter @ralphban/web build",
-    "build:cli": "pnpm --filter ralphban build",
-    "build:mcp": "pnpm --filter ralphban-mcp build",
-    "build:all": "pnpm build:api && pnpm build:server && pnpm build:web && pnpm build:cli && pnpm build:mcp"
+    "build:all": "pnpm build:api && pnpm build:web && pnpm build:server"
   },
   "keywords": [],
   "license": "ISC",

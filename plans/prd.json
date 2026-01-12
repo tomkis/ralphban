@@ -39,7 +39,7 @@
       "Update build:all to exclude cli and mcp",
       "Remove cli and mcp from typecheck/lint/fix scripts"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-004",

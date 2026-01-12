@@ -50,7 +50,7 @@ export function createServer(config: ServerConfig): ServerInstance {
 
   if (config.staticDir) {
     app.use(express.static(config.staticDir));
-    app.get('*', (_req, res) => {
+    app.get('{*path}', (_req, res) => {
       res.sendFile(path.join(config.staticDir!, 'index.html'));
     });
   }

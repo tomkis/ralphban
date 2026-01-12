@@ -21,3 +21,18 @@
   - chmod +x ensures bin works without explicit node call
   - files array needs web-dist to include static assets in npm package
 ---
+
+## 2026-01-12 - chore-003
+- Updated root package.json bin entry and scripts
+- Files changed:
+  - package.json (added bin, removed cli/mcp from scripts)
+  - scripts/tests.sh (build server instead of mcp-cli, use SKIP_GIT_VALIDATION/SKIP_API_KEY_CHECK)
+  - packages/server/src/ralph/service.ts (use --mcp flag in MCP config)
+  - packages/server/src/cli.ts (add SKIP_GIT_VALIDATION/SKIP_API_KEY_CHECK env vars)
+  - packages/server/src/server.ts (fix Express 5 wildcard route syntax)
+- **Learnings:**
+  - Express 5 requires `{*path}` instead of `*` for wildcard routes
+  - Test script needs env vars to bypass validations that block dev workflow
+  - MCP invocation needs --mcp flag now that server handles both modes
+  - build:all order matters: api -> web -> server (server prebuild copies web dist)
+---
