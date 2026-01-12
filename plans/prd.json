@@ -11,7 +11,7 @@
       "Route to cli.ts or mcp-cli.ts based on --mcp flag",
       "Add shebang to index.ts"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-002",

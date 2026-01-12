@@ -1,0 +1,12 @@
+## 2026-01-12 - chore-001
+- Created unified entry point in server package
+- Files changed:
+  - packages/server/src/index.ts (replaced with yargs-based arg parser)
+  - packages/server/src/cli.ts (new, HTTP server mode)
+  - packages/server/src/mcp-cli.ts (new, MCP server mode)
+  - packages/server/package.json (added yargs dependency)
+- **Learnings:**
+  - Dynamic imports used for lazy loading mode-specific code
+  - Signal handlers registered in mode modules, not entry point
+  - yargs hideBin helper strips node/script args from argv
+---

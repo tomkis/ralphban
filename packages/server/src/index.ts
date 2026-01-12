@@ -1,22 +1,21 @@
-import 'dotenv/config';
-import { createDbClient } from './db/client.js';
-import { createServer } from './server.js';
+#!/usr/bin/env node
 
-const pool = createDbClient();
-const server = createServer({ pool });
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-process.on('SIGINT', async () => {
-  console.log('\nReceived SIGINT, shutting down...');
-  await server.stop();
-  await pool.end();
-  process.exit(0);
-});
+const argv = await yargs(hideBin(process.argv))
+  .option('mcp', {
+    type: 'boolean',
+    description: 'Run in MCP server mode (stdio transport)',
+    default: false,
+  })
+  .help()
+  .parse();
 
-process.on('SIGTERM', async () => {
-  console.log('\nReceived SIGTERM, shutting down...');
-  await server.stop();
-  await pool.end();
-  process.exit(0);
-});
-
-server.start();
+if (argv.mcp) {
+  const { runMcpServer } = await import('./mcp-cli.js');
+  await runMcpServer();
+} else {
+  const { runHttpServer } = await import('./cli.js');
+  await runHttpServer();
+}
