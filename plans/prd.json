@@ -25,7 +25,7 @@
       "Add prebuild script to copy web-dist",
       "Update build script to chmod +x dist/index.js"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-003",

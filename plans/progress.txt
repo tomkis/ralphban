@@ -10,3 +10,14 @@
   - Signal handlers registered in mode modules, not entry point
   - yargs hideBin helper strips node/script args from argv
 ---
+
+## 2026-01-12 - chore-002
+- Updated server package.json for npx publishing
+- Files changed:
+  - packages/server/package.json (added bin, prebuild, updated build)
+- **Learnings:**
+  - private:false and yargs were already added in chore-001
+  - prebuild copies web/dist to web-dist before tsc runs
+  - chmod +x ensures bin works without explicit node call
+  - files array needs web-dist to include static assets in npm package
+---
