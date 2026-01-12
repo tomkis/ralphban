@@ -152,3 +152,17 @@
   - prebuild script auto-runs before build in pnpm
   - npm pack --dry-run useful for verifying tarball contents before publish
 ---
+
+## 2026-01-12 - chore-012
+- Created packages/server/src/server.ts with createServer function
+- Moved Express app setup, trpc handler, ralph endpoint, error handler to server.ts
+- Added ServerConfig interface with optional port and staticDir
+- Updated packages/server/src/index.ts to import and call createServer
+- Added root export "." to server package.json pointing to server.ts
+- Updated CLI to use createServer with staticDir option
+- CLI code reduced from 82 lines to 38 lines
+- **Learnings:**
+  - Server package exports need .d.ts files to exist for typecheck
+  - Must run build:server before typecheck when adding new exports
+  - createServer accepts staticDir for SPA serving (CLI uses, server doesn't)
+---

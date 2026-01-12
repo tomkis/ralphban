@@ -244,6 +244,6 @@
       "Export createServer function from server package",
       "Update CLI to call the server from the server package"
     ],
-    "passes": false
+    "passes": true
   }
 ]
