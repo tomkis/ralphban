@@ -245,5 +245,45 @@
       "Update CLI to call the server from the server package"
     ],
     "passes": true
+  },
+  {
+    "id": "chore-013",
+    "category": "chore",
+    "title": "Remove unused closeDbPool import",
+    "description": "CLI imports closeDbPool but doesn't use it since server.stop() handles cleanup. Remove the unused import.",
+    "steps": ["Remove closeDbPool import and call from CLI"],
+    "passes": false
+  },
+  {
+    "id": "chore-014",
+    "category": "chore",
+    "title": "Add web-dist to gitignore",
+    "description": "web-dist is a build artifact that shouldn't be committed.",
+    "steps": ["Add packages/cli/web-dist/ to .gitignore"],
+    "passes": false
+  },
+  {
+    "id": "chore-015",
+    "category": "chore",
+    "title": "Pass DB client to initializeSchema",
+    "description": "initializeSchema creates its own pool internally. Should accept Pool parameter instead for better lifecycle management.",
+    "steps": [
+      "Update initializeSchema to accept Pool parameter",
+      "Pass pool from CLI to initializeSchema"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-016",
+    "category": "chore",
+    "title": "Eliminate global DB pool",
+    "description": "trpc/context.ts has global pool. Each entry point should create and manage its own pool. Pass pool through createContext and createServer.",
+    "steps": [
+      "Update createContext to accept Pool parameter",
+      "Update createServer to accept Pool in config",
+      "Each entry point creates and manages own pool",
+      "Remove global pool and closeDbPool from trpc/context.ts"
+    ],
+    "passes": false
   }
 ]
