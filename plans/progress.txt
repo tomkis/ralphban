@@ -84,3 +84,13 @@
   - Test designed for old pnpm workspace setup needs future update when packages are published
   - Linter auto-adds .js extension to imports for ESM compatibility
 ---
+
+## 2026-01-12 - chore-005
+- Updated @ralphban/api package.json with description, license, and repository fields
+- Updated @ralphban/server package.json with description, license, and repository fields
+- Verified builds complete successfully
+- Verified npm pack --dry-run shows only dist files in tarball
+- **Learnings:**
+  - "files" field in package.json restricts what npm publish includes
+  - Both packages already had private: false and exports configured correctly
+---

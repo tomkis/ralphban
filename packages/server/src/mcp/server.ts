@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { Pool } from 'pg';
-import { getTasksReadyForImplementation, markTaskAsCompleted } from '../kanban/service';
+import { getTasksReadyForImplementation, markTaskAsCompleted } from '../kanban/service.js';
 
 export function createMCPServer(pool: Pool): McpServer {
   const server = new McpServer(

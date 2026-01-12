@@ -122,7 +122,7 @@
       "Add .npmignore files if needed to exclude dev files",
       "Verify dependencies are listed correctly (not devDependencies for runtime needs)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-006",
