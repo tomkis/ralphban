@@ -49,7 +49,7 @@
     "steps": [
       "Delete packages/cli directory entirely"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-005",

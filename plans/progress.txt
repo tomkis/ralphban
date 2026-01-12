@@ -36,3 +36,13 @@
   - MCP invocation needs --mcp flag now that server handles both modes
   - build:all order matters: api -> web -> server (server prebuild copies web dist)
 ---
+
+## 2026-01-12 - chore-004
+- Removed redundant packages/cli directory
+- Files changed:
+  - packages/cli (deleted entirely)
+- **Learnings:**
+  - CLI functionality already moved to server package in chore-001
+  - No code changes needed, simple directory removal
+  - pnpm workspace auto-updates when package dir removed
+---
