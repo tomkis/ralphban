@@ -1,0 +1,10 @@
+## 2026-01-12 - chore-001
+- Created packages/cli directory structure
+- Added package.json with name "ralphban", bin field, private: false
+- Added tsconfig.json matching server package pattern
+- Created placeholder cli.ts entry point
+- Updated eslint.config.js to include CLI package in node globals
+- **Learnings:**
+  - ESLint config at root needs explicit file patterns for new packages
+  - Placeholder entry point needed for typecheck to pass on new package
+---

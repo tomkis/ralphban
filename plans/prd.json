@@ -12,7 +12,7 @@
       "Add build/dev scripts using tsx",
       "Create tsconfig.json for CLI package"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-002",

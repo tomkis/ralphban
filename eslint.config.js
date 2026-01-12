@@ -51,7 +51,12 @@ export default [
     },
   },
   {
-    files: ['packages/server/**/*.ts', 'packages/integration-tests/**/*.ts', 'packages/api/**/*.ts'],
+    files: [
+      'packages/server/**/*.ts',
+      'packages/integration-tests/**/*.ts',
+      'packages/api/**/*.ts',
+      'packages/cli/**/*.ts',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,
