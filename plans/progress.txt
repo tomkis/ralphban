@@ -106,3 +106,14 @@
   - moduleResolution: "bundler" works well for workspace dependencies
   - Build script can chain chmod with && for simple postbuild steps
 ---
+
+## 2026-01-12 - chore-007
+- Created .env.example files for packages/cli and packages/mcp-cli
+- Added ANTHROPIC_API_KEY validation to both CLI entry points
+- Added helpful error message with console.anthropic.com link
+- dotenv/config already imported at top of both files from previous work
+- **Learnings:**
+  - ANTHROPIC_API_KEY used implicitly by spawned `claude` CLI in ralph service
+  - Both CLIs already had DATABASE_URL validation with helpful messages
+  - Integration test failure is pre-existing (npx ralphban-mcp not published)
+---

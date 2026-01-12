@@ -152,7 +152,7 @@
       "Document in package README that users need .env file in their project",
       "Consider where .env should be loaded from (user's project vs CLI installation)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-008",

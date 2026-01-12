@@ -41,6 +41,13 @@ async function main() {
 
   if (!process.env.DATABASE_URL) {
     console.error('DATABASE_URL environment variable is required');
+    console.error('Set it in your .env file or export it in your shell');
+    process.exit(1);
+  }
+
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.error('ANTHROPIC_API_KEY environment variable is required');
+    console.error('Get your API key from https://console.anthropic.com/');
     process.exit(1);
   }
 

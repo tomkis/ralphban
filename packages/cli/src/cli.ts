@@ -28,6 +28,12 @@ async function main() {
     process.exit(1);
   }
 
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.error('ANTHROPIC_API_KEY environment variable is required');
+    console.error('Get your API key from https://console.anthropic.com/');
+    process.exit(1);
+  }
+
   const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     console.error('Unhandled error:', err);
     res.status(500).json({ error: 'Internal server error' });
