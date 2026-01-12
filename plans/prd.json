@@ -202,23 +202,6 @@
     "passes": false
   },
   {
-    "id": "chore-010",
-    "category": "chore",
-    "title": "Add CLI usage documentation",
-    "description": "Create README files for both CLI packages explaining installation, requirements, usage. Cover PostgreSQL setup, environment variables, git requirements.",
-    "steps": [
-      "Create packages/cli/README.md",
-      "Document 'npx ralphban' usage",
-      "List requirements: Node.js version, PostgreSQL, git repository",
-      "Document environment variables needed",
-      "Add troubleshooting section for common errors",
-      "Create packages/mcp-cli/README.md",
-      "Document 'npx ralphban-mcp --cwd' usage",
-      "Explain MCP server purpose and Claude integration"
-    ],
-    "passes": false
-  },
-  {
     "id": "feat-005",
     "category": "feat",
     "title": "Add graceful shutdown handling",
@@ -243,9 +226,23 @@
     "steps": [
       "Modify buildMcpConfig() in packages/server/src/ralph/service.ts to check RALPHBAN_MCP_PATH env var",
       "If RALPHBAN_MCP_PATH set: use `node` command with path as first arg",
-      "If not set: use `npx ralphban-mcp` (current behavior)",
+      "If not set: use `npx ralphban-mcp`",
       "Update scripts/tests.sh to build mcp-cli before tests",
       "Set RALPHBAN_MCP_PATH env var in tests.sh pointing to local dist"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-012",
+    "category": "chore",
+    "title": "Extract and expose server code and use it inside CLI (not mcp)",
+    "description": "The server code is currently being duplicated in CLI and the server, the idea is that the server should be a dependency and CLI should depend on it. We can expose it as both library and with some main as well to run it independnetly.",
+    "steps": [
+      "Create packages/server/src/server.ts",
+      "Move all the bootstrapping from index to server",
+      "In the index, just run the server",
+      "Export createServer function from server package",
+      "Update CLI to call the server from the server package"
     ],
     "passes": false
   }
