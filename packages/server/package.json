@@ -3,6 +3,24 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "exports": {
+    "./utils/git-validation": {
+      "import": "./src/utils/git-validation.ts",
+      "types": "./src/utils/git-validation.ts"
+    },
+    "./trpc": {
+      "import": "./src/trpc/index.ts",
+      "types": "./src/trpc/index.ts"
+    },
+    "./ralph/service": {
+      "import": "./src/ralph/service.ts",
+      "types": "./src/ralph/service.ts"
+    },
+    "./db/client": {
+      "import": "./src/db/client.ts",
+      "types": "./src/db/client.ts"
+    }
+  },
   "scripts": {
     "dev": "docker-compose up -d && tsx watch src/index.ts",
     "build": "tsc",

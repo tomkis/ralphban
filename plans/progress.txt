@@ -32,3 +32,17 @@
   - Existing spawnProcess utility has logging that's not needed for validation
   - All functions accept optional cwd parameter for flexibility
 ---
+
+## 2026-01-12 - feat-002
+- Implemented main CLI entry point in packages/cli/src/cli.ts
+- Added git validation before initialization
+- Added DATABASE_URL env validation with helpful error
+- Integrated tRPC handler and Ralph endpoint from server package
+- Added static file serving from web-dist folder
+- Added SPA fallback routing
+- Added exports to @ralphban/server package.json for subpath imports
+- **Learnings:**
+  - Server package needed exports field to expose subpaths
+  - Using .ts extensions in exports works with tsx for dev
+  - web-dist path is relative to cli.ts location using __dirname
+---

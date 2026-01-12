@@ -60,7 +60,7 @@
       "Log server URL on successful start",
       "Handle DATABASE_URL missing with helpful error message"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "feat-003",
