@@ -59,7 +59,7 @@
     "steps": [
       "Delete packages/mcp-cli directory entirely"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-006",

@@ -46,3 +46,13 @@
   - No code changes needed, simple directory removal
   - pnpm workspace auto-updates when package dir removed
 ---
+
+## 2026-01-12 - chore-005
+- Removed redundant packages/mcp-cli directory
+- Files changed:
+  - packages/mcp-cli (deleted entirely)
+- **Learnings:**
+  - MCP CLI functionality already moved to server package in chore-001
+  - Same pattern as chore-004, simple directory removal
+  - Tests still pass after removal
+---
