@@ -234,5 +234,19 @@
       "Exit with appropriate code"
     ],
     "passes": false
+  },
+  {
+    "id": "chore-011",
+    "category": "chore",
+    "title": "Local npx testing without publishing",
+    "description": "Enable integration tests to use local mcp-cli code instead of published npm package via environment variable override.",
+    "steps": [
+      "Modify buildMcpConfig() in packages/server/src/ralph/service.ts to check RALPHBAN_MCP_PATH env var",
+      "If RALPHBAN_MCP_PATH set: use `node` command with path as first arg",
+      "If not set: use `npx ralphban-mcp` (current behavior)",
+      "Update scripts/tests.sh to build mcp-cli before tests",
+      "Set RALPHBAN_MCP_PATH env var in tests.sh pointing to local dist"
+    ],
+    "passes": false
   }
 ]
