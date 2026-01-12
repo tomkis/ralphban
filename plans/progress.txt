@@ -20,3 +20,15 @@
   - Followed same pattern as chore-001 for consistency
   - yargs v18 used for modern ESM CLI parsing
 ---
+
+## 2026-01-12 - feat-001
+- Created packages/server/src/utils/git-validation.ts
+- Implemented checkIsGitRepo using git rev-parse --git-dir
+- Implemented checkIsCleanWorkingTree using git status --porcelain
+- Exported validateGitRepository function combining both checks
+- Returns GitValidationResult with valid boolean and errors array
+- **Learnings:**
+  - Used spawn from child_process directly for simpler git commands
+  - Existing spawnProcess utility has logging that's not needed for validation
+  - All functions accept optional cwd parameter for flexibility
+---
