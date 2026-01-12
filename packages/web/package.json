@@ -8,10 +8,14 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "lint": "concurrently \"eslint .\" \"prettier --check .\"",
-    "fix": "concurrently \"eslint --fix .\" \"prettier --write .\""
+    "lint": "concurrently \"eslint .\" \"prettier --check . --ignore-path ../../.prettierignore\"",
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write . --ignore-path ../../.prettierignore\""
   },
   "dependencies": {
+    "@ralphban/api": "workspace:*",
+    "@tanstack/react-query": "^5.80.7",
+    "@trpc/client": "^11.3.0",
+    "@trpc/react-query": "^11.3.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
