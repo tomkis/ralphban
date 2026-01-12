@@ -179,3 +179,18 @@
   - Server package must be built before CLI typecheck to generate .d.ts
   - Pool.end() must be called after initialization to avoid hanging connections
 ---
+
+## 2026-01-12 - feat-005
+- Added stop() method to ServerInstance interface in server.ts
+- Modified createServer to track http.Server instance and return stop function
+- Added SIGINT/SIGTERM handlers to packages/cli/src/cli.ts
+- Added closeDbPool function to trpc/context.ts and exported from trpc/index.ts
+- Added SIGINT/SIGTERM handlers to packages/mcp-cli/src/mcp-cli.ts
+- MCP CLI closes McpServer and Pool on shutdown
+- Added @types/pg to mcp-cli devDependencies for Pool type
+- **Learnings:**
+  - http.Server.close() is async and takes callback, wrapped in Promise
+  - MCP uses stderr for logging since stdout is for protocol
+  - Module-level pool in context.ts needs exported cleanup function
+  - McpServer from @modelcontextprotocol/sdk has close() method
+---

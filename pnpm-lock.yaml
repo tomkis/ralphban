@@ -116,6 +116,9 @@ importers:
       '@types/node':
         specifier: ^25.0.3
         version: 25.0.3
+      '@types/pg':
+        specifier: ^8.16.0
+        version: 8.16.0
       '@types/yargs':
         specifier: ^17.0.33
         version: 17.0.35
@@ -140,9 +143,6 @@ importers:
       '@trpc/server':
         specifier: ^11.3.0
         version: 11.8.1(typescript@5.9.3)
-      '@types/pg':
-        specifier: ^8.16.0
-        version: 8.16.0
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -168,6 +168,9 @@ importers:
       '@types/node':
         specifier: ^25.0.3
         version: 25.0.3
+      '@types/pg':
+        specifier: ^8.16.0
+        version: 8.16.0
       tsx:
         specifier: ^4.21.0
         version: 4.21.0

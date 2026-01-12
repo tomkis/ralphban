@@ -11,3 +11,7 @@ export function createContext(): Context {
     ralph: createRalphService(),
   };
 }
+
+export async function closeDbPool(): Promise<void> {
+  await pool.end();
+}

@@ -1,3 +1,4 @@
+import http from 'http';
 import path from 'path';
 import express, { type Application, type ErrorRequestHandler } from 'express';
 import { runRalphLoop } from './ralph/service.js';
@@ -11,6 +12,7 @@ export interface ServerConfig {
 export interface ServerInstance {
   app: Application;
   start: () => Promise<void>;
+  stop: () => Promise<void>;
 }
 
 export function createServer(config: ServerConfig = {}): ServerInstance {
@@ -52,14 +54,29 @@ export function createServer(config: ServerConfig = {}): ServerInstance {
 
   app.use(errorHandler);
 
+  let httpServer: http.Server | null = null;
+
   const start = () => {
     return new Promise<void>((resolve) => {
-      app.listen(port, () => {
+      httpServer = app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);
         resolve();
       });
     });
   };
 
-  return { app, start };
+  const stop = () => {
+    return new Promise<void>((resolve, reject) => {
+      if (!httpServer) {
+        resolve();
+        return;
+      }
+      httpServer.close((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+  };
+
+  return { app, start, stop };
 }

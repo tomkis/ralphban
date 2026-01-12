@@ -216,7 +216,7 @@
       "Log shutdown messages",
       "Exit with appropriate code"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-011",
