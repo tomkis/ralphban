@@ -137,7 +137,7 @@
       "Test that built CLI can be executed directly",
       "Verify imports resolve correctly in built output"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-007",

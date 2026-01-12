@@ -7,7 +7,7 @@
     "ralphban": "./dist/cli.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/cli.js",
     "dev": "tsx watch src/cli.ts",
     "typecheck": "tsc --noEmit",
     "lint": "concurrently \"eslint .\" \"prettier --check . --ignore-path ../../.prettierignore\"",

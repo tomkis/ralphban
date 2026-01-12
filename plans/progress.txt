@@ -94,3 +94,15 @@
   - "files" field in package.json restricts what npm publish includes
   - Both packages already had private: false and exports configured correctly
 ---
+
+## 2026-01-12 - chore-006
+- Verified tsconfig already properly configured for both CLI packages (ES2022, ESNext module)
+- Confirmed tsc preserves shebang lines in output
+- Added chmod +x to build scripts in both packages/cli and packages/mcp-cli
+- Tested direct execution of built CLIs successfully
+- Verified imports to @ralphban/server subpaths resolve correctly
+- **Learnings:**
+  - TypeScript 5.9 preserves shebang comments automatically
+  - moduleResolution: "bundler" works well for workspace dependencies
+  - Build script can chain chmod with && for simple postbuild steps
+---

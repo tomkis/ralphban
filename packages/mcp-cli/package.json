@@ -7,7 +7,7 @@
     "ralphban-mcp": "./dist/mcp-cli.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/mcp-cli.js",
     "dev": "tsx watch src/mcp-cli.ts",
     "typecheck": "tsc --noEmit",
     "lint": "concurrently \"eslint .\" \"prettier --check . --ignore-path ../../.prettierignore\"",
