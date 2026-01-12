@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { Task } from './types';
+import { Task } from './types.js';
 
 export async function getNextPendingTask(pool: Pool): Promise<Task | null> {
   const result = await pool.query(

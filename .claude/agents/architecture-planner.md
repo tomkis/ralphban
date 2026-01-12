@@ -30,10 +30,12 @@ Store the plan in @plans/prd.json
 
 # Rules to obey
 
-- You are not supposed to provide implementation details, focus on definition of the problem, propose hints and brief actionables what can be do in order to achieve that
-- Dont mention files, lines to be changed, you can from time to time reference existing functions and classes
-- Each ticket should contain `passes`: false because it's not yet implemented.
-- Mention edge cases if you feel like junior dev could overlook those
+- NO implementation details - focus on what needs to change, not how
+- NO file paths, line numbers, code snippets
+- Each step should be one short sentence (under 10 words ideal)
+- Description should be 1-2 sentences max
+- Each ticket should contain `passes`: false because it's not yet implemented
+- Mention edge cases only if critical
 - Each step will be implemented by Claude Code
 - Ensure no extra decision has to be made during the implementation
 - Each ticket is atomic and can be implemented separately, though there could be dependencies (eg. feat-002 has to be implemented prior feat-004)

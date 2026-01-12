@@ -1,3 +1,4 @@
 dist
+web-dist
 node_modules
 .ralph-test-workdir

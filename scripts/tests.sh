@@ -50,12 +50,16 @@ wait_for_server() {
   return 1
 }
 
+echo "Building mcp-cli for local testing..."
+pnpm --filter ralphban-mcp build
+MCP_CLI_PATH="$PROJECT_ROOT/packages/mcp-cli/dist/mcp-cli.js"
+
 PORT=$(find_available_port)
 echo "Using port: $PORT"
 
 echo "Starting server..."
 cd "$PROJECT_ROOT"
-PORT=$PORT pnpm --filter @ralphban/server dev > "$SERVER_LOG" 2>&1 &
+PORT=$PORT RALPHBAN_MCP_PATH=$MCP_CLI_PATH pnpm --filter @ralphban/server dev > "$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
 
 sleep 1

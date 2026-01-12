@@ -51,7 +51,13 @@ export default [
     },
   },
   {
-    files: ['packages/server/**/*.ts', 'packages/integration-tests/**/*.ts', 'packages/api/**/*.ts'],
+    files: [
+      'packages/server/**/*.ts',
+      'packages/integration-tests/**/*.ts',
+      'packages/api/**/*.ts',
+      'packages/cli/**/*.ts',
+      'packages/mcp-cli/**/*.ts',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -63,6 +69,7 @@ export default [
     ignores: [
       '**/dist',
       '**/node_modules',
+      '**/web-dist',
       '.next',
       'build',
       'packages/integration-tests/.ralph-test-workdir',

@@ -1,8 +1,48 @@
 {
   "name": "@ralphban/server",
   "version": "0.0.1",
-  "private": true,
+  "description": "Server utilities, tRPC adapter, and MCP server for ralphban",
+  "private": false,
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomkis/ralphban.git",
+    "directory": "packages/server"
+  },
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/server.js",
+      "types": "./dist/server.d.ts"
+    },
+    "./utils/git-validation": {
+      "import": "./dist/utils/git-validation.js",
+      "types": "./dist/utils/git-validation.d.ts"
+    },
+    "./trpc": {
+      "import": "./dist/trpc/index.js",
+      "types": "./dist/trpc/index.d.ts"
+    },
+    "./ralph/service": {
+      "import": "./dist/ralph/service.js",
+      "types": "./dist/ralph/service.d.ts"
+    },
+    "./db/client": {
+      "import": "./dist/db/client.js",
+      "types": "./dist/db/client.d.ts"
+    },
+    "./mcp/server": {
+      "import": "./dist/mcp/server.js",
+      "types": "./dist/mcp/server.d.ts"
+    },
+    "./db/init": {
+      "import": "./dist/db/init.js",
+      "types": "./dist/db/init.d.ts"
+    }
+  },
   "scripts": {
     "dev": "docker-compose up -d && tsx watch src/index.ts",
     "build": "tsc",
@@ -20,7 +60,6 @@
     "@anthropic-ai/claude-agent-sdk": "^0.2.2",
     "@trpc/server": "^11.3.0",
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "@types/pg": "^8.16.0",
     "dotenv": "^17.2.3",
     "eventsource-parser": "^3.0.6",
     "express": "^5.2.1",
@@ -31,6 +70,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.3",
+    "@types/pg": "^8.16.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

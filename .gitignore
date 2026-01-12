@@ -4,3 +4,4 @@ node_modules
 .server-test.log
 dist/
 .DS_Store
+packages/cli/web-dist/
