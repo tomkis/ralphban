@@ -183,7 +183,7 @@
       "Test that npm pack includes both folders",
       "Verify static serving works with bundled assets"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "feat-004",

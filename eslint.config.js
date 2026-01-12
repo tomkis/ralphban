@@ -69,6 +69,7 @@ export default [
     ignores: [
       '**/dist',
       '**/node_modules',
+      '**/web-dist',
       '.next',
       'build',
       'packages/integration-tests/.ralph-test-workdir',

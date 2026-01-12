@@ -140,3 +140,15 @@
   - Environment variable override pattern enables local dev without npm publish
   - Cleanup of unused imports simplifies codebase
 ---
+
+## 2026-01-12 - chore-009
+- Added prebuild script to CLI package that builds web and copies dist to web-dist
+- Added files field to package.json with ["dist", "web-dist"]
+- CLI already served from web-dist path (from feat-002)
+- Added web-dist to eslint and prettier ignores (bundled JS was failing lint)
+- Verified npm pack includes dist/cli.js and web-dist/ (4 files, 86.7KB)
+- **Learnings:**
+  - Bundled web assets must be excluded from linting/formatting
+  - prebuild script auto-runs before build in pnpm
+  - npm pack --dry-run useful for verifying tarball contents before publish
+---

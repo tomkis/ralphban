@@ -6,7 +6,12 @@
   "bin": {
     "ralphban": "./dist/cli.js"
   },
+  "files": [
+    "dist",
+    "web-dist"
+  ],
   "scripts": {
+    "prebuild": "pnpm --filter @ralphban/web build && cp -r ../web/dist ./web-dist",
     "build": "tsc && chmod +x dist/cli.js",
     "dev": "tsx watch src/cli.ts",
     "typecheck": "tsc --noEmit",
