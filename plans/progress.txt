@@ -213,3 +213,18 @@
   - Caller is now responsible for pool lifecycle
   - Pool created just for schema init is closed after use; main app pool is separate (in trpc/context.ts)
 ---
+
+## 2026-01-12 - chore-016
+- Removed global pool from trpc/context.ts
+- Updated createContext to accept Pool parameter
+- Created createTrpcHandler factory function in adapter.ts that accepts Pool
+- Updated createServer to require pool in ServerConfig
+- Updated CLI to create appPool and pass to createServer, manage lifecycle in shutdown
+- Updated standalone server index.ts to create own pool with shutdown handlers
+- Removed closeDbPool export from trpc/index.ts
+- **Learnings:**
+  - trpcHandler adapter needs factory pattern to inject pool via closure
+  - ServerConfig.pool is now required (not optional) - cleaner API
+  - CLI uses separate initPool for schema init and appPool for runtime
+  - chore-013 PRD is obsolete - closeDbPool was valid; now pool management moved to entry points
+---

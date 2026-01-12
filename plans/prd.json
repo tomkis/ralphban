@@ -284,6 +284,6 @@
       "Each entry point creates and manages own pool",
       "Remove global pool and closeDbPool from trpc/context.ts"
     ],
-    "passes": false
+    "passes": true
   }
 ]

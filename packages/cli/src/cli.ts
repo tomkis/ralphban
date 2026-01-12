@@ -2,16 +2,17 @@
 
 import 'dotenv/config';
 import path from 'path';
+import type { Pool } from 'pg';
 import { fileURLToPath } from 'url';
 import { validateGitRepository } from '@ralphban/server/utils/git-validation';
 import { initializeSchema } from '@ralphban/server/db/init';
 import { createDbClient } from '@ralphban/server/db/client';
 import { createServer, type ServerInstance } from '@ralphban/server';
-import { closeDbPool } from '@ralphban/server/trpc';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let server: ServerInstance | null = null;
+let appPool: Pool | null = null;
 
 async function shutdown(signal: string) {
   console.log(`\nReceived ${signal}, shutting down...`);
@@ -19,7 +20,9 @@ async function shutdown(signal: string) {
     if (server) {
       await server.stop();
     }
-    await closeDbPool();
+    if (appPool) {
+      await appPool.end();
+    }
     console.log('Shutdown complete');
     process.exit(0);
   } catch (error) {
@@ -55,19 +58,20 @@ async function main() {
     process.exit(1);
   }
 
-  const pool = createDbClient();
+  const initPool = createDbClient();
   try {
-    await initializeSchema(pool);
+    await initializeSchema(initPool);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error('Database initialization failed:', message);
-    await pool.end();
+    await initPool.end();
     process.exit(1);
   }
-  await pool.end();
+  await initPool.end();
 
+  appPool = createDbClient();
   const webDistPath = path.resolve(__dirname, '..', 'web-dist');
-  server = createServer({ staticDir: webDistPath });
+  server = createServer({ pool: appPool, staticDir: webDistPath });
   await server.start();
   console.log('ralphban is ready');
 }

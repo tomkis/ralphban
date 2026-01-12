@@ -1,10 +1,12 @@
 import http from 'http';
 import path from 'path';
+import type { Pool } from 'pg';
 import express, { type Application, type ErrorRequestHandler } from 'express';
 import { runRalphLoop } from './ralph/service.js';
-import { trpcHandler } from './trpc/index.js';
+import { createTrpcHandler } from './trpc/index.js';
 
 export interface ServerConfig {
+  pool: Pool;
   port?: number;
   staticDir?: string;
 }
@@ -15,7 +17,8 @@ export interface ServerInstance {
   stop: () => Promise<void>;
 }
 
-export function createServer(config: ServerConfig = {}): ServerInstance {
+export function createServer(config: ServerConfig): ServerInstance {
+  const { pool } = config;
   const port = config.port ?? parseInt(process.env.PORT ?? '3001', 10);
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -27,7 +30,7 @@ export function createServer(config: ServerConfig = {}): ServerInstance {
 
   app.use(express.json());
 
-  app.all('/trpc/{*path}', trpcHandler);
+  app.all('/trpc/{*path}', createTrpcHandler(pool));
 
   app.post('/ralph', async (req, res) => {
     const { workingDirectory } = req.body;
