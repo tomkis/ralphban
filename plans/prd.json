@@ -199,7 +199,7 @@
       "Handle case where database exists but schema is outdated",
       "Consider idempotent migrations approach"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "feat-005",

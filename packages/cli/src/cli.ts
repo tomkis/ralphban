@@ -4,6 +4,7 @@ import 'dotenv/config';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { validateGitRepository } from '@ralphban/server/utils/git-validation';
+import { initializeSchema } from '@ralphban/server/db/init';
 import { createServer } from '@ralphban/server';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -29,6 +30,14 @@ async function main() {
   if (!process.env.ANTHROPIC_API_KEY) {
     console.error('ANTHROPIC_API_KEY environment variable is required');
     console.error('Get your API key from https://console.anthropic.com/');
+    process.exit(1);
+  }
+
+  try {
+    await initializeSchema();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Database initialization failed:', message);
     process.exit(1);
   }
 

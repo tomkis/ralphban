@@ -166,3 +166,16 @@
   - Must run build:server before typecheck when adding new exports
   - createServer accepts staticDir for SPA serving (CLI uses, server doesn't)
 ---
+
+## 2026-01-12 - feat-004
+- Created packages/server/src/db/init.ts with initializeSchema function
+- Uses CREATE TABLE/INDEX IF NOT EXISTS for idempotent schema creation
+- Added checkTablesExist helper using information_schema query
+- Catches ECONNREFUSED errors with helpful PostgreSQL message
+- Added ./db/init export to server package.json
+- Updated CLI to call initializeSchema after env validation
+- **Learnings:**
+  - IF NOT EXISTS makes schema idempotent without dropping existing data
+  - Server package must be built before CLI typecheck to generate .d.ts
+  - Pool.end() must be called after initialization to avoid hanging connections
+---
