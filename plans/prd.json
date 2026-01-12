@@ -89,6 +89,6 @@
       "Verify stdio transport connects",
       "Verify graceful shutdown works"
     ],
-    "passes": false
+    "passes": true
   }
 ]

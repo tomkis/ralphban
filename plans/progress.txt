@@ -74,3 +74,17 @@
   - Graceful shutdown properly closes server and db pool
   - No code changes needed, all functionality works as expected
 ---
+
+## 2026-01-12 - chore-007
+- Verified MCP server mode works correctly
+- Tests performed:
+  - Built server package with pnpm build:all
+  - Ran with --mcp flag via stdio pipe
+  - Sent MCP initialize request, received valid serverInfo response
+  - Sent tools/list request, confirmed both tools registered (get_tasks_ready_for_implementation, mark_task_done)
+  - Tested SIGINT graceful shutdown, confirmed "Shutdown complete" message
+- **Learnings:**
+  - MCP stdio server exits when stdin closes (expected behavior)
+  - DB client connects silently on startup (no explicit log)
+  - All verification steps pass without code changes
+---
