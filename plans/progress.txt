@@ -56,3 +56,21 @@
   - Same pattern as chore-004, simple directory removal
   - Tests still pass after removal
 ---
+
+## 2026-01-12 - chore-006
+- Verified HTTP server mode works correctly
+- Tests performed:
+  - Built server package with pnpm build:all
+  - Ran without flags, verified DATABASE_URL validation
+  - Ran without ANTHROPIC_API_KEY, verified API key check
+  - Ran outside git repo, verified git validation fails
+  - Started server with proper env vars on port 3001
+  - Verified static web serving returns index.html
+  - Verified tRPC endpoint responds at /trpc
+  - Verified graceful SIGINT shutdown with "Shutdown complete" message
+- **Learnings:**
+  - Server defaults to port 3001 not 3000
+  - All validation checks (git, db, api key) work correctly
+  - Graceful shutdown properly closes server and db pool
+  - No code changes needed, all functionality works as expected
+---

@@ -75,7 +75,7 @@
       "Verify static web serving works",
       "Verify graceful shutdown works"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-007",
