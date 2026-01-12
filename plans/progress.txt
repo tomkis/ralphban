@@ -62,3 +62,14 @@
   - MCP server creation reuses existing createMCPServer from server pkg
   - Server package exports need updating for each new subpath import
 ---
+
+## 2026-01-12 - chore-003
+- Added explicit build config to packages/web/vite.config.ts
+- Set base: '/' for absolute asset paths (compatible with Express static)
+- Set outDir: 'dist' and assetsDir: 'assets' explicitly
+- Verified build outputs index.html and assets/index-*.js correctly
+- **Learnings:**
+  - Vite default base '/' produces absolute paths like /assets/index.js
+  - Express.static serves these correctly when mounted at root
+  - Explicit config documents intent even when matching defaults
+---

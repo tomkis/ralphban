@@ -93,7 +93,7 @@
       "Test that assets use relative paths compatible with Express static middleware",
       "Document build command in web package.json"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-004",
