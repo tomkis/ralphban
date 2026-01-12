@@ -6,17 +6,17 @@ ralphban combines Ralph and Kanban into a unified development workflow.
 
 **Ralph** is an agentic coding approach where an agent continuously works in a loop to implement product requirement documents (PRDs).
 
-**ralphban** provides a Kanban board UI as a facade for the Ralph workflow. Users define PRDs through a traditional Kanban interface, while Ralph runs in the background loop to build the project based on those requirements.
+**ralphban** provides a Kanban board UI as a facade for the Ralph workflow. Users define PRDs through a traditional Kanban interface. User can then trigger Ralph to start, which initiate Ralph loop - picking a ticket from the backlog and working on that.
 
 ## Architecture
 
 **UI**: Kanban board for PRD management
 
-**Server**: Cron job that:
-- Reads tasks from database
-- Creates agent specification
-- Generates prd.json
-- Launches ralph
+**Server**: Express HTTP server that:
+- Provides tRPC endpoints for Kanban board operations and Ralph control
+- Exposes an MCP server with tools for Ralph to interact with tasks
+- Manages tasks in PostgreSQL database
+- Runs Ralph loop by spawning Claude with MCP configuration to pick and implement tasks from the backlog
 
 ## Development
 
