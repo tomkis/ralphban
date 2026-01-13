@@ -3,7 +3,8 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { createMCPServer } from './server.js';
 import { createDbClient } from '../db/client.js';
 
-const db = await createDbClient();
+const dbDir = process.env.RALPHBAN_DB_DIR || process.cwd();
+const db = await createDbClient(dbDir);
 const mcpServer = createMCPServer(db);
 const transport = new StdioServerTransport();
 

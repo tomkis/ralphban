@@ -3,17 +3,16 @@
 import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
-import type { Pool } from 'pg';
 import { fileURLToPath } from 'url';
 import { validateGitRepository } from './utils/git-validation.js';
 import { initializeSchema } from './db/init.js';
-import { createDbClient } from './db/client.js';
+import { createDbClient, type DbClient } from './db/client.js';
 import { createServer, type ServerInstance } from './server.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let server: ServerInstance | null = null;
-let appPool: Pool | null = null;
+let appDb: DbClient | null = null;
 
 async function shutdown(signal: string) {
   console.log(`\nReceived ${signal}, shutting down...`);
@@ -21,8 +20,8 @@ async function shutdown(signal: string) {
     if (server) {
       await server.stop();
     }
-    if (appPool) {
-      await appPool.end();
+    if (appDb) {
+      appDb.close();
     }
     console.log('Shutdown complete');
     process.exit(0);
@@ -49,28 +48,20 @@ export async function runHttpServer() {
     }
   }
 
-  if (!process.env.DATABASE_URL) {
-    console.error('DATABASE_URL environment variable is required');
-    console.error('Set it in your .env file or export it in your shell');
-    process.exit(1);
-  }
-
-  const initPool = createDbClient();
+  appDb = await createDbClient(cwd);
   try {
-    await initializeSchema(initPool);
+    initializeSchema(appDb);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error('Database initialization failed:', message);
-    await initPool.end();
+    appDb.close();
     process.exit(1);
   }
-  await initPool.end();
 
-  appPool = createDbClient();
   const webDistInDir = path.resolve(__dirname, 'web-dist');
   const webDistInParent = path.resolve(__dirname, '..', 'web-dist');
   const webDistPath = fs.existsSync(webDistInDir) ? webDistInDir : webDistInParent;
-  server = createServer({ pool: appPool, staticDir: webDistPath });
+  server = createServer({ db: appDb, staticDir: webDistPath });
   await server.start();
   console.log('ralphban is ready');
 }

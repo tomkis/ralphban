@@ -54,12 +54,16 @@ echo "Building server for local testing..."
 pnpm build:all
 MCP_CLI_PATH="$PROJECT_ROOT/packages/server/dist/index.js"
 
+echo "Cleaning up test databases..."
+rm -rf "$PROJECT_ROOT/packages/server/.ralphban"
+rm -rf "$PROJECT_ROOT/packages/integration-tests/.ralph-test-workdir"
+
 PORT=$(find_available_port)
 echo "Using port: $PORT"
 
 echo "Starting server..."
 cd "$PROJECT_ROOT"
-PORT=$PORT RALPHBAN_MCP_PATH=$MCP_CLI_PATH SKIP_GIT_VALIDATION=true SKIP_API_KEY_CHECK=true pnpm --filter @ralphban/server dev > "$SERVER_LOG" 2>&1 &
+PORT=$PORT RALPHBAN_MCP_PATH=$MCP_CLI_PATH SKIP_GIT_VALIDATION=true SKIP_API_KEY_CHECK=true SEED_DATABASE=true pnpm --filter @ralphban/server dev > "$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
 
 sleep 1
@@ -67,10 +71,6 @@ tail -f "$SERVER_LOG" | sed 's/^/[SERVER] /' &
 TAIL_PID=$!
 
 wait_for_server $PORT
-
-echo ""
-echo "Initializing database..."
-pnpm --filter @ralphban/server db:init
 
 echo ""
 echo "Running integration tests..."

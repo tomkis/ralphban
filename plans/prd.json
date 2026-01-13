@@ -101,7 +101,7 @@
       "Replace Pool with Database in mcp-cli.ts",
       "Remove DATABASE_URL validation from cli.ts"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-009",

@@ -49,7 +49,7 @@
     }
   },
   "scripts": {
-    "dev": "docker-compose up -d && tsx watch src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "prebuild": "rm -rf web-dist && cp -r ../web/dist web-dist",
     "build": "tsc && chmod +x dist/index.js",
     "build:publish": "rm -rf publish && node esbuild.config.js && chmod +x publish/index.js && cp -r ../web/dist publish/web-dist",

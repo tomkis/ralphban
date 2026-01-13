@@ -16,6 +16,12 @@ CREATE INDEX IF NOT EXISTS idx_tasks_state ON tasks(state);
 CREATE INDEX IF NOT EXISTS idx_tasks_created_at ON tasks(created_at DESC);
 `;
 
+const SEED = `
+DELETE FROM tasks;
+INSERT INTO tasks (id, category, title, description, steps, state) VALUES
+('FEAT-001', 'feat', 'Initialize empty javascript project', 'Initialize empty javascript project using pnpm init', '["Use pnpm init to create a new typescript project", "Create index file that logs hello world", "Add dev script to package json that would node start this"]', 'ReadyForDev');
+`;
+
 function checkTablesExist(db: DbClient): boolean {
   const result = db.exec(`
     SELECT name FROM sqlite_master
@@ -34,4 +40,10 @@ export function initializeSchema(db: DbClient): void {
   console.log('Initializing database schema...');
   db.run(SCHEMA);
   console.log('Database schema initialized');
+
+  if (process.env.SEED_DATABASE === 'true') {
+    console.log('Seeding database with test data...');
+    db.run(SEED);
+    console.log('Database seeded');
+  }
 }

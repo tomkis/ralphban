@@ -81,3 +81,21 @@
   - MCP server tool handlers can be sync since underlying service functions are sync
   - Build/test still fail due to pg imports in cli.ts, mcp-cli.ts, server.ts (expected until chore-008)
 ---
+
+## 2026-01-13 - chore-008
+- Updated server and CLI entry points to use DbClient instead of Pool
+- server.ts: changed config interface from pool:Pool to db:DbClient
+- cli.ts: removed DATABASE_URL validation, replaced Pool with DbClient, await createDbClient(cwd)
+- mcp-cli.ts: replaced Pool with DbClient, added RALPHBAN_DB_DIR env var support
+- Added RALPHBAN_DB_DIR env var passing in ralph/service.ts for MCP subprocess
+- Added env parameter to SpawnProcessOptions interface
+- stdio-server.ts: added RALPHBAN_DB_DIR support
+- init.ts: added SEED_DATABASE env var for test seeding
+- tests.sh: removed docker-compose dependency, added SEED_DATABASE, moved cleanup after build
+- Files changed: packages/server/src/server.ts, packages/server/src/cli.ts, packages/server/src/mcp-cli.ts, packages/server/src/mcp/stdio-server.ts, packages/server/src/ralph/service.ts, packages/server/src/utils/process.ts, packages/server/src/db/init.ts, packages/server/package.json, scripts/tests.sh
+- **Learnings:**
+  - HTTP server and MCP subprocess need same database - solved via RALPHBAN_DB_DIR env var
+  - Build process creates empty database (unexplained side effect) - tests.sh cleanup moved after build
+  - dev script removed docker-compose dependency for SQLite workflow
+  - Tests now pass end-to-end with SQLite
+---
