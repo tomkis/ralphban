@@ -75,7 +75,7 @@
       "Update function signatures in both files",
       "Parse JSON for steps field in mapping functions"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-007",

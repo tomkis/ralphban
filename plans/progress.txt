@@ -57,3 +57,14 @@
   - Cast via unknown needed for dynamic object to interface conversion
   - Build/test still fail due to pg imports in other files (expected until chore-006+)
 ---
+
+## 2026-01-13 - chore-006
+- Updated service layers to use DbClient instead of Pool
+- service.ts: made functions sync, changed Pool param to DbClient
+- trpc-service.ts: added TaskRow interface, manual column-to-row mapping via exec()
+- Files changed: packages/server/src/kanban/service.ts, packages/server/src/kanban/trpc-service.ts
+- **Learnings:**
+  - trpc-service getTasks kept async signature for IKanbanService contract compatibility
+  - Reused same Object.fromEntries pattern from repository for exec() result mapping
+  - Build/test still fail due to pg imports in other files (expected until chore-007+)
+---
