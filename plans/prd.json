@@ -49,7 +49,7 @@
       "Update checkTablesExist for SQLite syntax",
       "Replace pool.query with db.run for DDL"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-005",

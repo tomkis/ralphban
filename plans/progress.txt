@@ -31,3 +31,15 @@
   - createDbClient now async since loadDatabase is async
   - Build/test still fail due to pg imports in other files (expected until chore-004+)
 ---
+
+## 2026-01-13 - chore-004
+- Converted PostgreSQL schema to SQLite syntax in init.ts
+- Replaced Pool with DbClient, JSONB with TEXT, TIMESTAMPTZ with TEXT, NOW() with CURRENT_TIMESTAMP
+- Updated checkTablesExist to use sqlite_master query instead of information_schema
+- Changed initializeSchema from async to sync since DbClient operations are sync
+- Files changed: packages/server/src/db/init.ts
+- **Learnings:**
+  - SQLite uses sqlite_master table to check for table existence
+  - VARCHAR(n) can be simplified to TEXT in SQLite
+  - Build/test still fail due to pg imports in other files (expected until chore-005+)
+---
