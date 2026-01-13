@@ -1,9 +1,9 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { Pool } from 'pg';
+import type { DbClient } from '../db/client.js';
 import { getTasksReadyForImplementation, markTaskAsCompleted } from '../kanban/service.js';
 
-export function createMCPServer(pool: Pool): McpServer {
+export function createMCPServer(db: DbClient): McpServer {
   const server = new McpServer(
     {
       name: 'ralphban-task-server',
@@ -21,8 +21,8 @@ export function createMCPServer(pool: Pool): McpServer {
     {
       description: 'Get all tasks that are ready for implementation',
     },
-    async () => {
-      const tasks = await getTasksReadyForImplementation(pool);
+    () => {
+      const tasks = getTasksReadyForImplementation(db);
       return {
         content: [
           {
@@ -42,8 +42,8 @@ export function createMCPServer(pool: Pool): McpServer {
         taskId: z.string().describe('The ID of the task to mark as done'),
       },
     },
-    async ({ taskId }) => {
-      await markTaskAsCompleted(pool, taskId);
+    ({ taskId }) => {
+      markTaskAsCompleted(db, taskId);
       return {
         content: [
           {

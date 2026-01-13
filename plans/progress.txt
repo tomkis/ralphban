@@ -68,3 +68,16 @@
   - Reused same Object.fromEntries pattern from repository for exec() result mapping
   - Build/test still fail due to pg imports in other files (expected until chore-007+)
 ---
+
+## 2026-01-13 - chore-007
+- Updated tRPC infrastructure to use DbClient instead of Pool
+- context.ts: replaced Pool import with DbClient, updated param name
+- adapter.ts: replaced Pool import with DbClient, updated param name
+- mcp/server.ts: replaced Pool import with DbClient, removed async from handlers since service functions are now sync
+- mcp/stdio-server.ts: awaited createDbClient() since it's now async
+- Files changed: packages/server/src/trpc/context.ts, packages/server/src/trpc/adapter.ts, packages/server/src/mcp/server.ts, packages/server/src/mcp/stdio-server.ts
+- **Learnings:**
+  - stdio-server.ts needed update as part of MCP infrastructure
+  - MCP server tool handlers can be sync since underlying service functions are sync
+  - Build/test still fail due to pg imports in cli.ts, mcp-cli.ts, server.ts (expected until chore-008)
+---

@@ -1,10 +1,10 @@
-import type { Pool } from 'pg';
 import type { Request, Response } from 'express';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@ralphban/api';
+import type { DbClient } from '../db/client.js';
 import { createContext } from './context.js';
 
-export function createTrpcHandler(pool: Pool) {
+export function createTrpcHandler(db: DbClient) {
   return async (req: Request, res: Response) => {
     const url = new URL(req.url || '', `http://${req.headers.host}`);
 
@@ -23,7 +23,7 @@ export function createTrpcHandler(pool: Pool) {
         body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body),
       }),
       router: appRouter,
-      createContext: () => createContext(pool),
+      createContext: () => createContext(db),
     });
 
     res.status(response.status);
