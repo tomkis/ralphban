@@ -1,13 +1,46 @@
-import { Pool } from 'pg';
+import { DbClient } from '../db/client.js';
 import { Task } from './types.js';
 
-export async function getNextPendingTask(pool: Pool): Promise<Task | null> {
-  const result = await pool.query(
-    "SELECT * FROM tasks WHERE state = 'ReadyForDev' ORDER BY created_at ASC LIMIT 1"
-  );
-  return result.rows[0] || null;
+interface TaskRow {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+  steps: string;
+  state: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export async function updateTaskStatus(pool: Pool, id: string, state: string): Promise<void> {
-  await pool.query('UPDATE tasks SET state = $1, updated_at = NOW() WHERE id = $2', [state, id]);
+function rowToTask(row: TaskRow): Task {
+  return {
+    id: row.id,
+    category: row.category,
+    title: row.title,
+    description: row.description,
+    steps: JSON.parse(row.steps),
+    state: row.state as Task['state'],
+    created_at: new Date(row.created_at),
+    updated_at: new Date(row.updated_at),
+  };
+}
+
+export function getNextPendingTask(client: DbClient): Task | null {
+  const result = client.exec(
+    "SELECT id, category, title, description, steps, state, created_at, updated_at FROM tasks WHERE state = 'ReadyForDev' ORDER BY created_at ASC LIMIT 1"
+  );
+  if (result.length === 0 || result[0].values.length === 0) {
+    return null;
+  }
+  const columns = result[0].columns;
+  const values = result[0].values[0];
+  const row = Object.fromEntries(columns.map((col, i) => [col, values[i]])) as unknown as TaskRow;
+  return rowToTask(row);
+}
+
+export function updateTaskStatus(client: DbClient, id: string, state: string): void {
+  client.run('UPDATE tasks SET state = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [
+    state,
+    id,
+  ]);
 }

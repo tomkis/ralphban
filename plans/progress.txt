@@ -43,3 +43,17 @@
   - VARCHAR(n) can be simplified to TEXT in SQLite
   - Build/test still fail due to pg imports in other files (expected until chore-005+)
 ---
+
+## 2026-01-13 - chore-005
+- Converted repository layer from pg Pool to sql.js DbClient
+- Functions now sync instead of async
+- Added TaskRow interface and rowToTask mapper for converting raw SQL results
+- JSON.parse for steps field, Date conversion for timestamps
+- Replaced $1/$2 params with ? placeholders, NOW() with CURRENT_TIMESTAMP
+- Files changed: packages/server/src/kanban/repository.ts
+- **Learnings:**
+  - sql.js exec returns QueryExecResult[] with columns and values arrays
+  - Need to manually map columns to row object using Object.fromEntries
+  - Cast via unknown needed for dynamic object to interface conversion
+  - Build/test still fail due to pg imports in other files (expected until chore-006+)
+---

@@ -62,7 +62,7 @@
       "Update updateTaskStatus to use db.run",
       "Parse JSON steps field from TEXT storage"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-006",
