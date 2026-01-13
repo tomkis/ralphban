@@ -88,3 +88,16 @@
   - DB client connects silently on startup (no explicit log)
   - All verification steps pass without code changes
 ---
+
+## 2026-01-13 - bug-001
+- Migrated E2E test from direct REST endpoint to tRPC client
+- Files changed:
+  - packages/server/src/server.ts (removed /ralph REST endpoint)
+  - packages/integration-tests/package.json (added @ralphban/api and @trpc/client deps)
+  - packages/integration-tests/tests/ralph-loop.test.ts (use tRPC client instead of fetch)
+- **Learnings:**
+  - tRPC client uses httpBatchLink for HTTP transport
+  - createTRPCClient<AppRouter> provides full type safety
+  - ralph.start is a mutation (fire-and-forget), need to poll ralph.getStatus for completion
+  - Test now properly uses the existing ralph tRPC service which manages running state
+---

@@ -2,7 +2,6 @@ import http from 'http';
 import path from 'path';
 import type { Pool } from 'pg';
 import express, { type Application, type ErrorRequestHandler } from 'express';
-import { runRalphLoop } from './ralph/service.js';
 import { createTrpcHandler } from './trpc/index.js';
 
 export interface ServerConfig {
@@ -31,22 +30,6 @@ export function createServer(config: ServerConfig): ServerInstance {
   app.use(express.json());
 
   app.all('/trpc/{*path}', createTrpcHandler(pool));
-
-  app.post('/ralph', async (req, res) => {
-    const { workingDirectory } = req.body;
-    if (!workingDirectory || typeof workingDirectory !== 'string') {
-      res.status(400).json({ error: 'workingDirectory is required' });
-      return;
-    }
-
-    try {
-      const output = await runRalphLoop(workingDirectory);
-      res.json({ output });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      res.status(500).json({ error: message });
-    }
-  });
 
   if (config.staticDir) {
     app.use(express.static(config.staticDir));
