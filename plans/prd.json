@@ -46,9 +46,7 @@
     "category": "chore",
     "title": "Remove packages/cli directory",
     "description": "CLI package is now redundant as functionality moved to server package.",
-    "steps": [
-      "Delete packages/cli directory entirely"
-    ],
+    "steps": ["Delete packages/cli directory entirely"],
     "passes": true
   },
   {
@@ -56,9 +54,7 @@
     "category": "chore",
     "title": "Remove packages/mcp-cli directory",
     "description": "MCP CLI package is now redundant as functionality moved to server package.",
-    "steps": [
-      "Delete packages/mcp-cli directory entirely"
-    ],
+    "steps": ["Delete packages/mcp-cli directory entirely"],
     "passes": true
   },
   {
@@ -88,6 +84,20 @@
       "Verify DB client connects",
       "Verify stdio transport connects",
       "Verify graceful shutdown works"
+    ],
+    "passes": true
+  },
+  {
+    "id": "bug-001",
+    "category": "bug",
+    "title": "E2E test for ralph is using direct rest endpoint, it should use tRPC instead",
+    "description": "There should be no direct rest endpoints in the server, only tRPC is exposed as the API. We need to create tRPC client and use it to run the integration test",
+    "steps": [
+      "Remove the direct rest endpoint from the server",
+      "Install trpc client to the integration tests package",
+      "Depend on the API package",
+      "Create tRPC client",
+      "Update integration test to use tRPC client"
     ],
     "passes": true
   }
