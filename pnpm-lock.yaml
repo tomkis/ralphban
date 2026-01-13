@@ -49,38 +49,14 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/cli:
+  packages/integration-tests:
     dependencies:
       '@ralphban/api':
         specifier: workspace:*
         version: link:../api
-      '@ralphban/server':
-        specifier: workspace:*
-        version: link:../server
-      dotenv:
-        specifier: ^17.2.3
-        version: 17.2.3
-      express:
-        specifier: ^5.2.1
-        version: 5.2.1
-    devDependencies:
-      '@types/express':
-        specifier: ^5.0.6
-        version: 5.0.6
-      '@types/node':
-        specifier: ^25.0.3
-        version: 25.0.3
-      '@types/pg':
-        specifier: ^8.16.0
-        version: 8.16.0
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/integration-tests:
+      '@trpc/client':
+        specifier: ^11.3.0
+        version: 11.8.1(@trpc/server@11.8.1(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.4
@@ -97,40 +73,6 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.19.3)
-
-  packages/mcp-cli:
-    dependencies:
-      '@modelcontextprotocol/sdk':
-        specifier: ^1.0.4
-        version: 1.25.2(hono@4.11.3)(zod@4.3.5)
-      '@ralphban/api':
-        specifier: workspace:*
-        version: link:../api
-      '@ralphban/server':
-        specifier: workspace:*
-        version: link:../server
-      dotenv:
-        specifier: ^17.2.3
-        version: 17.2.3
-      yargs:
-        specifier: ^18.0.0
-        version: 18.0.0
-    devDependencies:
-      '@types/node':
-        specifier: ^25.0.3
-        version: 25.0.3
-      '@types/pg':
-        specifier: ^8.16.0
-        version: 8.16.0
-      '@types/yargs':
-        specifier: ^17.0.33
-        version: 17.0.35
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
 
   packages/server:
     dependencies:
@@ -158,6 +100,9 @@ importers:
       pg:
         specifier: ^8.16.3
         version: 8.16.3
+      yargs:
+        specifier: ^18.0.0
+        version: 18.0.0
       zod:
         specifier: ^4.3.5
         version: 4.3.5
@@ -174,6 +119,9 @@ importers:
       '@types/pg':
         specifier: ^8.16.0
         version: 8.16.0
+      '@types/yargs':
+        specifier: ^17.0.33
+        version: 17.0.35
       tsx:
         specifier: ^4.21.0
         version: 4.21.0

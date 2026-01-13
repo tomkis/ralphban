@@ -2,11 +2,21 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { rm, mkdir, access } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import type { AppRouter } from '@ralphban/api';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEST_WORKING_DIR = join(__dirname, '../.ralph-test-workdir');
 
 const RALPH_API_URL = process.env.RALPH_API_URL || 'http://localhost:3001';
+
+const trpc = createTRPCClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: `${RALPH_API_URL}/trpc`,
+    }),
+  ],
+});
 
 async function fileExists(path: string): Promise<boolean> {
   try {
@@ -17,24 +27,31 @@ async function fileExists(path: string): Promise<boolean> {
   }
 }
 
+async function waitForRalphComplete(maxWaitMs = 120_000): Promise<void> {
+  const startTime = Date.now();
+  const pollIntervalMs = 1000;
+
+  while (Date.now() - startTime < maxWaitMs) {
+    const status = await trpc.ralph.getStatus.query();
+    if (!status.isRunning) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+  }
+
+  throw new Error('Ralph loop did not complete within timeout');
+}
+
 describe('Ralph Loop', () => {
   beforeEach(async () => {
     await rm(TEST_WORKING_DIR, { recursive: true, force: true });
     await mkdir(TEST_WORKING_DIR, { recursive: true });
   });
 
-  it('should run ralph loop via API', { timeout: 120_000 }, async () => {
-    const response = await fetch(`${RALPH_API_URL}/ralph`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ workingDirectory: TEST_WORKING_DIR }),
-    });
+  it('should run ralph loop via tRPC', { timeout: 120_000 }, async () => {
+    await trpc.ralph.start.mutate({ workingDirectory: TEST_WORKING_DIR });
 
-    if (!response.ok) {
-      const body = (await response.json()) as { error: string };
-      console.error('Ralph API error:', body);
-      throw new Error(`Ralph API error: ${body.error}`);
-    }
+    await waitForRalphComplete();
 
     const packageJsonExists = await fileExists(join(TEST_WORKING_DIR, 'package.json'));
     const indexJsExists = await fileExists(join(TEST_WORKING_DIR, 'index.js'));

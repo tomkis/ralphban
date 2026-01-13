@@ -4,10 +4,10 @@ import 'dotenv/config';
 import path from 'path';
 import type { Pool } from 'pg';
 import { fileURLToPath } from 'url';
-import { validateGitRepository } from '@ralphban/server/utils/git-validation';
-import { initializeSchema } from '@ralphban/server/db/init';
-import { createDbClient } from '@ralphban/server/db/client';
-import { createServer, type ServerInstance } from '@ralphban/server';
+import { validateGitRepository } from './utils/git-validation.js';
+import { initializeSchema } from './db/init.js';
+import { createDbClient } from './db/client.js';
+import { createServer, type ServerInstance } from './server.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -34,16 +34,18 @@ async function shutdown(signal: string) {
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-async function main() {
+export async function runHttpServer() {
   const cwd = process.cwd();
 
-  const gitValidation = await validateGitRepository(cwd);
-  if (!gitValidation.valid) {
-    console.error('Git validation failed:');
-    for (const error of gitValidation.errors) {
-      console.error(`  - ${error}`);
+  if (process.env.SKIP_GIT_VALIDATION !== 'true') {
+    const gitValidation = await validateGitRepository(cwd);
+    if (!gitValidation.valid) {
+      console.error('Git validation failed:');
+      for (const error of gitValidation.errors) {
+        console.error(`  - ${error}`);
+      }
+      process.exit(1);
     }
-    process.exit(1);
   }
 
   if (!process.env.DATABASE_URL) {
@@ -52,7 +54,7 @@ async function main() {
     process.exit(1);
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.ANTHROPIC_API_KEY && process.env.SKIP_API_KEY_CHECK !== 'true') {
     console.error('ANTHROPIC_API_KEY environment variable is required');
     console.error('Get your API key from https://console.anthropic.com/');
     process.exit(1);
@@ -75,8 +77,3 @@ async function main() {
   await server.start();
   console.log('ralphban is ready');
 }
-
-main().catch((err) => {
-  console.error('Failed to start ralphban:', err);
-  process.exit(1);
-});

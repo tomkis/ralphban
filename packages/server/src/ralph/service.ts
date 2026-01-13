@@ -23,8 +23,8 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 function buildMcpConfig(): string {
   const mcpPath = process.env.RALPHBAN_MCP_PATH;
   const mcpServer = mcpPath
-    ? { type: 'stdio', command: 'node', args: [mcpPath] }
-    : { type: 'stdio', command: 'npx', args: ['ralphban-mcp'] };
+    ? { type: 'stdio', command: 'node', args: [mcpPath, '--mcp'] }
+    : { type: 'stdio', command: 'npx', args: ['ralphban', '--mcp'] };
 
   return JSON.stringify({ mcpServers: { ralphban: mcpServer } });
 }

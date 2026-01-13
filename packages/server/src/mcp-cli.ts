@@ -4,8 +4,8 @@ import 'dotenv/config';
 import type { Pool } from 'pg';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { createMCPServer } from '@ralphban/server/mcp/server';
-import { createDbClient } from '@ralphban/server/db/client';
+import { createMCPServer } from './mcp/server.js';
+import { createDbClient } from './db/client.js';
 
 let pool: Pool | null = null;
 let mcpServer: McpServer | null = null;
@@ -30,15 +30,10 @@ async function shutdown(signal: string) {
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-async function main() {
+export async function runMcpServer() {
   pool = createDbClient();
   mcpServer = createMCPServer(pool);
   const transport = new StdioServerTransport();
 
   await mcpServer.connect(transport);
 }
-
-main().catch((err) => {
-  process.stderr.write(`Failed to start ralphban-mcp: ${err}\n`);
-  process.exit(1);
-});

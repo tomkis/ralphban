@@ -5,3 +5,4 @@ node_modules
 dist/
 .DS_Store
 packages/cli/web-dist/
+packages/server/web-dist/
