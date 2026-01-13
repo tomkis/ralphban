@@ -55,9 +55,6 @@
     "build:publish": "rm -rf publish && node esbuild.config.js && chmod +x publish/index.js && cp -r ../web/dist publish/web-dist",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "db:init": "tsx scripts/init-db.ts",
     "lint": "concurrently \"eslint .\" \"prettier --check . --ignore-path ../../.prettierignore\"",
     "fix": "concurrently \"eslint --fix .\" \"prettier --write . --ignore-path ../../.prettierignore\"",
     "mcp:stdio": "tsx src/mcp/stdio-server.ts"

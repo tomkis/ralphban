@@ -114,6 +114,6 @@
       "Remove db:init and docker scripts from package.json",
       "Update dev script to not start docker-compose"
     ],
-    "passes": false
+    "passes": true
   }
 ]

@@ -99,3 +99,17 @@
   - dev script removed docker-compose dependency for SQLite workflow
   - Tests now pass end-to-end with SQLite
 ---
+
+## 2026-01-13 - chore-009
+- Cleaned up PostgreSQL artifacts after SQLite migration
+- Updated schema.sql: JSONB→TEXT, TIMESTAMPTZ→TEXT, NOW()→CURRENT_TIMESTAMP, VARCHAR→TEXT
+- Removed docker-compose.yml
+- Removed docker:up, docker:down, db:init scripts from package.json
+- Removed scripts/init-db.ts and empty scripts/ directory
+- Files changed: packages/server/db/schema.sql, packages/server/package.json
+- Files removed: packages/server/docker-compose.yml, packages/server/scripts/init-db.ts
+- **Learnings:**
+  - dev script already updated in chore-008 to not reference docker-compose
+  - Pre-existing lint errors in publish/index.js and process.ts (NodeJS type) remain
+  - SQLite migration complete - all PostgreSQL artifacts removed
+---
