@@ -22,7 +22,7 @@
       "Add loadDatabase function to load SQLite from file",
       "Add saveDatabase function to persist in-memory DB"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-003",

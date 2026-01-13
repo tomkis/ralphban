@@ -9,3 +9,14 @@
   - Build/typecheck fail expected until code migration complete (chore-002+)
   - Lint errors in publish/index.js are pre-existing bundled file issues
 ---
+
+## 2026-01-13 - chore-002
+- Created database setup utilities for local SQLite file management
+- Added ensureRalphbanDir, ensureGitignore, loadDatabase, saveDatabase functions
+- Added @types/sql.js devDependency for type support
+- Files changed: packages/server/src/db/setup.ts, packages/server/package.json
+- **Learnings:**
+  - sql.js Database can be created from Buffer for loading existing DB
+  - db.export() returns Uint8Array for persistence
+  - Build/test still fail due to pg imports in other files (expected until chore-003+)
+---

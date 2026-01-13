@@ -1,0 +1,62 @@
+import * as fs from 'fs';
+import * as path from 'path';
+import initSqlJs, { Database } from 'sql.js';
+
+const RALPHBAN_DIR = '.ralphban';
+const DB_FILENAME = 'ralphban.db';
+
+export function getRalphbanDir(cwd: string = process.cwd()): string {
+  return path.join(cwd, RALPHBAN_DIR);
+}
+
+export function getDbPath(cwd: string = process.cwd()): string {
+  return path.join(getRalphbanDir(cwd), DB_FILENAME);
+}
+
+export function ensureRalphbanDir(cwd: string = process.cwd()): string {
+  const dir = getRalphbanDir(cwd);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  return dir;
+}
+
+export function ensureGitignore(cwd: string = process.cwd()): void {
+  const gitignorePath = path.join(cwd, '.gitignore');
+  const pattern = RALPHBAN_DIR;
+
+  if (!fs.existsSync(gitignorePath)) {
+    fs.writeFileSync(gitignorePath, `${pattern}\n`);
+    return;
+  }
+
+  const content = fs.readFileSync(gitignorePath, 'utf-8');
+  const lines = content.split('\n');
+
+  if (!lines.some((line) => line.trim() === pattern)) {
+    const newContent = content.endsWith('\n')
+      ? `${content}${pattern}\n`
+      : `${content}\n${pattern}\n`;
+    fs.writeFileSync(gitignorePath, newContent);
+  }
+}
+
+export async function loadDatabase(cwd: string = process.cwd()): Promise<Database> {
+  const SQL = await initSqlJs();
+  const dbPath = getDbPath(cwd);
+
+  if (fs.existsSync(dbPath)) {
+    const buffer = fs.readFileSync(dbPath);
+    return new SQL.Database(buffer);
+  }
+
+  return new SQL.Database();
+}
+
+export function saveDatabase(db: Database, cwd: string = process.cwd()): void {
+  ensureRalphbanDir(cwd);
+  const dbPath = getDbPath(cwd);
+  const data = db.export();
+  const buffer = Buffer.from(data);
+  fs.writeFileSync(dbPath, buffer);
+}
