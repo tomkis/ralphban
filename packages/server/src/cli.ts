@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import 'dotenv/config';
+import fs from 'fs';
 import path from 'path';
 import type { Pool } from 'pg';
 import { fileURLToPath } from 'url';
@@ -54,12 +55,6 @@ export async function runHttpServer() {
     process.exit(1);
   }
 
-  if (!process.env.ANTHROPIC_API_KEY && process.env.SKIP_API_KEY_CHECK !== 'true') {
-    console.error('ANTHROPIC_API_KEY environment variable is required');
-    console.error('Get your API key from https://console.anthropic.com/');
-    process.exit(1);
-  }
-
   const initPool = createDbClient();
   try {
     await initializeSchema(initPool);
@@ -72,7 +67,9 @@ export async function runHttpServer() {
   await initPool.end();
 
   appPool = createDbClient();
-  const webDistPath = path.resolve(__dirname, '..', 'web-dist');
+  const webDistInDir = path.resolve(__dirname, 'web-dist');
+  const webDistInParent = path.resolve(__dirname, '..', 'web-dist');
+  const webDistPath = fs.existsSync(webDistInDir) ? webDistInDir : webDistInParent;
   server = createServer({ pool: appPool, staticDir: webDistPath });
   await server.start();
   console.log('ralphban is ready');

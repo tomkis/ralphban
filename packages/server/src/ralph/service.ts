@@ -24,7 +24,7 @@ function buildMcpConfig(): string {
   const mcpPath = process.env.RALPHBAN_MCP_PATH;
   const mcpServer = mcpPath
     ? { type: 'stdio', command: 'node', args: [mcpPath, '--mcp'] }
-    : { type: 'stdio', command: 'npx', args: ['ralphban', '--mcp'] };
+    : { type: 'stdio', command: 'npx', args: ['github:tomkis/ralphban', '--mcp'] };
 
   return JSON.stringify({ mcpServers: { ralphban: mcpServer } });
 }
