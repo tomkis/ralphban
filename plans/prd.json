@@ -35,7 +35,7 @@
       "Add loadDatabase call in createDbClient",
       "Remove Pool import and types"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-004",

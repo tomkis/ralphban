@@ -1,7 +1,33 @@
-import { Pool } from 'pg';
+import { Database, QueryExecResult } from 'sql.js';
+import { loadDatabase, saveDatabase, ensureRalphbanDir, ensureGitignore } from './setup.js';
 
-export function createDbClient(): Pool {
-  return new Pool({
-    connectionString: process.env.DATABASE_URL,
-  });
+export interface DbClient {
+  db: Database;
+  run(sql: string, params?: unknown[]): void;
+  exec(sql: string): QueryExecResult[];
+  close(): void;
+}
+
+export async function createDbClient(cwd: string = process.cwd()): Promise<DbClient> {
+  ensureRalphbanDir(cwd);
+  ensureGitignore(cwd);
+
+  const db = await loadDatabase(cwd);
+
+  const save = () => saveDatabase(db, cwd);
+
+  return {
+    db,
+    run(sql: string, params?: unknown[]) {
+      db.run(sql, params as (string | number | null | Uint8Array)[]);
+      save();
+    },
+    exec(sql: string) {
+      return db.exec(sql);
+    },
+    close() {
+      save();
+      db.close();
+    },
+  };
 }

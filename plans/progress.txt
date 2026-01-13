@@ -20,3 +20,14 @@
   - db.export() returns Uint8Array for persistence
   - Build/test still fail due to pg imports in other files (expected until chore-003+)
 ---
+
+## 2026-01-13 - chore-003
+- Rewrote database client to use sql.js instead of pg Pool
+- Created DbClient interface with run, exec, close methods
+- Implemented auto-save mechanism that saves after every write operation (run)
+- Files changed: packages/server/src/db/client.ts
+- **Learnings:**
+  - QueryExecResult is exported as standalone interface from sql.js, not namespaced under Database
+  - createDbClient now async since loadDatabase is async
+  - Build/test still fail due to pg imports in other files (expected until chore-004+)
+---
