@@ -9,7 +9,7 @@
       "Add sql.js to dependencies",
       "Update package.json in both root and server"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-002",

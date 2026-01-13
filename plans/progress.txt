@@ -1,0 +1,11 @@
+## 2026-01-13 - chore-001
+- Updated dependencies for SQLite migration
+- Removed pg from root and server package.json
+- Removed @types/pg from server devDependencies
+- Added sql.js ^1.12.0 to both root and server
+- Files changed: package.json, packages/server/package.json
+- **Learnings:**
+  - sql.js installed as 1.13.0 (latest)
+  - Build/typecheck fail expected until code migration complete (chore-002+)
+  - Lint errors in publish/index.js are pre-existing bundled file issues
+---
