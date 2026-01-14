@@ -21,26 +21,6 @@ export function ensureRalphbanDir(cwd: string = process.cwd()): string {
   return dir;
 }
 
-export function ensureGitignore(cwd: string = process.cwd()): void {
-  const gitignorePath = path.join(cwd, '.gitignore');
-  const pattern = RALPHBAN_DIR;
-
-  if (!fs.existsSync(gitignorePath)) {
-    fs.writeFileSync(gitignorePath, `${pattern}\n`);
-    return;
-  }
-
-  const content = fs.readFileSync(gitignorePath, 'utf-8');
-  const lines = content.split('\n');
-
-  if (!lines.some((line) => line.trim() === pattern)) {
-    const newContent = content.endsWith('\n')
-      ? `${content}${pattern}\n`
-      : `${content}\n${pattern}\n`;
-    fs.writeFileSync(gitignorePath, newContent);
-  }
-}
-
 export async function loadDatabase(cwd: string = process.cwd()): Promise<Database> {
   const SQL = await initSqlJs();
   const dbPath = getDbPath(cwd);

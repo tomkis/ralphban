@@ -1,5 +1,5 @@
 import { Database, QueryExecResult } from 'sql.js';
-import { loadDatabase, saveDatabase, ensureRalphbanDir, ensureGitignore } from './setup.js';
+import { loadDatabase, saveDatabase, ensureRalphbanDir } from './setup.js';
 
 export interface DbClient {
   db: Database;
@@ -10,10 +10,8 @@ export interface DbClient {
 
 export async function createDbClient(cwd: string = process.cwd()): Promise<DbClient> {
   ensureRalphbanDir(cwd);
-  ensureGitignore(cwd);
 
   const db = await loadDatabase(cwd);
-
   const save = () => saveDatabase(db, cwd);
 
   return {
