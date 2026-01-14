@@ -40,6 +40,47 @@ function updateTaskStatus(client, id, state) {
     id
   ]);
 }
+function getNextTaskId(client, category) {
+  const result = client.exec(
+    `SELECT id FROM tasks WHERE id LIKE '${category}-%' ORDER BY created_at DESC LIMIT 1`
+  );
+  if (result.length === 0 || result[0].values.length === 0) {
+    return `${category}-001`;
+  }
+  const lastId = result[0].values[0][0];
+  const numPart = parseInt(lastId.split("-")[1], 10);
+  const nextNum = numPart + 1;
+  return `${category}-${String(nextNum).padStart(3, "0")}`;
+}
+function createTask(client, params) {
+  const id = getNextTaskId(client, params.category);
+  const now = /* @__PURE__ */ new Date();
+  client.run(
+    `INSERT INTO tasks (id, category, title, description, steps, state, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 'ReadyForDev', ?, ?)`,
+    [
+      id,
+      params.category,
+      params.title,
+      params.description,
+      JSON.stringify(params.steps),
+      now.toISOString(),
+      now.toISOString()
+    ]
+  );
+  return {
+    id,
+    category: params.category,
+    title: params.title,
+    description: params.description,
+    steps: params.steps,
+    state: "ReadyForDev",
+    created_at: now,
+    updated_at: now
+  };
+}
+function deleteAllTasks(client) {
+  client.run("DELETE FROM tasks");
+}
 var init_repository = __esm({
   "src/kanban/repository.ts"() {
     "use strict";
@@ -139,24 +180,6 @@ function ensureRalphbanDir(cwd = process.cwd()) {
   }
   return dir;
 }
-function ensureGitignore(cwd = process.cwd()) {
-  const gitignorePath = path.join(cwd, ".gitignore");
-  const pattern = RALPHBAN_DIR;
-  if (!fs.existsSync(gitignorePath)) {
-    fs.writeFileSync(gitignorePath, `${pattern}
-`);
-    return;
-  }
-  const content = fs.readFileSync(gitignorePath, "utf-8");
-  const lines = content.split("\n");
-  if (!lines.some((line) => line.trim() === pattern)) {
-    const newContent = content.endsWith("\n") ? `${content}${pattern}
-` : `${content}
-${pattern}
-`;
-    fs.writeFileSync(gitignorePath, newContent);
-  }
-}
 async function loadDatabase(cwd = process.cwd()) {
   const SQL = await initSqlJs();
   const dbPath = getDbPath(cwd);
@@ -185,7 +208,6 @@ var init_setup = __esm({
 // src/db/client.ts
 async function createDbClient(cwd = process.cwd()) {
   ensureRalphbanDir(cwd);
-  ensureGitignore(cwd);
   const db2 = await loadDatabase(cwd);
   const save = () => saveDatabase(db2, cwd);
   return {
@@ -382,7 +404,7 @@ var init_trpc = __esm({
 
 // ../api/dist/routers/kanban.js
 import { z as z2 } from "zod";
-var TaskSchema, kanbanRouter;
+var TaskSchema, CreateTaskInputSchema, kanbanRouter;
 var init_kanban = __esm({
   "../api/dist/routers/kanban.js"() {
     "use strict";
@@ -392,9 +414,21 @@ var init_kanban = __esm({
       title: z2.string(),
       status: z2.enum(["todo", "in_progress", "done"])
     });
+    CreateTaskInputSchema = z2.object({
+      category: z2.enum(["feat", "bug", "chore"]),
+      title: z2.string().min(1),
+      description: z2.string(),
+      steps: z2.array(z2.string())
+    });
     kanbanRouter = router({
       getTasks: publicProcedure.query(async ({ ctx }) => {
         return ctx.kanban.getTasks();
+      }),
+      createTask: publicProcedure.input(CreateTaskInputSchema).mutation(async ({ ctx, input }) => {
+        return ctx.kanban.createTask(input);
+      }),
+      deleteAllTasks: publicProcedure.mutation(async ({ ctx }) => {
+        return ctx.kanban.deleteAllTasks();
       })
     });
   }
@@ -480,12 +514,24 @@ function createKanbanService(client) {
         (values) => Object.fromEntries(columns.map((col, i) => [col, values[i]]))
       );
       return rows.map(mapRowToApiTask);
+    },
+    async createTask(input) {
+      const serverTask = createTask(client, input);
+      return {
+        id: serverTask.id,
+        title: serverTask.title,
+        status: mapStateToStatus(serverTask.state)
+      };
+    },
+    async deleteAllTasks() {
+      deleteAllTasks(client);
     }
   };
 }
 var init_trpc_service = __esm({
   "src/kanban/trpc-service.ts"() {
     "use strict";
+    init_repository();
   }
 });
 
