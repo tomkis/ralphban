@@ -28,7 +28,7 @@
       "Define props: isOpen, onClose, onConfirm, title, message",
       "Refactor WorkingDirectoryModal to use Modal component"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "feat-003",

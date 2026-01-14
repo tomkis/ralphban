@@ -1,0 +1,14 @@
+
+## 2026-01-14 - feat-002
+- Created reusable Modal component with Modal and ModalButton exports
+- Modal accepts: isOpen, onClose, title, children, footer (ReactNode)
+- ModalButton accepts: onClick, disabled, variant (primary/secondary), children
+- Refactored WorkingDirectoryModal to use new Modal component
+- Files changed:
+  - packages/web/src/components/Modal.tsx (new)
+  - packages/web/src/App.tsx (modified)
+- **Learnings:**
+  - Modal uses composition pattern via children+footer props instead of rigid props
+  - ModalButton variant approach allows consistent styling across modals
+  - Components directory created for future UI components
+---
