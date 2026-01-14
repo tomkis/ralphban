@@ -1,0 +1,115 @@
+## 2026-01-13 - chore-001
+- Updated dependencies for SQLite migration
+- Removed pg from root and server package.json
+- Removed @types/pg from server devDependencies
+- Added sql.js ^1.12.0 to both root and server
+- Files changed: package.json, packages/server/package.json
+- **Learnings:**
+  - sql.js installed as 1.13.0 (latest)
+  - Build/typecheck fail expected until code migration complete (chore-002+)
+  - Lint errors in publish/index.js are pre-existing bundled file issues
+---
+
+## 2026-01-13 - chore-002
+- Created database setup utilities for local SQLite file management
+- Added ensureRalphbanDir, ensureGitignore, loadDatabase, saveDatabase functions
+- Added @types/sql.js devDependency for type support
+- Files changed: packages/server/src/db/setup.ts, packages/server/package.json
+- **Learnings:**
+  - sql.js Database can be created from Buffer for loading existing DB
+  - db.export() returns Uint8Array for persistence
+  - Build/test still fail due to pg imports in other files (expected until chore-003+)
+---
+
+## 2026-01-13 - chore-003
+- Rewrote database client to use sql.js instead of pg Pool
+- Created DbClient interface with run, exec, close methods
+- Implemented auto-save mechanism that saves after every write operation (run)
+- Files changed: packages/server/src/db/client.ts
+- **Learnings:**
+  - QueryExecResult is exported as standalone interface from sql.js, not namespaced under Database
+  - createDbClient now async since loadDatabase is async
+  - Build/test still fail due to pg imports in other files (expected until chore-004+)
+---
+
+## 2026-01-13 - chore-004
+- Converted PostgreSQL schema to SQLite syntax in init.ts
+- Replaced Pool with DbClient, JSONB with TEXT, TIMESTAMPTZ with TEXT, NOW() with CURRENT_TIMESTAMP
+- Updated checkTablesExist to use sqlite_master query instead of information_schema
+- Changed initializeSchema from async to sync since DbClient operations are sync
+- Files changed: packages/server/src/db/init.ts
+- **Learnings:**
+  - SQLite uses sqlite_master table to check for table existence
+  - VARCHAR(n) can be simplified to TEXT in SQLite
+  - Build/test still fail due to pg imports in other files (expected until chore-005+)
+---
+
+## 2026-01-13 - chore-005
+- Converted repository layer from pg Pool to sql.js DbClient
+- Functions now sync instead of async
+- Added TaskRow interface and rowToTask mapper for converting raw SQL results
+- JSON.parse for steps field, Date conversion for timestamps
+- Replaced $1/$2 params with ? placeholders, NOW() with CURRENT_TIMESTAMP
+- Files changed: packages/server/src/kanban/repository.ts
+- **Learnings:**
+  - sql.js exec returns QueryExecResult[] with columns and values arrays
+  - Need to manually map columns to row object using Object.fromEntries
+  - Cast via unknown needed for dynamic object to interface conversion
+  - Build/test still fail due to pg imports in other files (expected until chore-006+)
+---
+
+## 2026-01-13 - chore-006
+- Updated service layers to use DbClient instead of Pool
+- service.ts: made functions sync, changed Pool param to DbClient
+- trpc-service.ts: added TaskRow interface, manual column-to-row mapping via exec()
+- Files changed: packages/server/src/kanban/service.ts, packages/server/src/kanban/trpc-service.ts
+- **Learnings:**
+  - trpc-service getTasks kept async signature for IKanbanService contract compatibility
+  - Reused same Object.fromEntries pattern from repository for exec() result mapping
+  - Build/test still fail due to pg imports in other files (expected until chore-007+)
+---
+
+## 2026-01-13 - chore-007
+- Updated tRPC infrastructure to use DbClient instead of Pool
+- context.ts: replaced Pool import with DbClient, updated param name
+- adapter.ts: replaced Pool import with DbClient, updated param name
+- mcp/server.ts: replaced Pool import with DbClient, removed async from handlers since service functions are now sync
+- mcp/stdio-server.ts: awaited createDbClient() since it's now async
+- Files changed: packages/server/src/trpc/context.ts, packages/server/src/trpc/adapter.ts, packages/server/src/mcp/server.ts, packages/server/src/mcp/stdio-server.ts
+- **Learnings:**
+  - stdio-server.ts needed update as part of MCP infrastructure
+  - MCP server tool handlers can be sync since underlying service functions are sync
+  - Build/test still fail due to pg imports in cli.ts, mcp-cli.ts, server.ts (expected until chore-008)
+---
+
+## 2026-01-13 - chore-008
+- Updated server and CLI entry points to use DbClient instead of Pool
+- server.ts: changed config interface from pool:Pool to db:DbClient
+- cli.ts: removed DATABASE_URL validation, replaced Pool with DbClient, await createDbClient(cwd)
+- mcp-cli.ts: replaced Pool with DbClient, added RALPHBAN_DB_DIR env var support
+- Added RALPHBAN_DB_DIR env var passing in ralph/service.ts for MCP subprocess
+- Added env parameter to SpawnProcessOptions interface
+- stdio-server.ts: added RALPHBAN_DB_DIR support
+- init.ts: added SEED_DATABASE env var for test seeding
+- tests.sh: removed docker-compose dependency, added SEED_DATABASE, moved cleanup after build
+- Files changed: packages/server/src/server.ts, packages/server/src/cli.ts, packages/server/src/mcp-cli.ts, packages/server/src/mcp/stdio-server.ts, packages/server/src/ralph/service.ts, packages/server/src/utils/process.ts, packages/server/src/db/init.ts, packages/server/package.json, scripts/tests.sh
+- **Learnings:**
+  - HTTP server and MCP subprocess need same database - solved via RALPHBAN_DB_DIR env var
+  - Build process creates empty database (unexplained side effect) - tests.sh cleanup moved after build
+  - dev script removed docker-compose dependency for SQLite workflow
+  - Tests now pass end-to-end with SQLite
+---
+
+## 2026-01-13 - chore-009
+- Cleaned up PostgreSQL artifacts after SQLite migration
+- Updated schema.sql: JSONB→TEXT, TIMESTAMPTZ→TEXT, NOW()→CURRENT_TIMESTAMP, VARCHAR→TEXT
+- Removed docker-compose.yml
+- Removed docker:up, docker:down, db:init scripts from package.json
+- Removed scripts/init-db.ts and empty scripts/ directory
+- Files changed: packages/server/db/schema.sql, packages/server/package.json
+- Files removed: packages/server/docker-compose.yml, packages/server/scripts/init-db.ts
+- **Learnings:**
+  - dev script already updated in chore-008 to not reference docker-compose
+  - Pre-existing lint errors in publish/index.js and process.ts (NodeJS type) remain
+  - SQLite migration complete - all PostgreSQL artifacts removed
+---

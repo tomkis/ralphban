@@ -1,6 +1,12 @@
-import { Pool } from 'pg';
+import { DbClient } from '../db/client.js';
 import type { IKanbanService, Task as ApiTask } from '@ralphban/api';
 import type { Task as ServerTask } from './types.js';
+
+interface TaskRow {
+  id: string;
+  title: string;
+  state: string;
+}
 
 function mapStateToStatus(state: ServerTask['state']): ApiTask['status'] {
   switch (state) {
@@ -13,19 +19,27 @@ function mapStateToStatus(state: ServerTask['state']): ApiTask['status'] {
   }
 }
 
-function mapServerTaskToApiTask(task: ServerTask): ApiTask {
+function mapRowToApiTask(row: TaskRow): ApiTask {
   return {
-    id: task.id,
-    title: task.title,
-    status: mapStateToStatus(task.state),
+    id: row.id,
+    title: row.title,
+    status: mapStateToStatus(row.state as ServerTask['state']),
   };
 }
 
-export function createKanbanService(pool: Pool): IKanbanService {
+export function createKanbanService(client: DbClient): IKanbanService {
   return {
     async getTasks(): Promise<ApiTask[]> {
-      const result = await pool.query<ServerTask>('SELECT * FROM tasks ORDER BY created_at ASC');
-      return result.rows.map(mapServerTaskToApiTask);
+      const result = client.exec('SELECT id, title, state FROM tasks ORDER BY created_at ASC');
+      if (result.length === 0) {
+        return [];
+      }
+      const columns = result[0].columns;
+      const rows = result[0].values.map(
+        (values) =>
+          Object.fromEntries(columns.map((col, i) => [col, values[i]])) as unknown as TaskRow
+      );
+      return rows.map(mapRowToApiTask);
     },
   };
 }

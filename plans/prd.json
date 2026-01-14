@@ -1,1 +1,119 @@
-[]
+[
+  {
+    "id": "chore-001",
+    "category": "chore",
+    "title": "Update dependencies for SQLite",
+    "description": "Remove PostgreSQL dependencies and add sql.js for local SQLite database",
+    "steps": [
+      "Remove pg and @types/pg from dependencies",
+      "Add sql.js to dependencies",
+      "Update package.json in both root and server"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-002",
+    "category": "chore",
+    "title": "Create database setup utilities",
+    "description": "Add utilities to manage local SQLite file in .ralphban directory (cwd) with auto-save",
+    "steps": [
+      "Create src/db/setup.ts with ensureRalphbanDir function",
+      "Add ensureGitignore function for .ralphban pattern",
+      "Add loadDatabase function to load SQLite from file",
+      "Add saveDatabase function to persist in-memory DB"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-003",
+    "category": "chore",
+    "title": "Rewrite database client for sql.js",
+    "description": "Replace Pool with sql.js Database wrapper that auto-saves on modifications",
+    "steps": [
+      "Replace createDbClient to return sql.js Database",
+      "Implement auto-save mechanism after write operations",
+      "Add loadDatabase call in createDbClient",
+      "Remove Pool import and types"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-004",
+    "category": "chore",
+    "title": "Update schema initialization for SQLite",
+    "description": "Convert PostgreSQL schema to SQLite syntax and update initialization logic",
+    "steps": [
+      "Replace JSONB with TEXT in schema",
+      "Replace TIMESTAMPTZ with TEXT",
+      "Replace NOW() with CURRENT_TIMESTAMP",
+      "Update checkTablesExist for SQLite syntax",
+      "Replace pool.query with db.run for DDL"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-005",
+    "category": "chore",
+    "title": "Update repository layer for sql.js API",
+    "description": "Convert repository functions from Pool to sql.js Database API",
+    "steps": [
+      "Replace Pool type with Database type",
+      "Update getNextPendingTask to use db.exec",
+      "Update updateTaskStatus to use db.run",
+      "Parse JSON steps field from TEXT storage"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-006",
+    "category": "chore",
+    "title": "Update service layers for sql.js",
+    "description": "Update service and trpc-service to use Database instead of Pool",
+    "steps": [
+      "Replace Pool imports with Database in service.ts",
+      "Replace Pool imports with Database in trpc-service.ts",
+      "Update function signatures in both files",
+      "Parse JSON for steps field in mapping functions"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-007",
+    "category": "chore",
+    "title": "Update tRPC infrastructure for sql.js",
+    "description": "Replace Pool with Database across tRPC context, adapter, and MCP server",
+    "steps": [
+      "Update context.ts to accept Database",
+      "Update adapter.ts to accept Database",
+      "Update mcp/server.ts to accept Database",
+      "Replace Pool imports with Database"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-008",
+    "category": "chore",
+    "title": "Update server and CLI entry points",
+    "description": "Replace Pool instantiation with Database in server.ts, cli.ts, and mcp-cli.ts",
+    "steps": [
+      "Update server.ts createServer config interface",
+      "Replace Pool with Database in cli.ts",
+      "Replace Pool with Database in mcp-cli.ts",
+      "Remove DATABASE_URL validation from cli.ts"
+    ],
+    "passes": true
+  },
+  {
+    "id": "chore-009",
+    "category": "chore",
+    "title": "Clean up PostgreSQL artifacts",
+    "description": "Remove PostgreSQL-specific files and update remaining schema files",
+    "steps": [
+      "Update schema.sql to SQLite syntax",
+      "Remove docker-compose.yml",
+      "Remove db:init and docker scripts from package.json",
+      "Update dev script to not start docker-compose"
+    ],
+    "passes": true
+  }
+]

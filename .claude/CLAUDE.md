@@ -8,6 +8,8 @@ ralphban combines Ralph and Kanban into a unified development workflow.
 
 **ralphban** provides a Kanban board UI as a facade for the Ralph workflow. Users define PRDs through a traditional Kanban interface. User can then trigger Ralph to start, which initiate Ralph loop - picking a ticket from the backlog and working on that.
 
+Ralphban is meant to be used as a `npx` tool. Basically you use it on your folder on your computer, this is supposed to be a git repo. Inside that folder you can start the ralphban via `npx` via `npx ralphban` it would create `.ralphban` folder and start up the server. Then it does all the development inside that folder.
+
 ## Architecture
 
 **UI**: Kanban board for PRD management

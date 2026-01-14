@@ -2,6 +2,7 @@ import { spawn, ChildProcess, SpawnOptions } from 'child_process';
 
 export interface SpawnProcessOptions {
   cwd?: string;
+  env?: NodeJS.ProcessEnv;
   onStdout?: (data: string) => void;
   signal?: AbortSignal;
 }
@@ -14,6 +15,7 @@ export function spawnProcess(
   return new Promise((resolve, reject) => {
     const spawnOptions: SpawnOptions = {
       cwd: options?.cwd,
+      env: options?.env,
       stdio: ['ignore', 'pipe', 'pipe'],
     };
 

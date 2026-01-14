@@ -1,12 +1,12 @@
-import { Pool } from 'pg';
+import { DbClient } from '../db/client.js';
 import { Task } from './types.js';
 import { getNextPendingTask, updateTaskStatus } from './repository.js';
 
-export async function getTasksReadyForImplementation(pool: Pool): Promise<Task[]> {
-  const task = await getNextPendingTask(pool);
+export function getTasksReadyForImplementation(client: DbClient): Task[] {
+  const task = getNextPendingTask(client);
   return task ? [task] : [];
 }
 
-export async function markTaskAsCompleted(pool: Pool, taskId: string): Promise<void> {
-  await updateTaskStatus(pool, taskId, 'Done');
+export function markTaskAsCompleted(client: DbClient, taskId: string): void {
+  updateTaskStatus(client, taskId, 'Done');
 }
