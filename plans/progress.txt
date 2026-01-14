@@ -12,3 +12,28 @@
   - ModalButton variant approach allows consistent styling across modals
   - Components directory created for future UI components
 ---
+
+## 2026-01-14 - feat-001
+- Implemented full task creation flow from UI to database
+- Added CreateTaskInputSchema with zod validation (category enum, title, description, steps array)
+- Added createTask mutation to kanban tRPC router
+- Extended IKanbanService interface with createTask method
+- Implemented getNextTaskId helper to generate sequential IDs (feat-001, feat-002, etc.)
+- Implemented createTask in repository layer
+- Created CreateTaskModal component with dynamic steps list
+- Added '+' button to Todo column header via onAddClick prop
+- Wired createTask mutation in App component with query invalidation
+- Files changed:
+  - packages/api/src/routers/kanban.ts (schema + mutation)
+  - packages/api/src/context.ts (interface)
+  - packages/api/src/index.ts (exports)
+  - packages/server/src/kanban/repository.ts (getNextTaskId, createTask)
+  - packages/server/src/kanban/trpc-service.ts (createTask impl)
+  - packages/web/src/components/CreateTaskModal.tsx (new)
+  - packages/web/src/App.tsx (Column update, modal wiring)
+- **Learnings:**
+  - API package needs rebuild after adding new exports for dependent packages to see types
+  - Task ID generation uses category-based prefix with zero-padded sequential numbers
+  - Column component now supports optional onAddClick for extensibility
+  - trpc.useUtils() provides invalidation mechanism for cache refresh
+---

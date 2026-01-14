@@ -16,7 +16,7 @@
       "Add '+' button to Todo column header",
       "Wire createTask mutation in App component"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "feat-002",

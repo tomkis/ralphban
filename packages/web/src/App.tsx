@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Task } from '@ralphban/api';
 import { trpc } from './trpc';
 import { Modal, ModalButton } from './components/Modal';
+import { CreateTaskModal, CreateTaskFormData } from './components/CreateTaskModal';
 
 function WorkingDirectoryModal({
   isOpen,
@@ -80,7 +81,15 @@ function TaskCard({ task }: { task: Task }) {
   );
 }
 
-function Column({ title, tasks }: { title: string; tasks: Task[] }) {
+function Column({
+  title,
+  tasks,
+  onAddClick,
+}: {
+  title: string;
+  tasks: Task[];
+  onAddClick?: () => void;
+}) {
   return (
     <div
       style={{
@@ -93,17 +102,43 @@ function Column({ title, tasks }: { title: string; tasks: Task[] }) {
         marginRight: '16px',
       }}
     >
-      <h3
+      <div
         style={{
-          margin: '0 0 12px 0',
-          fontSize: '14px',
-          fontWeight: 600,
-          color: '#5e6c84',
-          textTransform: 'uppercase',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '12px',
         }}
       >
-        {title} ({tasks.length})
-      </h3>
+        <h3
+          style={{
+            margin: 0,
+            fontSize: '14px',
+            fontWeight: 600,
+            color: '#5e6c84',
+            textTransform: 'uppercase',
+          }}
+        >
+          {title} ({tasks.length})
+        </h3>
+        {onAddClick && (
+          <button
+            onClick={onAddClick}
+            style={{
+              padding: '4px 8px',
+              fontSize: '16px',
+              fontWeight: 600,
+              color: '#5e6c84',
+              backgroundColor: 'transparent',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            +
+          </button>
+        )}
+      </div>
       <div>
         {tasks.map((task) => (
           <TaskCard key={task.id} task={task} />
@@ -147,7 +182,9 @@ function StartRalphButton({
 }
 
 export default function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStartModalOpen, setIsStartModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const utils = trpc.useUtils();
   const { data: tasks = [] } = trpc.kanban.getTasks.useQuery(undefined, {
     refetchInterval: 3000,
   });
@@ -155,6 +192,11 @@ export default function App() {
     refetchInterval: 1000,
   });
   const startRalph = trpc.ralph.start.useMutation();
+  const createTask = trpc.kanban.createTask.useMutation({
+    onSuccess: () => {
+      utils.kanban.getTasks.invalidate();
+    },
+  });
 
   const todoTasks = tasks.filter((t) => t.status === 'todo' || t.status === 'in_progress');
   const doneTasks = tasks.filter((t) => t.status === 'done');
@@ -163,6 +205,10 @@ export default function App() {
 
   const handleStartRalph = (workingDirectory: string) => {
     startRalph.mutate({ workingDirectory });
+  };
+
+  const handleCreateTask = (data: CreateTaskFormData) => {
+    createTask.mutate(data);
   };
 
   return (
@@ -188,17 +234,22 @@ export default function App() {
         <StartRalphButton
           hasReadyTasks={hasReadyTasks}
           isRalphRunning={isRalphRunning}
-          onStart={() => setIsModalOpen(true)}
+          onStart={() => setIsStartModalOpen(true)}
         />
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-        <Column title="Todo" tasks={todoTasks} />
+        <Column title="Todo" tasks={todoTasks} onAddClick={() => setIsCreateModalOpen(true)} />
         <Column title="Done" tasks={doneTasks} />
       </div>
       <WorkingDirectoryModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isStartModalOpen}
+        onClose={() => setIsStartModalOpen(false)}
         onSubmit={handleStartRalph}
+      />
+      <CreateTaskModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateTask}
       />
     </div>
   );
