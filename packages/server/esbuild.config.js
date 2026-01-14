@@ -16,6 +16,7 @@ await build({
     'eventsource-parser',
     'express',
     'pg',
+    'sql.js',
     'yargs',
     'zod',
   ],
