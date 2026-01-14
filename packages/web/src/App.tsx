@@ -173,7 +173,6 @@ function StartRalphButton({
         border: 'none',
         borderRadius: '4px',
         cursor: isDisabled ? 'not-allowed' : 'pointer',
-        marginLeft: 'auto',
       }}
     >
       {buttonText}
@@ -184,6 +183,7 @@ function StartRalphButton({
 export default function App() {
   const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
   const utils = trpc.useUtils();
   const { data: tasks = [] } = trpc.kanban.getTasks.useQuery(undefined, {
     refetchInterval: 3000,
@@ -193,6 +193,11 @@ export default function App() {
   });
   const startRalph = trpc.ralph.start.useMutation();
   const createTask = trpc.kanban.createTask.useMutation({
+    onSuccess: () => {
+      utils.kanban.getTasks.invalidate();
+    },
+  });
+  const deleteAllTasks = trpc.kanban.deleteAllTasks.useMutation({
     onSuccess: () => {
       utils.kanban.getTasks.invalidate();
     },
@@ -209,6 +214,11 @@ export default function App() {
 
   const handleCreateTask = (data: CreateTaskFormData) => {
     createTask.mutate(data);
+  };
+
+  const handleDeleteAllTasks = () => {
+    deleteAllTasks.mutate();
+    setIsDeleteAllModalOpen(false);
   };
 
   return (
@@ -231,6 +241,24 @@ export default function App() {
         >
           Kanban Board
         </h1>
+        <button
+          onClick={() => setIsDeleteAllModalOpen(true)}
+          disabled={tasks.length === 0}
+          style={{
+            padding: '10px 20px',
+            fontSize: '14px',
+            fontWeight: 600,
+            color: tasks.length === 0 ? '#a5adba' : '#fff',
+            backgroundColor: tasks.length === 0 ? '#dfe1e6' : '#eb5a46',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: tasks.length === 0 ? 'not-allowed' : 'pointer',
+            marginLeft: 'auto',
+            marginRight: '8px',
+          }}
+        >
+          Clear All
+        </button>
         <StartRalphButton
           hasReadyTasks={hasReadyTasks}
           isRalphRunning={isRalphRunning}
@@ -251,6 +279,23 @@ export default function App() {
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreateTask}
       />
+      <Modal
+        isOpen={isDeleteAllModalOpen}
+        onClose={() => setIsDeleteAllModalOpen(false)}
+        title="Clear All Tasks"
+        footer={
+          <>
+            <ModalButton onClick={() => setIsDeleteAllModalOpen(false)}>Cancel</ModalButton>
+            <ModalButton onClick={handleDeleteAllTasks} variant="primary">
+              Clear All
+            </ModalButton>
+          </>
+        }
+      >
+        <p style={{ margin: 0, color: '#172b4d' }}>
+          Are you sure you want to delete all tasks? This action cannot be undone.
+        </p>
+      </Modal>
     </div>
   );
 }

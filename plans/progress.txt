@@ -1,4 +1,24 @@
 
+## 2026-01-14 - feat-003
+- Implemented delete all tasks feature with confirmation modal
+- Added deleteAllTasks to repository layer (simple DELETE FROM tasks)
+- Extended IKanbanService interface with deleteAllTasks method
+- Added deleteAllTasks mutation to kanban tRPC router
+- Added red "Clear All" button to board header (disabled when no tasks)
+- Used existing Modal component for confirmation dialog
+- Wired deleteAllTasks mutation with query invalidation
+- Files changed:
+  - packages/server/src/kanban/repository.ts (deleteAllTasks)
+  - packages/api/src/context.ts (interface)
+  - packages/api/src/routers/kanban.ts (mutation)
+  - packages/server/src/kanban/trpc-service.ts (deleteAllTasks impl)
+  - packages/web/src/App.tsx (Clear All button + confirmation modal)
+- **Learnings:**
+  - Reusing Modal component keeps UI consistent
+  - Button disabled state based on tasks.length for UX
+  - API package rebuild required before dependent packages can see new types
+---
+
 ## 2026-01-14 - feat-002
 - Created reusable Modal component with Modal and ModalButton exports
 - Modal accepts: isOpen, onClose, title, children, footer (ReactNode)

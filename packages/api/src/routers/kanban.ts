@@ -27,4 +27,7 @@ export const kanbanRouter = router({
     .mutation(async ({ ctx, input }): Promise<Task> => {
       return ctx.kanban.createTask(input);
     }),
+  deleteAllTasks: publicProcedure.mutation(async ({ ctx }): Promise<void> => {
+    return ctx.kanban.deleteAllTasks();
+  }),
 });

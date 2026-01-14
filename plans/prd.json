@@ -44,6 +44,6 @@
       "Wire ConfirmationModal for delete confirmation",
       "Implement deleteAllTasks mutation with invalidation"
     ],
-    "passes": false
+    "passes": true
   }
 ]

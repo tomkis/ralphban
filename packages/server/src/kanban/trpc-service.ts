@@ -1,7 +1,10 @@
 import { DbClient } from '../db/client.js';
 import type { IKanbanService, Task as ApiTask, CreateTaskInput } from '@ralphban/api';
 import type { Task as ServerTask } from './types.js';
-import { createTask as repoCreateTask } from './repository.js';
+import {
+  createTask as repoCreateTask,
+  deleteAllTasks as repoDeleteAllTasks,
+} from './repository.js';
 
 interface TaskRow {
   id: string;
@@ -49,6 +52,9 @@ export function createKanbanService(client: DbClient): IKanbanService {
         title: serverTask.title,
         status: mapStateToStatus(serverTask.state),
       };
+    },
+    async deleteAllTasks(): Promise<void> {
+      repoDeleteAllTasks(client);
     },
   };
 }

@@ -91,3 +91,7 @@ export function createTask(client: DbClient, params: CreateTaskParams): Task {
     updated_at: now,
   };
 }
+
+export function deleteAllTasks(client: DbClient): void {
+  client.run('DELETE FROM tasks');
+}
