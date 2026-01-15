@@ -11,16 +11,11 @@ function WorkingDirectoryModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (workingDirectory: string) => void;
+  onSubmit: () => void;
 }) {
-  const [workingDirectory, setWorkingDirectory] = useState('');
-
   const handleSubmit = () => {
-    if (workingDirectory.trim()) {
-      onSubmit(workingDirectory.trim());
-      setWorkingDirectory('');
-      onClose();
-    }
+    onSubmit();
+    onClose();
   };
 
   return (
@@ -31,35 +26,15 @@ function WorkingDirectoryModal({
       footer={
         <>
           <ModalButton onClick={onClose}>Cancel</ModalButton>
-          <ModalButton onClick={handleSubmit} disabled={!workingDirectory.trim()} variant="primary">
+          <ModalButton onClick={handleSubmit} variant="primary">
             Start
           </ModalButton>
         </>
       }
     >
-      <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#5e6c84' }}>
-        Working Directory
-      </label>
-      <input
-        type="text"
-        value={workingDirectory}
-        onChange={(e) => setWorkingDirectory(e.target.value)}
-        placeholder="/path/to/project"
-        style={{
-          width: '100%',
-          padding: '8px 12px',
-          fontSize: '14px',
-          border: '1px solid #dfe1e6',
-          borderRadius: '4px',
-          boxSizing: 'border-box',
-          marginBottom: '16px',
-        }}
-        autoFocus
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleSubmit();
-          if (e.key === 'Escape') onClose();
-        }}
-      />
+      <p style={{ margin: 0, color: '#172b4d' }}>
+        Ralph will start working on tasks in the current working directory.
+      </p>
     </Modal>
   );
 }
@@ -208,8 +183,8 @@ export default function App() {
   const hasReadyTasks = todoTasks.length > 0;
   const isRalphRunning = ralphStatus?.isRunning ?? false;
 
-  const handleStartRalph = (workingDirectory: string) => {
-    startRalph.mutate({ workingDirectory });
+  const handleStartRalph = () => {
+    startRalph.mutate();
   };
 
   const handleCreateTask = (data: CreateTaskFormData) => {

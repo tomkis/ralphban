@@ -40,7 +40,7 @@
       "Remove workingDirectory from StartRalphInputSchema",
       "Change ralph.start input to empty object"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "feat-001",

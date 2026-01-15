@@ -9,7 +9,7 @@ export interface IKanbanService {
 
 export interface IRalphService {
   getStatus(): Promise<RalphStatus>;
-  start(workingDirectory: string): Promise<void>;
+  start(): Promise<void>;
 }
 
 export interface Context {
