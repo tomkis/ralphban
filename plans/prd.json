@@ -54,6 +54,6 @@
       "Update handleStartRalph to call mutation without parameter",
       "Update StartRalphButton onStart to call handleStartRalph directly"
     ],
-    "passes": false
+    "passes": true
   }
 ]

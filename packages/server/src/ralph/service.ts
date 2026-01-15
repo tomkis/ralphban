@@ -43,7 +43,7 @@ export async function runRalphLoop(workingDirectory: string): Promise<string> {
       cwd: workingDirectory,
       env: {
         ...process.env,
-        RALPHBAN_DB_DIR: process.cwd(),
+        RALPHBAN_DB_DIR: workingDirectory,
       },
     }
   );

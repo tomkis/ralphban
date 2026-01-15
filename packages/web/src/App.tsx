@@ -4,41 +4,6 @@ import { trpc } from './trpc';
 import { Modal, ModalButton } from './components/Modal';
 import { CreateTaskModal, CreateTaskFormData } from './components/CreateTaskModal';
 
-function WorkingDirectoryModal({
-  isOpen,
-  onClose,
-  onSubmit,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: () => void;
-}) {
-  const handleSubmit = () => {
-    onSubmit();
-    onClose();
-  };
-
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Start Ralph"
-      footer={
-        <>
-          <ModalButton onClick={onClose}>Cancel</ModalButton>
-          <ModalButton onClick={handleSubmit} variant="primary">
-            Start
-          </ModalButton>
-        </>
-      }
-    >
-      <p style={{ margin: 0, color: '#172b4d' }}>
-        Ralph will start working on tasks in the current working directory.
-      </p>
-    </Modal>
-  );
-}
-
 function TaskCard({ task }: { task: Task }) {
   return (
     <div
@@ -156,7 +121,6 @@ function StartRalphButton({
 }
 
 export default function App() {
-  const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
   const utils = trpc.useUtils();
@@ -237,18 +201,13 @@ export default function App() {
         <StartRalphButton
           hasReadyTasks={hasReadyTasks}
           isRalphRunning={isRalphRunning}
-          onStart={() => setIsStartModalOpen(true)}
+          onStart={handleStartRalph}
         />
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
         <Column title="Todo" tasks={todoTasks} onAddClick={() => setIsCreateModalOpen(true)} />
         <Column title="Done" tasks={doneTasks} />
       </div>
-      <WorkingDirectoryModal
-        isOpen={isStartModalOpen}
-        onClose={() => setIsStartModalOpen(false)}
-        onSubmit={handleStartRalph}
-      />
       <CreateTaskModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}

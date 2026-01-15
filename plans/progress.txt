@@ -26,3 +26,16 @@
   - tRPC mutation without input just uses `.mutation(async ({ ctx }) => {...})`
   - WorkingDirectoryModal kept for now (feat-001 will remove it completely)
 ---
+
+## 2026-01-15 - feat-001
+- Removed WorkingDirectoryModal component and isStartModalOpen state
+- StartRalphButton now calls handleStartRalph directly
+- Fixed integration test: removed workingDirectory arg from ralph.start.mutate()
+- Fixed test script: passes --cwd to server for proper cwd configuration
+- Fixed ralph/service.ts: RALPHBAN_DB_DIR now uses workingDirectory param
+- Files changed: packages/web/src/App.tsx, packages/integration-tests/tests/ralph-loop.test.ts, scripts/tests.sh, packages/server/src/ralph/service.ts
+- **Learnings:**
+  - MCP server needs RALPHBAN_DB_DIR to match the HTTP server's cwd
+  - Integration tests require server to be started with correct --cwd
+  - Test passes workingDirectory was leftover from chore-003
+---

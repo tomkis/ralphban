@@ -49,7 +49,7 @@ describe('Ralph Loop', () => {
   });
 
   it('should run ralph loop via tRPC', { timeout: 120_000 }, async () => {
-    await trpc.ralph.start.mutate({ workingDirectory: TEST_WORKING_DIR });
+    await trpc.ralph.start.mutate();
 
     await waitForRalphComplete();
 
