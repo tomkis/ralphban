@@ -8,7 +8,7 @@ export interface DbClient {
   close(): void;
 }
 
-export async function createDbClient(cwd: string = process.cwd()): Promise<DbClient> {
+export async function createDbClient(cwd: string): Promise<DbClient> {
   ensureRalphbanDir(cwd);
 
   const db = await loadDatabase(cwd);

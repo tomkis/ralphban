@@ -19,7 +19,7 @@ const argv = await yargs(hideBin(process.argv))
 
 if (argv.mcp) {
   const { runMcpServer } = await import('./mcp-cli.js');
-  await runMcpServer();
+  await runMcpServer(argv.cwd);
 } else {
   const { runHttpServer } = await import('./cli.js');
   await runHttpServer(argv.cwd);

@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@ralphban/api';
-import type { DbClient } from '../db/client.js';
 import { createContext } from './context.js';
+import { createDbClient } from '../db/client.js';
 
-export function createTrpcHandler(db: DbClient, cwd: string) {
+export function createTrpcHandler(cwd: string) {
   return async (req: Request, res: Response) => {
     const url = new URL(req.url || '', `http://${req.headers.host}`);
 
@@ -14,6 +14,8 @@ export function createTrpcHandler(db: DbClient, cwd: string) {
         headers[key] = value;
       }
     }
+
+    const db = await createDbClient(cwd);
 
     const response = await fetchRequestHandler({
       endpoint: '/trpc',

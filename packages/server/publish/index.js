@@ -9,6 +9,75 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
+// src/db/setup.ts
+import * as fs from "fs";
+import * as path from "path";
+import initSqlJs from "sql.js";
+function getRalphbanDir(cwd) {
+  return path.join(cwd, RALPHBAN_DIR);
+}
+function getDbPath(cwd) {
+  return path.join(getRalphbanDir(cwd), DB_FILENAME);
+}
+function ensureRalphbanDir(cwd) {
+  const dir = getRalphbanDir(cwd);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  return dir;
+}
+async function loadDatabase(cwd) {
+  const SQL = await initSqlJs();
+  const dbPath = getDbPath(cwd);
+  if (fs.existsSync(dbPath)) {
+    const buffer = fs.readFileSync(dbPath);
+    return new SQL.Database(buffer);
+  }
+  return new SQL.Database();
+}
+function saveDatabase(db2, cwd) {
+  ensureRalphbanDir(cwd);
+  const dbPath = getDbPath(cwd);
+  const data = db2.export();
+  const buffer = Buffer.from(data);
+  fs.writeFileSync(dbPath, buffer);
+}
+var RALPHBAN_DIR, DB_FILENAME;
+var init_setup = __esm({
+  "src/db/setup.ts"() {
+    "use strict";
+    RALPHBAN_DIR = ".ralphban";
+    DB_FILENAME = "ralphban.db";
+  }
+});
+
+// src/db/client.ts
+async function createDbClient(cwd) {
+  ensureRalphbanDir(cwd);
+  const db2 = await loadDatabase(cwd);
+  const save = () => saveDatabase(db2, cwd);
+  return {
+    db: db2,
+    run(sql, params) {
+      db2.run(sql, params);
+      save();
+    },
+    exec(sql) {
+      return db2.exec(sql);
+    },
+    close() {
+      save();
+      db2.close();
+    }
+  };
+}
+var init_client = __esm({
+  "src/db/client.ts"() {
+    "use strict";
+    init_setup();
+  }
+});
+
 // src/kanban/repository.ts
 function rowToTask(row) {
   return {
@@ -105,7 +174,7 @@ var init_service = __esm({
 // src/mcp/server.ts
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-function createMCPServer(db2) {
+function createMCPServer(cwd) {
   const server2 = new McpServer(
     {
       name: "ralphban-task-server",
@@ -122,8 +191,10 @@ function createMCPServer(db2) {
     {
       description: "Get all tasks that are ready for implementation"
     },
-    () => {
+    async () => {
+      const db2 = await createDbClient(cwd);
       const tasks = getTasksReadyForImplementation(db2);
+      await db2.close();
       return {
         content: [
           {
@@ -142,8 +213,10 @@ function createMCPServer(db2) {
         taskId: z.string().describe("The ID of the task to mark as done")
       }
     },
-    ({ taskId }) => {
+    async ({ taskId }) => {
+      const db2 = await createDbClient(cwd);
       markTaskAsCompleted(db2, taskId);
+      await db2.close();
       return {
         content: [
           {
@@ -159,76 +232,8 @@ function createMCPServer(db2) {
 var init_server = __esm({
   "src/mcp/server.ts"() {
     "use strict";
+    init_client();
     init_service();
-  }
-});
-
-// src/db/setup.ts
-import * as fs from "fs";
-import * as path from "path";
-import initSqlJs from "sql.js";
-function getRalphbanDir(cwd = process.cwd()) {
-  return path.join(cwd, RALPHBAN_DIR);
-}
-function getDbPath(cwd = process.cwd()) {
-  return path.join(getRalphbanDir(cwd), DB_FILENAME);
-}
-function ensureRalphbanDir(cwd = process.cwd()) {
-  const dir = getRalphbanDir(cwd);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  return dir;
-}
-async function loadDatabase(cwd = process.cwd()) {
-  const SQL = await initSqlJs();
-  const dbPath = getDbPath(cwd);
-  if (fs.existsSync(dbPath)) {
-    const buffer = fs.readFileSync(dbPath);
-    return new SQL.Database(buffer);
-  }
-  return new SQL.Database();
-}
-function saveDatabase(db2, cwd = process.cwd()) {
-  ensureRalphbanDir(cwd);
-  const dbPath = getDbPath(cwd);
-  const data = db2.export();
-  const buffer = Buffer.from(data);
-  fs.writeFileSync(dbPath, buffer);
-}
-var RALPHBAN_DIR, DB_FILENAME;
-var init_setup = __esm({
-  "src/db/setup.ts"() {
-    "use strict";
-    RALPHBAN_DIR = ".ralphban";
-    DB_FILENAME = "ralphban.db";
-  }
-});
-
-// src/db/client.ts
-async function createDbClient(cwd = process.cwd()) {
-  ensureRalphbanDir(cwd);
-  const db2 = await loadDatabase(cwd);
-  const save = () => saveDatabase(db2, cwd);
-  return {
-    db: db2,
-    run(sql, params) {
-      db2.run(sql, params);
-      save();
-    },
-    exec(sql) {
-      return db2.exec(sql);
-    },
-    close() {
-      save();
-      db2.close();
-    }
-  };
-}
-var init_client = __esm({
-  "src/db/client.ts"() {
-    "use strict";
-    init_setup();
   }
 });
 
@@ -258,10 +263,8 @@ Received ${signal}, shutting down...
     process.exit(1);
   }
 }
-async function runMcpServer() {
-  const dbDir = process.env.RALPHBAN_DB_DIR || process.cwd();
-  db = await createDbClient(dbDir);
-  mcpServer = createMCPServer(db);
+async function runMcpServer(cwd) {
+  mcpServer = createMCPServer(cwd);
   const transport = new StdioServerTransport();
   await mcpServer.connect(transport);
 }
@@ -270,7 +273,6 @@ var init_mcp_cli = __esm({
   "src/mcp-cli.ts"() {
     "use strict";
     init_server();
-    init_client();
     db = null;
     mcpServer = null;
     process.on("SIGINT", () => shutdown("SIGINT"));
@@ -436,7 +438,7 @@ var init_kanban = __esm({
 
 // ../api/dist/routers/ralph.js
 import { z as z3 } from "zod";
-var RalphStatusSchema, StartRalphInputSchema, ralphRouter;
+var RalphStatusSchema, ralphRouter;
 var init_ralph = __esm({
   "../api/dist/routers/ralph.js"() {
     "use strict";
@@ -444,15 +446,12 @@ var init_ralph = __esm({
     RalphStatusSchema = z3.object({
       isRunning: z3.boolean()
     });
-    StartRalphInputSchema = z3.object({
-      workingDirectory: z3.string()
-    });
     ralphRouter = router({
       getStatus: publicProcedure.query(async ({ ctx }) => {
         return ctx.ralph.getStatus();
       }),
-      start: publicProcedure.input(StartRalphInputSchema).mutation(async ({ ctx, input }) => {
-        return ctx.ralph.start(input.workingDirectory);
+      start: publicProcedure.mutation(async ({ ctx }) => {
+        return ctx.ralph.start();
       })
     });
   }
@@ -585,9 +584,17 @@ var init_process = __esm({
 });
 
 // src/ralph/service.ts
-function buildMcpConfig() {
+function buildMcpConfig(workingDirectory) {
   const mcpPath = process.env.RALPHBAN_MCP_PATH;
-  const mcpServer2 = mcpPath ? { type: "stdio", command: "node", args: [mcpPath, "--mcp"] } : { type: "stdio", command: "npx", args: ["github:tomkis/ralphban", "--mcp"] };
+  const mcpServer2 = mcpPath ? {
+    type: "stdio",
+    command: "node",
+    args: [mcpPath, "--mcp", `--cwd=${workingDirectory}`]
+  } : {
+    type: "stdio",
+    command: "npx",
+    args: ["github:tomkis/ralphban", "--mcp", `--cwd=${workingDirectory}`]
+  };
   return JSON.stringify({ mcpServers: { ralphban: mcpServer2 } });
 }
 async function runRalphLoop(workingDirectory) {
@@ -596,15 +603,14 @@ async function runRalphLoop(workingDirectory) {
     [
       "--dangerously-skip-permissions",
       "--mcp-config",
-      buildMcpConfig(),
+      buildMcpConfig(workingDirectory),
       "-p",
       RALPH_PROMPT_TEMPLATE.trim()
     ],
     {
       cwd: workingDirectory,
       env: {
-        ...process.env,
-        RALPHBAN_DB_DIR: process.cwd()
+        ...process.env
       }
     }
   );
@@ -637,17 +643,17 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 });
 
 // src/ralph/trpc-service.ts
-function createRalphService() {
+function createRalphService(cwd) {
   return {
     async getStatus() {
       return { isRunning };
     },
-    async start(workingDirectory) {
+    async start() {
       if (isRunning) {
         return;
       }
       isRunning = true;
-      runRalphLoop(workingDirectory).finally(() => {
+      runRalphLoop(cwd).finally(() => {
         isRunning = false;
       });
     }
@@ -663,10 +669,10 @@ var init_trpc_service2 = __esm({
 });
 
 // src/trpc/context.ts
-function createContext(db2) {
+function createContext(db2, cwd) {
   return {
     kanban: createKanbanService(db2),
-    ralph: createRalphService()
+    ralph: createRalphService(cwd)
   };
 }
 var init_context = __esm({
@@ -679,7 +685,7 @@ var init_context = __esm({
 
 // src/trpc/adapter.ts
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-function createTrpcHandler(db2) {
+function createTrpcHandler(cwd) {
   return async (req, res) => {
     const url = new URL(req.url || "", `http://${req.headers.host}`);
     const headers = {};
@@ -688,6 +694,7 @@ function createTrpcHandler(db2) {
         headers[key] = value;
       }
     }
+    const db2 = await createDbClient(cwd);
     const response = await fetchRequestHandler({
       endpoint: "/trpc",
       req: new Request(url, {
@@ -696,7 +703,7 @@ function createTrpcHandler(db2) {
         body: ["GET", "HEAD"].includes(req.method) ? void 0 : JSON.stringify(req.body)
       }),
       router: appRouter,
-      createContext: () => createContext(db2)
+      createContext: () => createContext(db2, cwd)
     });
     res.status(response.status);
     response.headers.forEach((value, key) => {
@@ -711,6 +718,7 @@ var init_adapter = __esm({
     "use strict";
     init_dist();
     init_context();
+    init_client();
   }
 });
 
@@ -728,7 +736,8 @@ var init_trpc2 = __esm({
 import path2 from "path";
 import express from "express";
 function createServer(config) {
-  const { db: db2 } = config;
+  console.log("Starting server with config:", { cwd: config.cwd });
+  const { cwd } = config;
   const port = config.port ?? parseInt(process.env.PORT ?? "3001", 10);
   const errorHandler = (err, _req, res, _next) => {
     console.error("Unhandled error:", err);
@@ -736,7 +745,7 @@ function createServer(config) {
   };
   const app = express();
   app.use(express.json());
-  app.all("/trpc/{*path}", createTrpcHandler(db2));
+  app.all("/trpc/{*path}", createTrpcHandler(cwd));
   if (config.staticDir) {
     app.use(express.static(config.staticDir));
     app.get("{*path}", (_req, res) => {
@@ -800,8 +809,7 @@ Received ${signal}, shutting down...`);
     process.exit(1);
   }
 }
-async function runHttpServer() {
-  const cwd = process.cwd();
+async function runHttpServer(cwd) {
   if (process.env.SKIP_GIT_VALIDATION !== "true") {
     const gitValidation = await validateGitRepository(cwd);
     if (!gitValidation.valid) {
@@ -824,7 +832,7 @@ async function runHttpServer() {
   const webDistInDir = path3.resolve(__dirname, "web-dist");
   const webDistInParent = path3.resolve(__dirname, "..", "web-dist");
   const webDistPath = fs2.existsSync(webDistInDir) ? webDistInDir : webDistInParent;
-  server = createServer({ db: appDb, staticDir: webDistPath });
+  server = createServer({ cwd, staticDir: webDistPath });
   await server.start();
   console.log("ralphban is ready");
 }
@@ -851,11 +859,15 @@ var argv = await yargs(hideBin(process.argv)).option("mcp", {
   type: "boolean",
   description: "Run in MCP server mode (stdio transport)",
   default: false
+}).option("cwd", {
+  type: "string",
+  description: "Working directory for Ralph execution",
+  default: process.cwd()
 }).help().parse();
 if (argv.mcp) {
   const { runMcpServer: runMcpServer2 } = await Promise.resolve().then(() => (init_mcp_cli(), mcp_cli_exports));
-  await runMcpServer2();
+  await runMcpServer2(argv.cwd);
 } else {
   const { runHttpServer: runHttpServer2 } = await Promise.resolve().then(() => (init_cli(), cli_exports));
-  await runHttpServer2();
+  await runHttpServer2(argv.cwd);
 }

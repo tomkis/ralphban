@@ -20,11 +20,20 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 - Only implement ONE task per run
 `;
 
-function buildMcpConfig(): string {
+function buildMcpConfig(workingDirectory: string): string {
   const mcpPath = process.env.RALPHBAN_MCP_PATH;
+
   const mcpServer = mcpPath
-    ? { type: 'stdio', command: 'node', args: [mcpPath, '--mcp'] }
-    : { type: 'stdio', command: 'npx', args: ['github:tomkis/ralphban', '--mcp'] };
+    ? {
+        type: 'stdio',
+        command: 'node',
+        args: [mcpPath, '--mcp', `--cwd=${workingDirectory}`],
+      }
+    : {
+        type: 'stdio',
+        command: 'npx',
+        args: ['github:tomkis/ralphban', '--mcp', `--cwd=${workingDirectory}`],
+      };
 
   return JSON.stringify({ mcpServers: { ralphban: mcpServer } });
 }
@@ -35,7 +44,7 @@ export async function runRalphLoop(workingDirectory: string): Promise<string> {
     [
       '--dangerously-skip-permissions',
       '--mcp-config',
-      buildMcpConfig(),
+      buildMcpConfig(workingDirectory),
       '-p',
       RALPH_PROMPT_TEMPLATE.trim(),
     ],
@@ -43,7 +52,6 @@ export async function runRalphLoop(workingDirectory: string): Promise<string> {
       cwd: workingDirectory,
       env: {
         ...process.env,
-        RALPHBAN_DB_DIR: workingDirectory,
       },
     }
   );
