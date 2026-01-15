@@ -8,7 +8,7 @@
       "Add --cwd yargs option with string type and process.cwd() default",
       "Pass cwd value to runHttpServer()"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-002",

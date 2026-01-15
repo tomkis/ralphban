@@ -34,9 +34,7 @@ async function shutdown(signal: string) {
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-export async function runHttpServer() {
-  const cwd = process.cwd();
-
+export async function runHttpServer(cwd: string) {
   if (process.env.SKIP_GIT_VALIDATION !== 'true') {
     const gitValidation = await validateGitRepository(cwd);
     if (!gitValidation.valid) {

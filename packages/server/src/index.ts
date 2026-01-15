@@ -9,6 +9,11 @@ const argv = await yargs(hideBin(process.argv))
     description: 'Run in MCP server mode (stdio transport)',
     default: false,
   })
+  .option('cwd', {
+    type: 'string',
+    description: 'Working directory for Ralph execution',
+    default: process.cwd(),
+  })
   .help()
   .parse();
 
@@ -17,5 +22,5 @@ if (argv.mcp) {
   await runMcpServer();
 } else {
   const { runHttpServer } = await import('./cli.js');
-  await runHttpServer();
+  await runHttpServer(argv.cwd);
 }

@@ -1,0 +1,8 @@
+## 2026-01-15 - chore-001
+- Added --cwd CLI parameter to yargs in index.ts
+- Updated runHttpServer() to accept cwd parameter
+- Files changed: packages/server/src/index.ts, packages/server/src/cli.ts
+- **Learnings:**
+  - CLI entry point is index.ts, runHttpServer is in cli.ts
+  - yargs already set up with option pattern
+---
