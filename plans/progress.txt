@@ -1,0 +1,41 @@
+## 2026-01-15 - chore-001
+- Added --cwd CLI parameter to yargs in index.ts
+- Updated runHttpServer() to accept cwd parameter
+- Files changed: packages/server/src/index.ts, packages/server/src/cli.ts
+- **Learnings:**
+  - CLI entry point is index.ts, runHttpServer is in cli.ts
+  - yargs already set up with option pattern
+---
+
+## 2026-01-15 - chore-002
+- Threading cwd through server init was already implemented in chore-001
+- Verified: cli.ts -> server.ts -> adapter.ts -> context.ts -> ralph/trpc-service.ts
+- Files changed: plans/prd.json (marked passes: true)
+- **Learnings:**
+  - chore-001 commit included full threading implementation
+  - ServerConfig already had cwd, createTrpcHandler/createContext already passing it
+---
+
+## 2026-01-15 - chore-003
+- Removed workingDirectory parameter from Ralph API
+- IRalphService.start() now takes no params, uses cwd from closure
+- Removed StartRalphInputSchema, ralph.start mutation takes no input
+- Updated UI modal to not pass workingDirectory (simplified)
+- Files changed: packages/api/src/context.ts, packages/api/src/routers/ralph.ts, packages/server/src/ralph/trpc-service.ts, packages/web/src/App.tsx
+- **Learnings:**
+  - tRPC mutation without input just uses `.mutation(async ({ ctx }) => {...})`
+  - WorkingDirectoryModal kept for now (feat-001 will remove it completely)
+---
+
+## 2026-01-15 - feat-001
+- Removed WorkingDirectoryModal component and isStartModalOpen state
+- StartRalphButton now calls handleStartRalph directly
+- Fixed integration test: removed workingDirectory arg from ralph.start.mutate()
+- Fixed test script: passes --cwd to server for proper cwd configuration
+- Fixed ralph/service.ts: RALPHBAN_DB_DIR now uses workingDirectory param
+- Files changed: packages/web/src/App.tsx, packages/integration-tests/tests/ralph-loop.test.ts, scripts/tests.sh, packages/server/src/ralph/service.ts
+- **Learnings:**
+  - MCP server needs RALPHBAN_DB_DIR to match the HTTP server's cwd
+  - Integration tests require server to be started with correct --cwd
+  - Test passes workingDirectory was leftover from chore-003
+---

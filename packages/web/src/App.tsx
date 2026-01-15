@@ -4,66 +4,6 @@ import { trpc } from './trpc';
 import { Modal, ModalButton } from './components/Modal';
 import { CreateTaskModal, CreateTaskFormData } from './components/CreateTaskModal';
 
-function WorkingDirectoryModal({
-  isOpen,
-  onClose,
-  onSubmit,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (workingDirectory: string) => void;
-}) {
-  const [workingDirectory, setWorkingDirectory] = useState('');
-
-  const handleSubmit = () => {
-    if (workingDirectory.trim()) {
-      onSubmit(workingDirectory.trim());
-      setWorkingDirectory('');
-      onClose();
-    }
-  };
-
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Start Ralph"
-      footer={
-        <>
-          <ModalButton onClick={onClose}>Cancel</ModalButton>
-          <ModalButton onClick={handleSubmit} disabled={!workingDirectory.trim()} variant="primary">
-            Start
-          </ModalButton>
-        </>
-      }
-    >
-      <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#5e6c84' }}>
-        Working Directory
-      </label>
-      <input
-        type="text"
-        value={workingDirectory}
-        onChange={(e) => setWorkingDirectory(e.target.value)}
-        placeholder="/path/to/project"
-        style={{
-          width: '100%',
-          padding: '8px 12px',
-          fontSize: '14px',
-          border: '1px solid #dfe1e6',
-          borderRadius: '4px',
-          boxSizing: 'border-box',
-          marginBottom: '16px',
-        }}
-        autoFocus
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleSubmit();
-          if (e.key === 'Escape') onClose();
-        }}
-      />
-    </Modal>
-  );
-}
-
 function TaskCard({ task }: { task: Task }) {
   return (
     <div
@@ -181,7 +121,6 @@ function StartRalphButton({
 }
 
 export default function App() {
-  const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
   const utils = trpc.useUtils();
@@ -208,8 +147,8 @@ export default function App() {
   const hasReadyTasks = todoTasks.length > 0;
   const isRalphRunning = ralphStatus?.isRunning ?? false;
 
-  const handleStartRalph = (workingDirectory: string) => {
-    startRalph.mutate({ workingDirectory });
+  const handleStartRalph = () => {
+    startRalph.mutate();
   };
 
   const handleCreateTask = (data: CreateTaskFormData) => {
@@ -262,18 +201,13 @@ export default function App() {
         <StartRalphButton
           hasReadyTasks={hasReadyTasks}
           isRalphRunning={isRalphRunning}
-          onStart={() => setIsStartModalOpen(true)}
+          onStart={handleStartRalph}
         />
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
         <Column title="Todo" tasks={todoTasks} onAddClick={() => setIsCreateModalOpen(true)} />
         <Column title="Done" tasks={doneTasks} />
       </div>
-      <WorkingDirectoryModal
-        isOpen={isStartModalOpen}
-        onClose={() => setIsStartModalOpen(false)}
-        onSubmit={handleStartRalph}
-      />
       <CreateTaskModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}

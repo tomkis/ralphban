@@ -1,11 +1,10 @@
 import http from 'http';
 import path from 'path';
 import express, { type Application, type ErrorRequestHandler } from 'express';
-import type { DbClient } from './db/client.js';
 import { createTrpcHandler } from './trpc/index.js';
 
 export interface ServerConfig {
-  db: DbClient;
+  cwd: string;
   port?: number;
   staticDir?: string;
 }
@@ -17,7 +16,9 @@ export interface ServerInstance {
 }
 
 export function createServer(config: ServerConfig): ServerInstance {
-  const { db } = config;
+  console.log('Starting server with config:', { cwd: config.cwd });
+
+  const { cwd } = config;
   const port = config.port ?? parseInt(process.env.PORT ?? '3001', 10);
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -29,7 +30,7 @@ export function createServer(config: ServerConfig): ServerInstance {
 
   app.use(express.json());
 
-  app.all('/trpc/{*path}', createTrpcHandler(db));
+  app.all('/trpc/{*path}', createTrpcHandler(cwd));
 
   if (config.staticDir) {
     app.use(express.static(config.staticDir));

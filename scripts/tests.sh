@@ -62,8 +62,10 @@ PORT=$(find_available_port)
 echo "Using port: $PORT"
 
 echo "Starting server..."
+TEST_WORKDIR="$PROJECT_ROOT/packages/integration-tests/.ralph-test-workdir"
+mkdir -p "$TEST_WORKDIR"
 cd "$PROJECT_ROOT"
-PORT=$PORT RALPHBAN_MCP_PATH=$MCP_CLI_PATH SKIP_GIT_VALIDATION=true SKIP_API_KEY_CHECK=true SEED_DATABASE=true pnpm --filter @ralphban/server dev > "$SERVER_LOG" 2>&1 &
+PORT=$PORT RALPHBAN_MCP_PATH=$MCP_CLI_PATH SKIP_GIT_VALIDATION=true SKIP_API_KEY_CHECK=true SEED_DATABASE=true pnpm --filter @ralphban/server dev -- --cwd "$TEST_WORKDIR" > "$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
 
 sleep 1

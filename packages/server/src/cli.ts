@@ -34,9 +34,7 @@ async function shutdown(signal: string) {
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-export async function runHttpServer() {
-  const cwd = process.cwd();
-
+export async function runHttpServer(cwd: string) {
   if (process.env.SKIP_GIT_VALIDATION !== 'true') {
     const gitValidation = await validateGitRepository(cwd);
     if (!gitValidation.valid) {
@@ -61,7 +59,7 @@ export async function runHttpServer() {
   const webDistInDir = path.resolve(__dirname, 'web-dist');
   const webDistInParent = path.resolve(__dirname, '..', 'web-dist');
   const webDistPath = fs.existsSync(webDistInDir) ? webDistInDir : webDistInParent;
-  server = createServer({ db: appDb, staticDir: webDistPath });
+  server = createServer({ cwd, staticDir: webDistPath });
   await server.start();
   console.log('ralphban is ready');
 }

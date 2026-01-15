@@ -29,10 +29,8 @@ async function shutdown(signal: string) {
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-export async function runMcpServer() {
-  const dbDir = process.env.RALPHBAN_DB_DIR || process.cwd();
-  db = await createDbClient(dbDir);
-  mcpServer = createMCPServer(db);
+export async function runMcpServer(cwd: string) {
+  mcpServer = createMCPServer(cwd);
   const transport = new StdioServerTransport();
 
   await mcpServer.connect(transport);

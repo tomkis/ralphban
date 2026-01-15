@@ -5,15 +5,15 @@ import initSqlJs, { Database } from 'sql.js';
 const RALPHBAN_DIR = '.ralphban';
 const DB_FILENAME = 'ralphban.db';
 
-export function getRalphbanDir(cwd: string = process.cwd()): string {
+export function getRalphbanDir(cwd: string): string {
   return path.join(cwd, RALPHBAN_DIR);
 }
 
-export function getDbPath(cwd: string = process.cwd()): string {
+export function getDbPath(cwd: string): string {
   return path.join(getRalphbanDir(cwd), DB_FILENAME);
 }
 
-export function ensureRalphbanDir(cwd: string = process.cwd()): string {
+export function ensureRalphbanDir(cwd: string): string {
   const dir = getRalphbanDir(cwd);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -21,7 +21,7 @@ export function ensureRalphbanDir(cwd: string = process.cwd()): string {
   return dir;
 }
 
-export async function loadDatabase(cwd: string = process.cwd()): Promise<Database> {
+export async function loadDatabase(cwd: string): Promise<Database> {
   const SQL = await initSqlJs();
   const dbPath = getDbPath(cwd);
 
@@ -33,7 +33,7 @@ export async function loadDatabase(cwd: string = process.cwd()): Promise<Databas
   return new SQL.Database();
 }
 
-export function saveDatabase(db: Database, cwd: string = process.cwd()): void {
+export function saveDatabase(db: Database, cwd: string): void {
   ensureRalphbanDir(cwd);
   const dbPath = getDbPath(cwd);
   const data = db.export();
