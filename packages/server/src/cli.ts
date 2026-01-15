@@ -59,7 +59,7 @@ export async function runHttpServer(cwd: string) {
   const webDistInDir = path.resolve(__dirname, 'web-dist');
   const webDistInParent = path.resolve(__dirname, '..', 'web-dist');
   const webDistPath = fs.existsSync(webDistInDir) ? webDistInDir : webDistInParent;
-  server = createServer({ db: appDb, staticDir: webDistPath });
+  server = createServer({ db: appDb, cwd, staticDir: webDistPath });
   await server.start();
   console.log('ralphban is ready');
 }

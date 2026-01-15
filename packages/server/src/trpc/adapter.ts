@@ -4,7 +4,7 @@ import { appRouter } from '@ralphban/api';
 import type { DbClient } from '../db/client.js';
 import { createContext } from './context.js';
 
-export function createTrpcHandler(db: DbClient) {
+export function createTrpcHandler(db: DbClient, cwd: string) {
   return async (req: Request, res: Response) => {
     const url = new URL(req.url || '', `http://${req.headers.host}`);
 
@@ -23,7 +23,7 @@ export function createTrpcHandler(db: DbClient) {
         body: ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body),
       }),
       router: appRouter,
-      createContext: () => createContext(db),
+      createContext: () => createContext(db, cwd),
     });
 
     res.status(response.status);

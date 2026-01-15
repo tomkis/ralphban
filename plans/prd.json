@@ -25,7 +25,7 @@
       "Accept cwd in createContext() signature",
       "Pass cwd to createRalphService()"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "chore-003",

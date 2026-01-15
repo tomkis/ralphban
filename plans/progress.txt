@@ -6,3 +6,12 @@
   - CLI entry point is index.ts, runHttpServer is in cli.ts
   - yargs already set up with option pattern
 ---
+
+## 2026-01-15 - chore-002
+- Threading cwd through server init was already implemented in chore-001
+- Verified: cli.ts -> server.ts -> adapter.ts -> context.ts -> ralph/trpc-service.ts
+- Files changed: plans/prd.json (marked passes: true)
+- **Learnings:**
+  - chore-001 commit included full threading implementation
+  - ServerConfig already had cwd, createTrpcHandler/createContext already passing it
+---
