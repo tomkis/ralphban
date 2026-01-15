@@ -1,1 +1,59 @@
-[]
+[
+  {
+    "id": "chore-001",
+    "category": "chore",
+    "title": "Add --cwd CLI parameter",
+    "description": "CLI must accept --cwd parameter to specify working directory for Ralph execution. Defaults to process.cwd().",
+    "steps": [
+      "Add --cwd yargs option with string type and process.cwd() default",
+      "Pass cwd value to runHttpServer()"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-002",
+    "category": "chore",
+    "title": "Thread cwd through server initialization",
+    "description": "Server stack must receive and propagate cwd from CLI through all layers to Ralph service.",
+    "steps": [
+      "Accept cwd parameter in runHttpServer()",
+      "Pass cwd to createServer() config",
+      "Accept cwd in ServerConfig interface",
+      "Pass cwd to createTrpcHandler()",
+      "Accept cwd in createTrpcHandler() signature",
+      "Pass cwd to createContext()",
+      "Accept cwd in createContext() signature",
+      "Pass cwd to createRalphService()"
+    ],
+    "passes": false
+  },
+  {
+    "id": "chore-003",
+    "category": "chore",
+    "title": "Remove workingDirectory from Ralph API",
+    "description": "Ralph service must use cwd from constructor instead of per-request workingDirectory parameter.",
+    "steps": [
+      "Accept cwd in createRalphService() signature",
+      "Store cwd in closure for start() method",
+      "Remove workingDirectory parameter from start() method",
+      "Update start() to use stored cwd",
+      "Remove workingDirectory from StartRalphInputSchema",
+      "Change ralph.start input to empty object"
+    ],
+    "passes": false
+  },
+  {
+    "id": "feat-001",
+    "category": "feat",
+    "title": "Remove working directory modal from UI",
+    "description": "UI must not prompt for working directory. Start Ralph directly when clicked.",
+    "steps": [
+      "Remove WorkingDirectoryModal component definition",
+      "Remove isStartModalOpen state",
+      "Remove WorkingDirectoryModal usage",
+      "Update handleStartRalph to call mutation without parameter",
+      "Update StartRalphButton onStart to call handleStartRalph directly"
+    ],
+    "passes": false
+  }
+]
