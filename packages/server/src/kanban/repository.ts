@@ -8,6 +8,7 @@ interface TaskRow {
   description: string;
   steps: string;
   state: string;
+  progress: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -20,6 +21,7 @@ function rowToTask(row: TaskRow): Task {
     description: row.description,
     steps: JSON.parse(row.steps),
     state: row.state as Task['state'],
+    progress: row.progress,
     created_at: new Date(row.created_at),
     updated_at: new Date(row.updated_at),
   };
@@ -27,7 +29,7 @@ function rowToTask(row: TaskRow): Task {
 
 export function getNextPendingTask(client: DbClient): Task | null {
   const result = client.exec(
-    "SELECT id, category, title, description, steps, state, created_at, updated_at FROM tasks WHERE state = 'ReadyForDev' ORDER BY created_at ASC LIMIT 1"
+    "SELECT id, category, title, description, steps, state, progress, created_at, updated_at FROM tasks WHERE state = 'ReadyForDev' ORDER BY created_at ASC LIMIT 1"
   );
   if (result.length === 0 || result[0].values.length === 0) {
     return null;
@@ -38,11 +40,19 @@ export function getNextPendingTask(client: DbClient): Task | null {
   return rowToTask(row);
 }
 
-export function updateTaskStatus(client: DbClient, id: string, state: string): void {
-  client.run('UPDATE tasks SET state = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [
-    state,
-    id,
-  ]);
+export function updateTaskStatus(client: DbClient, id: string, state: string, progress?: string): void {
+  if (progress !== undefined) {
+    client.run('UPDATE tasks SET state = ?, progress = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [
+      state,
+      progress,
+      id,
+    ]);
+  } else {
+    client.run('UPDATE tasks SET state = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [
+      state,
+      id,
+    ]);
+  }
 }
 
 export function getNextTaskId(client: DbClient, category: string): string {
@@ -87,6 +97,7 @@ export function createTask(client: DbClient, params: CreateTaskParams): Task {
     description: params.description,
     steps: params.steps,
     state: 'ReadyForDev',
+    progress: null,
     created_at: now,
     updated_at: now,
   };

@@ -7,6 +7,6 @@ export function getTasksReadyForImplementation(client: DbClient): Task[] {
   return task ? [task] : [];
 }
 
-export function markTaskAsCompleted(client: DbClient, taskId: string): void {
-  updateTaskStatus(client, taskId, 'Done');
+export function markTaskAsCompleted(client: DbClient, taskId: string, progress: string): void {
+  updateTaskStatus(client, taskId, 'Done', progress);
 }

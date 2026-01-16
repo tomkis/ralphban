@@ -3,16 +3,19 @@ import type { Task } from '@ralphban/api';
 import { trpc } from './trpc';
 import { Modal, ModalButton } from './components/Modal';
 import { CreateTaskModal, CreateTaskFormData } from './components/CreateTaskModal';
+import { TaskDetailModal } from './components/TaskDetailModal';
 
-function TaskCard({ task }: { task: Task }) {
+function TaskCard({ task, onClick }: { task: Task; onClick: () => void }) {
   return (
     <div
+      onClick={onClick}
       style={{
         padding: '12px',
         marginBottom: '8px',
         backgroundColor: '#fff',
         borderRadius: '4px',
         boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+        cursor: 'pointer',
       }}
     >
       <div style={{ fontWeight: 500 }}>{task.title}</div>
@@ -25,10 +28,12 @@ function Column({
   title,
   tasks,
   onAddClick,
+  onTaskClick,
 }: {
   title: string;
   tasks: Task[];
   onAddClick?: () => void;
+  onTaskClick: (taskId: string) => void;
 }) {
   return (
     <div
@@ -81,7 +86,7 @@ function Column({
       </div>
       <div>
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} onClick={() => onTaskClick(task.id)} />
         ))}
       </div>
     </div>
@@ -123,6 +128,7 @@ function StartRalphButton({
 export default function App() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const utils = trpc.useUtils();
   const { data: tasks = [] } = trpc.kanban.getTasks.useQuery(undefined, {
     refetchInterval: 3000,
@@ -141,6 +147,10 @@ export default function App() {
       utils.kanban.getTasks.invalidate();
     },
   });
+  const { data: selectedTask } = trpc.kanban.getTask.useQuery(
+    { id: selectedTaskId! },
+    { enabled: !!selectedTaskId }
+  );
 
   const todoTasks = tasks.filter((t) => t.status === 'todo' || t.status === 'in_progress');
   const doneTasks = tasks.filter((t) => t.status === 'done');
@@ -205,8 +215,8 @@ export default function App() {
         />
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-        <Column title="Todo" tasks={todoTasks} onAddClick={() => setIsCreateModalOpen(true)} />
-        <Column title="Done" tasks={doneTasks} />
+        <Column title="Todo" tasks={todoTasks} onAddClick={() => setIsCreateModalOpen(true)} onTaskClick={setSelectedTaskId} />
+        <Column title="Done" tasks={doneTasks} onTaskClick={setSelectedTaskId} />
       </div>
       <CreateTaskModal
         isOpen={isCreateModalOpen}
@@ -230,6 +240,11 @@ export default function App() {
           Are you sure you want to delete all tasks? This action cannot be undone.
         </p>
       </Modal>
+      <TaskDetailModal
+        isOpen={!!selectedTaskId}
+        onClose={() => setSelectedTaskId(null)}
+        task={selectedTask ?? null}
+      />
     </div>
   );
 }

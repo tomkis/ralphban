@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +9,19 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -25,7 +38,6 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
         justifyContent: 'center',
         zIndex: 1000,
       }}
-      onClick={onClose}
     >
       <div
         style={{
@@ -35,7 +47,6 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
           minWidth: '400px',
           boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         <h2 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: 600 }}>{title}</h2>
         {children}

@@ -43,11 +43,12 @@ export function createMCPServer(cwd: string): McpServer {
       description: 'Mark a task as completed',
       inputSchema: {
         taskId: z.string().describe('The ID of the task to mark as done'),
+        progress: z.string().describe('Progress summary: what was implemented, important files changed, learnings (gotchas, follow-ups)'),
       },
     },
-    async ({ taskId }) => {
+    async ({ taskId, progress }) => {
       const db = await createDbClient(cwd);
-      markTaskAsCompleted(db, taskId);
+      markTaskAsCompleted(db, taskId, progress);
       await db.close();
 
       return {

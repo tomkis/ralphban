@@ -10,7 +10,7 @@ const RALPH_PROMPT_TEMPLATE = `
    - Tasks are NOT sorted by priority
    - Think about which one is right to pick based on dependencies
 3. Implement that ONE task
-4. Call \`mark_task_done\` tool with the task ID
+4. Call \`mark_task_done\` tool with the task ID and progress summary
 5. Terminate, you are only supposed to work on ONE task
 
 If no tasks are returned, output <promise>COMPLETE</promise>.
@@ -18,6 +18,10 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 ## Important Rules
 
 - Only implement ONE task per run
+- When marking task done, provide progress summary:
+  - What was implemented
+  - Important files changed
+  - Learnings (gotchas encountered, proposed follow-ups)
 `;
 
 function buildMcpConfig(workingDirectory: string): string {
