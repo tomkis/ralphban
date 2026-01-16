@@ -87,13 +87,14 @@ function rowToTask(row) {
     description: row.description,
     steps: JSON.parse(row.steps),
     state: row.state,
+    progress: row.progress,
     created_at: new Date(row.created_at),
     updated_at: new Date(row.updated_at)
   };
 }
 function getNextPendingTask(client) {
   const result = client.exec(
-    "SELECT id, category, title, description, steps, state, created_at, updated_at FROM tasks WHERE state = 'ReadyForDev' ORDER BY created_at ASC LIMIT 1"
+    "SELECT id, category, title, description, steps, state, progress, created_at, updated_at FROM tasks WHERE state = 'ReadyForDev' ORDER BY created_at ASC LIMIT 1"
   );
   if (result.length === 0 || result[0].values.length === 0) {
     return null;
@@ -103,11 +104,19 @@ function getNextPendingTask(client) {
   const row = Object.fromEntries(columns.map((col, i) => [col, values[i]]));
   return rowToTask(row);
 }
-function updateTaskStatus(client, id, state) {
-  client.run("UPDATE tasks SET state = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", [
-    state,
-    id
-  ]);
+function updateTaskStatus(client, id, state, progress) {
+  if (progress !== void 0) {
+    client.run("UPDATE tasks SET state = ?, progress = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", [
+      state,
+      progress,
+      id
+    ]);
+  } else {
+    client.run("UPDATE tasks SET state = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", [
+      state,
+      id
+    ]);
+  }
 }
 function getNextTaskId(client, category) {
   const result = client.exec(
@@ -143,12 +152,26 @@ function createTask(client, params) {
     description: params.description,
     steps: params.steps,
     state: "ReadyForDev",
+    progress: null,
     created_at: now,
     updated_at: now
   };
 }
 function deleteAllTasks(client) {
   client.run("DELETE FROM tasks");
+}
+function getDoneTasks(client) {
+  const result = client.exec(
+    "SELECT id, category, title, description, steps, state, progress, created_at, updated_at FROM tasks WHERE state = 'Done' ORDER BY updated_at ASC"
+  );
+  if (result.length === 0 || result[0].values.length === 0) {
+    return [];
+  }
+  const columns = result[0].columns;
+  return result[0].values.map((values) => {
+    const row = Object.fromEntries(columns.map((col, i) => [col, values[i]]));
+    return rowToTask(row);
+  });
 }
 var init_repository = __esm({
   "src/kanban/repository.ts"() {
@@ -161,8 +184,16 @@ function getTasksReadyForImplementation(client) {
   const task = getNextPendingTask(client);
   return task ? [task] : [];
 }
-function markTaskAsCompleted(client, taskId) {
-  updateTaskStatus(client, taskId, "Done");
+function markTaskAsCompleted(client, taskId, progress) {
+  updateTaskStatus(client, taskId, "Done", progress);
+}
+function getProgress(client) {
+  const doneTasks = getDoneTasks(client);
+  if (doneTasks.length === 0) {
+    return "No completed tasks yet.";
+  }
+  return doneTasks.map((task) => `## ${task.id}: ${task.title}
+${task.progress || "No progress recorded."}`).join("\n\n");
 }
 var init_service = __esm({
   "src/kanban/service.ts"() {
@@ -184,6 +215,25 @@ function createMCPServer(cwd) {
       capabilities: {
         tools: {}
       }
+    }
+  );
+  server2.registerTool(
+    "get_progress",
+    {
+      description: "Get progress from all completed tasks to understand past context"
+    },
+    async () => {
+      const db2 = await createDbClient(cwd);
+      const progress = getProgress(db2);
+      await db2.close();
+      return {
+        content: [
+          {
+            type: "text",
+            text: progress
+          }
+        ]
+      };
     }
   );
   server2.registerTool(
@@ -210,12 +260,13 @@ function createMCPServer(cwd) {
     {
       description: "Mark a task as completed",
       inputSchema: {
-        taskId: z.string().describe("The ID of the task to mark as done")
+        taskId: z.string().describe("The ID of the task to mark as done"),
+        progress: z.string().describe("Progress summary: what was implemented, important files changed, learnings (gotchas, follow-ups)")
       }
     },
-    async ({ taskId }) => {
+    async ({ taskId, progress }) => {
       const db2 = await createDbClient(cwd);
-      markTaskAsCompleted(db2, taskId);
+      markTaskAsCompleted(db2, taskId, progress);
       await db2.close();
       return {
         content: [
@@ -359,13 +410,8 @@ function initializeSchema(db2) {
   console.log("Initializing database schema...");
   db2.run(SCHEMA);
   console.log("Database schema initialized");
-  if (process.env.SEED_DATABASE === "true") {
-    console.log("Seeding database with test data...");
-    db2.run(SEED);
-    console.log("Database seeded");
-  }
 }
-var SCHEMA, SEED;
+var SCHEMA;
 var init_init = __esm({
   "src/db/init.ts"() {
     "use strict";
@@ -376,6 +422,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   steps TEXT NOT NULL,
+  progress TEXT,
   state TEXT DEFAULT 'ReadyForDev' CHECK (state IN ('ReadyForDev', 'Done')),
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP
@@ -383,11 +430,6 @@ CREATE TABLE IF NOT EXISTS tasks (
 
 CREATE INDEX IF NOT EXISTS idx_tasks_state ON tasks(state);
 CREATE INDEX IF NOT EXISTS idx_tasks_created_at ON tasks(created_at DESC);
-`;
-    SEED = `
-DELETE FROM tasks;
-INSERT INTO tasks (id, category, title, description, steps, state) VALUES
-('FEAT-001', 'feat', 'Initialize empty javascript project', 'Initialize empty javascript project using pnpm init', '["Use pnpm init to create a new typescript project", "Create index file that logs hello world", "Add dev script to package json that would node start this"]', 'ReadyForDev');
 `;
   }
 });
@@ -406,7 +448,7 @@ var init_trpc = __esm({
 
 // ../api/dist/routers/kanban.js
 import { z as z2 } from "zod";
-var TaskSchema, CreateTaskInputSchema, kanbanRouter;
+var TaskSchema, TaskDetailSchema, CreateTaskInputSchema, kanbanRouter;
 var init_kanban = __esm({
   "../api/dist/routers/kanban.js"() {
     "use strict";
@@ -415,6 +457,17 @@ var init_kanban = __esm({
       id: z2.string(),
       title: z2.string(),
       status: z2.enum(["todo", "in_progress", "done"])
+    });
+    TaskDetailSchema = z2.object({
+      id: z2.string(),
+      category: z2.string(),
+      title: z2.string(),
+      description: z2.string(),
+      steps: z2.array(z2.string()),
+      status: z2.enum(["todo", "in_progress", "done"]),
+      progress: z2.string().nullable(),
+      created_at: z2.string(),
+      updated_at: z2.string()
     });
     CreateTaskInputSchema = z2.object({
       category: z2.enum(["feat", "bug", "chore"]),
@@ -425,6 +478,9 @@ var init_kanban = __esm({
     kanbanRouter = router({
       getTasks: publicProcedure.query(async ({ ctx }) => {
         return ctx.kanban.getTasks();
+      }),
+      getTask: publicProcedure.input(z2.object({ id: z2.string() })).query(async ({ ctx, input }) => {
+        return ctx.kanban.getTask(input.id);
       }),
       createTask: publicProcedure.input(CreateTaskInputSchema).mutation(async ({ ctx, input }) => {
         return ctx.kanban.createTask(input);
@@ -501,6 +557,19 @@ function mapRowToApiTask(row) {
     status: mapStateToStatus(row.state)
   };
 }
+function mapDetailRowToTaskDetail(row) {
+  return {
+    id: row.id,
+    category: row.category,
+    title: row.title,
+    description: row.description,
+    steps: JSON.parse(row.steps),
+    status: mapStateToStatus(row.state),
+    progress: row.progress,
+    created_at: row.created_at,
+    updated_at: row.updated_at
+  };
+}
 function createKanbanService(client) {
   return {
     async getTasks() {
@@ -513,6 +582,18 @@ function createKanbanService(client) {
         (values) => Object.fromEntries(columns.map((col, i) => [col, values[i]]))
       );
       return rows.map(mapRowToApiTask);
+    },
+    async getTask(id) {
+      const result = client.exec(
+        `SELECT id, category, title, description, steps, state, progress, created_at, updated_at FROM tasks WHERE id = '${id}'`
+      );
+      if (result.length === 0 || result[0].values.length === 0) {
+        return null;
+      }
+      const columns = result[0].columns;
+      const values = result[0].values[0];
+      const row = Object.fromEntries(columns.map((col, i) => [col, values[i]]));
+      return mapDetailRowToTaskDetail(row);
     },
     async createTask(input) {
       const serverTask = createTask(client, input);
@@ -637,19 +718,24 @@ var init_service2 = __esm({
 
 ## Your Task
 
-1. Call \`get_tasks_ready_for_implementation\` tool to get tasks ready to implement
-2. Pick highest priority task
+1. Call \`get_progress\` tool to read progress from completed tasks and understand past context
+2. Call \`get_tasks_ready_for_implementation\` tool to get tasks ready to implement
+3. Pick highest priority task
    - Tasks are NOT sorted by priority
    - Think about which one is right to pick based on dependencies
-3. Implement that ONE task
-4. Call \`mark_task_done\` tool with the task ID
-5. Terminate, you are only supposed to work on ONE task
+4. Implement that ONE task
+5. Call \`mark_task_done\` tool with the task ID and progress summary
+6. Terminate, you are only supposed to work on ONE task
 
 If no tasks are returned, output <promise>COMPLETE</promise>.
 
 ## Important Rules
 
 - Only implement ONE task per run
+- When marking task done, provide progress summary:
+  - What was implemented
+  - Important files changed
+  - Learnings (gotchas encountered, proposed follow-ups)
 `;
     MAX_ITERATIONS = 5;
     STOP_CONDITION = "<promise>COMPLETE</promise>";
