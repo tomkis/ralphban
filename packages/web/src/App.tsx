@@ -69,6 +69,7 @@ function Column({
         {onAddClick && (
           <button
             onClick={onAddClick}
+            id="add-task-button"
             style={{
               padding: '4px 8px',
               fontSize: '16px',
@@ -215,7 +216,12 @@ export default function App() {
         />
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-        <Column title="Todo" tasks={todoTasks} onAddClick={() => setIsCreateModalOpen(true)} onTaskClick={setSelectedTaskId} />
+        <Column
+          title="Todo"
+          tasks={todoTasks}
+          onAddClick={() => setIsCreateModalOpen(true)}
+          onTaskClick={setSelectedTaskId}
+        />
         <Column title="Done" tasks={doneTasks} onTaskClick={setSelectedTaskId} />
       </div>
       <CreateTaskModal
