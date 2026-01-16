@@ -9,6 +9,20 @@ export const TaskSchema = z.object({
 
 export type Task = z.infer<typeof TaskSchema>;
 
+export const TaskDetailSchema = z.object({
+  id: z.string(),
+  category: z.string(),
+  title: z.string(),
+  description: z.string(),
+  steps: z.array(z.string()),
+  status: z.enum(['todo', 'in_progress', 'done']),
+  progress: z.string().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+
+export type TaskDetail = z.infer<typeof TaskDetailSchema>;
+
 export const CreateTaskInputSchema = z.object({
   category: z.enum(['feat', 'bug', 'chore']),
   title: z.string().min(1),
@@ -22,6 +36,11 @@ export const kanbanRouter = router({
   getTasks: publicProcedure.query(async ({ ctx }): Promise<Task[]> => {
     return ctx.kanban.getTasks();
   }),
+  getTask: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }): Promise<TaskDetail | null> => {
+      return ctx.kanban.getTask(input.id);
+    }),
   createTask: publicProcedure
     .input(CreateTaskInputSchema)
     .mutation(async ({ ctx, input }): Promise<Task> => {

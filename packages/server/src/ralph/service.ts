@@ -5,19 +5,24 @@ const RALPH_PROMPT_TEMPLATE = `
 
 ## Your Task
 
-1. Call \`get_tasks_ready_for_implementation\` tool to get tasks ready to implement
-2. Pick highest priority task
+1. Call \`get_progress\` tool to read progress from completed tasks and understand past context
+2. Call \`get_tasks_ready_for_implementation\` tool to get tasks ready to implement
+3. Pick highest priority task
    - Tasks are NOT sorted by priority
    - Think about which one is right to pick based on dependencies
-3. Implement that ONE task
-4. Call \`mark_task_done\` tool with the task ID
-5. Terminate, you are only supposed to work on ONE task
+4. Implement that ONE task
+5. Call \`mark_task_done\` tool with the task ID and progress summary
+6. Terminate, you are only supposed to work on ONE task
 
 If no tasks are returned, output <promise>COMPLETE</promise>.
 
 ## Important Rules
 
 - Only implement ONE task per run
+- When marking task done, provide progress summary:
+  - What was implemented
+  - Important files changed
+  - Learnings (gotchas encountered, proposed follow-ups)
 `;
 
 function buildMcpConfig(workingDirectory: string): string {

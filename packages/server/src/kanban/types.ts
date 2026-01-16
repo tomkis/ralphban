@@ -5,6 +5,7 @@ export interface Task {
   description: string;
   steps: string[];
   state: 'ReadyForDev' | 'Done';
+  progress: string | null;
   created_at: Date;
   updated_at: Date;
 }

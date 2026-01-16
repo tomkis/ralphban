@@ -4,6 +4,8 @@ export {
   kanbanRouter,
   TaskSchema,
   type Task,
+  TaskDetailSchema,
+  type TaskDetail,
   CreateTaskInputSchema,
   type CreateTaskInput,
 } from './routers/kanban.js';
