@@ -25,10 +25,28 @@ function checkTablesExist(db: DbClient): boolean {
   return result.length > 0 && result[0].values.length > 0;
 }
 
+function checkColumnExists(db: DbClient, table: string, column: string): boolean {
+  const result = db.exec(`PRAGMA table_info(${table})`);
+  if (result.length === 0 || result[0].values.length === 0) {
+    return false;
+  }
+  const columnNames = result[0].values.map((row) => row[1]);
+  return columnNames.includes(column);
+}
+
+function runMigrations(db: DbClient): void {
+  if (!checkColumnExists(db, 'tasks', 'progress')) {
+    console.log('Adding progress column to tasks table...');
+    db.run('ALTER TABLE tasks ADD COLUMN progress TEXT');
+    console.log('Progress column added');
+  }
+}
+
 export function initializeSchema(db: DbClient): void {
   const tablesExist = checkTablesExist(db);
 
   if (tablesExist) {
+    runMigrations(db);
     return;
   }
 

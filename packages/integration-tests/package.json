@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "concurrently \"eslint .\" \"prettier --check . --ignore-path ../../.prettierignore\"",
-    "fix": "concurrently \"eslint --fix .\" \"prettier --write . --ignore-path ../../.prettierignore\""
+    "fix": "concurrently \"eslint --fix .\" \"prettier --write . --ignore-path ../../.prettierignore\"",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@ralphban/api": "workspace:*",
@@ -16,9 +16,9 @@
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
+    "@playwright/test": "^1.57.0",
     "@types/node": "^22.10.5",
-    "typescript": "^5.7.3",
-    "vite": "^6.0.11",
-    "vitest": "^2.1.8"
+    "playwright": "^1.57.0",
+    "typescript": "^5.7.3"
   }
 }

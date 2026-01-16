@@ -5,7 +5,6 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { validateGitRepository } from './utils/git-validation.js';
-import { initializeSchema } from './db/init.js';
 import { createDbClient, type DbClient } from './db/client.js';
 import { createServer, type ServerInstance } from './server.js';
 
@@ -46,13 +45,11 @@ export async function runHttpServer(cwd: string) {
     }
   }
 
-  appDb = await createDbClient(cwd);
   try {
-    initializeSchema(appDb);
+    appDb = await createDbClient(cwd);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error('Database initialization failed:', message);
-    appDb.close();
     process.exit(1);
   }
 
