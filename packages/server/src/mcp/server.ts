@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { createDbClient } from '../db/client.js';
-import { getTasksReadyForImplementation, markTaskAsCompleted } from '../kanban/service.js';
+import { getTasksReadyForImplementation, markTaskAsCompleted, getProgress } from '../kanban/service.js';
 
 export function createMCPServer(cwd: string): McpServer {
   const server = new McpServer(
@@ -13,6 +13,27 @@ export function createMCPServer(cwd: string): McpServer {
       capabilities: {
         tools: {},
       },
+    }
+  );
+
+  server.registerTool(
+    'get_progress',
+    {
+      description: 'Get progress from all completed tasks to understand past context',
+    },
+    async () => {
+      const db = await createDbClient(cwd);
+      const progress = getProgress(db);
+      await db.close();
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: progress,
+          },
+        ],
+      };
     }
   );
 

@@ -106,3 +106,17 @@ export function createTask(client: DbClient, params: CreateTaskParams): Task {
 export function deleteAllTasks(client: DbClient): void {
   client.run('DELETE FROM tasks');
 }
+
+export function getDoneTasks(client: DbClient): Task[] {
+  const result = client.exec(
+    "SELECT id, category, title, description, steps, state, progress, created_at, updated_at FROM tasks WHERE state = 'Done' ORDER BY updated_at ASC"
+  );
+  if (result.length === 0 || result[0].values.length === 0) {
+    return [];
+  }
+  const columns = result[0].columns;
+  return result[0].values.map((values) => {
+    const row = Object.fromEntries(columns.map((col, i) => [col, values[i]])) as unknown as TaskRow;
+    return rowToTask(row);
+  });
+}
