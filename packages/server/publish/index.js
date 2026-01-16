@@ -598,24 +598,36 @@ function buildMcpConfig(workingDirectory) {
   return JSON.stringify({ mcpServers: { ralphban: mcpServer2 } });
 }
 async function runRalphLoop(workingDirectory) {
-  return spawnProcess(
-    "claude",
-    [
-      "--dangerously-skip-permissions",
-      "--mcp-config",
-      buildMcpConfig(workingDirectory),
-      "-p",
-      RALPH_PROMPT_TEMPLATE.trim()
-    ],
-    {
-      cwd: workingDirectory,
-      env: {
-        ...process.env
+  console.log(`[Ralph] Starting loop (max ${MAX_ITERATIONS} iterations)`);
+  let allOutput = "";
+  for (let i = 0; i < MAX_ITERATIONS; i++) {
+    console.log(`[Ralph] Iteration ${i + 1}/${MAX_ITERATIONS}`);
+    const output = await spawnProcess(
+      "claude",
+      [
+        "--dangerously-skip-permissions",
+        "--mcp-config",
+        buildMcpConfig(workingDirectory),
+        "-p",
+        RALPH_PROMPT_TEMPLATE.trim()
+      ],
+      {
+        cwd: workingDirectory,
+        env: {
+          ...process.env
+        }
       }
+    );
+    allOutput += output;
+    if (output.includes(STOP_CONDITION)) {
+      console.log("[Ralph] Stop condition met, ending loop");
+      break;
     }
-  );
+  }
+  console.log("[Ralph] Loop ended");
+  return allOutput;
 }
-var RALPH_PROMPT_TEMPLATE;
+var RALPH_PROMPT_TEMPLATE, MAX_ITERATIONS, STOP_CONDITION;
 var init_service2 = __esm({
   "src/ralph/service.ts"() {
     "use strict";
@@ -639,6 +651,8 @@ If no tasks are returned, output <promise>COMPLETE</promise>.
 
 - Only implement ONE task per run
 `;
+    MAX_ITERATIONS = 5;
+    STOP_CONDITION = "<promise>COMPLETE</promise>";
   }
 });
 
