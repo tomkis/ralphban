@@ -7,3 +7,4 @@ dist/
 packages/cli/web-dist/
 packages/server/web-dist/
 .ralphban/
+test-results/

@@ -1,5 +1,6 @@
 import { Database, QueryExecResult } from 'sql.js';
 import { loadDatabase, saveDatabase, ensureRalphbanDir } from './setup.js';
+import { initializeSchema } from './init.js';
 
 export interface DbClient {
   db: Database;
@@ -14,7 +15,7 @@ export async function createDbClient(cwd: string): Promise<DbClient> {
   const db = await loadDatabase(cwd);
   const save = () => saveDatabase(db, cwd);
 
-  return {
+  const client: DbClient = {
     db,
     run(sql: string, params?: unknown[]) {
       db.run(sql, params as (string | number | null | Uint8Array)[]);
@@ -28,4 +29,9 @@ export async function createDbClient(cwd: string): Promise<DbClient> {
       db.close();
     },
   };
+
+  initializeSchema(client);
+  save();
+
+  return client;
 }
