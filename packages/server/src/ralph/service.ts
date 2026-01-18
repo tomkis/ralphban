@@ -54,15 +54,17 @@ export async function runRalphLoop(workingDirectory: string): Promise<string> {
   for (let i = 0; i < MAX_ITERATIONS; i++) {
     console.log(`[Ralph] Iteration ${i + 1}/${MAX_ITERATIONS}`);
 
-    const output = await spawnProcess(
-      'claude',
-      [
-        '--dangerously-skip-permissions',
-        '--mcp-config',
-        buildMcpConfig(workingDirectory),
-        '-p',
-        RALPH_PROMPT_TEMPLATE.trim(),
-      ],
+    const mockPath = process.env.CLAUDE_MOCK_PATH;
+    const command = mockPath ? 'node' : 'claude';
+    const args = [
+      ...(mockPath ? [mockPath] : []),
+      '--dangerously-skip-permissions',
+      '--mcp-config',
+      buildMcpConfig(workingDirectory),
+      '-p',
+      RALPH_PROMPT_TEMPLATE.trim(),
+    ];
+    const output = await spawnProcess(command, args,
       {
         cwd: workingDirectory,
         env: {
