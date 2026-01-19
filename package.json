@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "type": "module",
   "bin": {
-    "ralphban": "packages/server/publish/index.js"
+    "ralphban": "scripts/docker-wrapper.sh"
   },
   "files": [
-    "packages/server/publish"
+    "scripts/docker-wrapper.sh"
   ],
   "scripts": {
     "dev": "concurrently -n Server,Web -c green,blue \"pnpm --filter @ralphban/server dev\" \"pnpm --filter @ralphban/web dev\"",
