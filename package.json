@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "bin": {
-    "ralphban": "packages/server/publish/index.js"
+    "ralphban": "packages/server/publish/docker-wrapper.js"
   },
   "files": [
     "packages/server/publish"

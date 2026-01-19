@@ -1,12 +1,12 @@
 import { build } from 'esbuild';
 
 await build({
-  entryPoints: ['./src/index.ts'],
+  entryPoints: ['./src/index.ts', './src/docker-wrapper.ts'],
   bundle: true,
   platform: 'node',
   target: 'node20',
   format: 'esm',
-  outfile: './publish/index.js',
+  outdir: './publish',
   external: [
     '@anthropic-ai/claude-agent-sdk',
     '@modelcontextprotocol/sdk',

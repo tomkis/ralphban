@@ -6,5 +6,6 @@ dist/
 .DS_Store
 packages/cli/web-dist/
 packages/server/web-dist/
+packages/server/publish/
 .ralphban/
 test-results/
